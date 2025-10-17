@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apostila 6.5 - ValeCard Gestão de Frotas | Mercado US$ 100 Bi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #ff6b00;
+            --premium: #9d4edd;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --premium-gradient: linear-gradient(135deg, #9d4edd, #5a189a);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Premium */
+        .premium-badge {
+            background: var(--premium-gradient);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), #003d82);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .version {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .market-size {
+            background: var(--premium-gradient);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem auto;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .market-size h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .market-size p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-tab:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .nav-tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .content-section {
+            display: none;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 1.2rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .card {
+            background-color: var(--light);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .premium-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-left: 4px solid var(--premium);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+        
+        .premium-card::before {
+            content: "PREMIUM";
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: var(--premium-gradient);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .competitor-table {
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .badge-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .badge-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .badge-premium {
+            background: var(--premium-gradient);
+            color: white;
+        }
+        
+        .script-box {
+            background-color: #f0f7ff;
+            border: 1px solid #cce5ff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .script-box:before {
+            content: "💬";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: white;
+            padding: 0 5px;
+            font-size: 1.2rem;
+        }
+        
+        .step-indicator {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .alert-info {
+            background-color: #e0f7fa;
+            color: #007bb5;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--primary);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .table-blitz {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table-blitz th, .table-blitz td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table-blitz th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        .table-blitz tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+        
+        .kpi-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .function-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .function-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .function-tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .function-content {
+            display: none;
+        }
+        
+        .function-content.active {
+            display: block;
+        }
+        
+        .checklist {
+            list-style-type: none;
+            margin-left: 0;
+        }
+        
+        .checklist li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .process-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            margin: 0.5rem;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .process-step:after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .process-step:last-child:after {
+            display: none;
+        }
+        
+        .process-number {
+            display: block;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            line-height: 30px;
+            margin: 0 auto 0.5rem;
+        }
+        
+        .competitor-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .competitor-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--secondary);
+        }
+        
+        .competitor-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .strengths, .weaknesses {
+            margin-top: 1rem;
+        }
+        
+        .strengths h4, .weaknesses h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .strengths ul, .weaknesses ul {
+            margin-left: 1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .function-tabs {
+                flex-direction: column;
+            }
+            
+            .process-flow {
+                flex-direction: column;
+            }
+            
+            .process-step:after {
+                display: none;
+            }
+            
+            .competitor-analysis {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .tab-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .value-prop {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .testimonial {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--secondary);
+            font-style: italic;
+        }
+        
+        .testimonial:before {
+            content: """;
+            font-size: 3rem;
+            color: var(--secondary);
+            line-height: 1;
+            margin-right: 0.5rem;
+        }
+        
+        .update-badge {
+            background-color: var(--success);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        .market-trend {
+            background-color: #e8f4fd;
+            border-left: 4px solid #17a2b8;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .new-competitor {
+            border: 2px dashed var(--secondary);
+            position: relative;
+        }
+        
+        .new-competitor::before {
+            content: "NOVO";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Estilos específicos para as novas seções de Call Blitz */
+        .blitz-driver {
+            border-left: 4px solid var(--secondary);
+        }
+        .blitz-warning {
+            border-left: 4px solid var(--danger);
+        }
+        .blitz-day-card {
+            background-color: #e3f2fd;
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        /* Estilos da nova tabela de margem */
+        .margin-table th {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .margin-table td:last-child {
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        /* Estilos para a seção de segmentos */
+        .segmentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .segmento-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #e9ecef;
+        }
+        
+        .segmento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+        
+        .segmento-icon {
+            background: var(--primary);
+            color: white;
+            font-size: 2.5rem;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .segmento-content {
+            padding: 1.8rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .segmento-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .segmento-desc {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .btn-solucao {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-solucao:hover {
+            background: #004494;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 900px;
+            margin: 2rem auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+        
+        .modal-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .modal-section h3 i {
+            margin-right: 0.5rem;
+        }
+        
+        .desafios-list, .solucoes-list {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .desafios-list li, .solucoes-list li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .case-study {
+            background: #fff3e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--secondary);
+            font-style: italic;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: #e8f4fd;
+            border-radius: 0 0 12px 12px;
+            text-align: center;
+        }
+        
+        .btn-proposta {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .btn-proposta:hover {
+            background: #e65c00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255,107,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="premium-badge">APOSTILA 6.5</div>
+            <div class="logo">
+                <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="Logotipo ValeCard"> 
+                ValeCard
+            </div>
+            <div class="subtitle">Apostila Estratégica de Vendas - Gestão de Frotas</div>
+            <div class="version">Versão 6.5 - Mercado de Frete US$ 100 Bi - Outubro 2025</div>
+            
+            <div class="market-size">
+                <h2>MERCADO DE US$ 100 BILHÕES</h2>
+                <p>De acordo com a Mordor Intelligence, o mercado brasileiro de logística e frete movimenta mais de <strong>US$ 100 bilhões</strong> anualmente, com crescimento anual de 4-6%.</p>
+                <p>Esta apostila mostra como capturar sua participação neste mercado em expansão.</p>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-target="intro"><i class="fas fa-home tab-icon"></i>Introdução</div>
+            <div class="nav-tab" data-target="market"><i class="fas fa-chart-line tab-icon"></i>Mercado US$ 100 Bi</div>
+            <div class="nav-tab" data-target="segmentos"><i class="fas fa-truck-loading tab-icon"></i>Segmentos Especializados</div>
+            <div class="nav-tab" data-target="positioning"><i class="fas fa-bullseye tab-icon"></i>Posicionamento</div>
+            <div class="nav-tab" data-target="logistics"><i class="fas fa-route tab-icon"></i>Logística Frota Pesada</div>
+            <div class="nav-tab" data-target="etc-blitz"><i class="fas fa-truck-moving tab-icon"></i>Call BLITZ-Leads</div>
+            <div class="nav-tab" data-target="rotina-semanal"><i class="fas fa-calendar-alt tab-icon"></i>Rotina Semanal</div>
+            <div class="nav-tab" data-target="roteiro-fps"><i class="fas fa-bullhorn tab-icon"></i>Roteiro F.P.S.</div>
+            <div class="nav-tab" data-target="process"><i class="fas fa-sitemap tab-icon"></i>Processo Comercial</div>
+            <div class="nav-tab" data-target="playbooks"><i class="fas fa-users tab-icon"></i>Playbooks</div>
+            <div class="nav-tab" data-target="scripts"><i class="fas fa-comments tab-icon"></i>Scripts & Objeções</div>
+            <div class="nav-tab" data-target="metrics"><i class="fas fa-chart-bar tab-icon"></i>Métricas & KPIs</div>
+        </div>
+        
+        <section id="intro" class="content-section active">
+            <h1>Introdução <span class="update-badge"> 6.5</span></h1>
+            
+            <div class="premium-card">
+                <h2>Objetivo da Apostila 6.5</h2>
+                <p>Capacitar a equipe comercial da ValeCard a dominar o mercado de <strong>US$ 100 bilhões</strong> de logística e frete no Brasil, com estratégias avançadas de prospecção, qualificação, negociação e fechamento de clientes no segmento de gestão de frotas.</p>
+                <p>Esta versão premium integra <strong>análise de mercado, segmentação avançada e estratégias de acesso executivo</strong> para maximizar resultados.</p>
+            </div>
+            
+            <h2>Pilares Estratégicos da Versão 6.0</h2>
+            <ul class="checklist">
+                <li>Foco no <strong>mercado de US$ 100 bilhões</strong> com estratégias específicas</li>
+                <li>Segmentação avançada por <strong>tipos de transporte especializados</strong></li>
+                <li>Processo comercial <strong>estruturado e repetível</strong> com métricas precisas</li>
+                <li>Abordagem <strong>consultiva baseada em valor e ROI</strong></li>
+                <li><strong>Disciplina executiva</strong> na prospecção e acompanhamento</li>
+            </ul>
+            
+            <div class="highlight">
+                <h3>🚀 Filosofia de Vendas Premium</h3>
+                <p><em>"Não vendemos um produto - implementamos um processo de economia e controle que transforma a gestão de frotas em um mercado de US$ 100 bilhões. No Call Blitz, vendemos uma **REUNIÃO**, não o produto."</em></p>
+            </div>
+            
+            <div class="value-prop">
+                <h3>💎 Proposta de Valor Única</h3>
+                <p>A ValeCard é <strong>a única plataforma completa com crédito próprio e expertise de 30 anos</strong> no mercado de gestão de frotas, combinando meio de pagamento, telemetria integrada e suporte humanizado 24/7 para dominar o mercado de US$ 100 bilhões.</p>
+            </div>
+        </section>
+        
+        <section id="market" class="content-section">
+            <h1>Mercado de US$ 100 Bilhões <span class="update-badge">6.5</span></h1>
+            
+            <div class="premium-card">
+                <h2>O Mercado Brasileiro de Logística e Frete</h2>
+                <p>De acordo com a <strong>Mordor Intelligence</strong>, o mercado brasileiro de logística e frete movimenta mais de <strong>US$ 100 bilhões anualmente</strong>, com crescimento anual sustentado de 4-6%.</p>
+                <p>Este mercado é composto por mais de <strong>49.000 transportadoras registradas na ANTT</strong>, representando uma oportunidade colossal para soluções de gestão de frotas.</p>
+            </div>
+            
+            <h2>Análise do Potencial de Mercado</h2>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card" style="border-top: 4px solid var(--premium);">
+                    <div class="kpi-value">US$ 100 Bi+</div>
+                    <div class="kpi-label">Mercado Anual</div>
+                </div>
+                <div class="kpi-card" style="border-top: 4px solid var(--premium);">
+                    <div class="kpi-value">49.000+</div>
+                    <div class="kpi-label">Transportadoras ETC</div>
+                </div>
+                <div class="kpi-card" style="border-top: 4px solid var(--premium);">
+                    <div class="kpi-value">4-6%</div>
+                    <div class="kpi-label">Crescimento Anual</div>
+                </div>
+                <div class="kpi-card" style="border-top: 4px solid var(--premium);">
+                    <div class="kpi-value">30-45%</div>
+                    <div class="kpi-label">Custo com Combustível</div>
+                </div>
+            </div>
+            
+            <h2>Oportunidades por Segmento</h2>
+            
+            <table class="table-blitz">
+                <thead>
+                    <tr>
+                        <th>Segmento</th>
+                        <th>Participação no Mercado</th>
+                        <th>Oportunidade ValeCard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Transporte Rodoviário de Cargas</strong></td>
+                        <td>~60% do mercado</td>
+                        <td>Gestão de combustível, pedágio e manutenção para +49.000 ETCs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logística Urbana</strong></td>
+                        <td>~15% do mercado</td>
+                        <td>Otimização de rotas e controle de entregas para e-commerce</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cargas Especializadas</strong></td>
+                        <td>~25% do mercado</td>
+                        <td>Soluções específicas para perigosos, frigorificadas, granel</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Fatores de Crescimento do Mercado</h2>
+            
+            <div class="market-trend">
+                <h3>📈 Drivers do Mercado US$ 100 Bi</h3>
+                <ul>
+                    <li><strong>Expansão do E-commerce</strong> - Aumento de 30% nas entregas urbanas</li>
+                    <li><strong>Agronegócio</strong> - Maior exportação de commodities</li>
+                    <li><strong>Infraestrutura</strong> - Investimentos em rodovias e portos</li>
+                    <li><strong>Tecnologia</strong> - Digitalização das operações logísticas</li>
+                    <li><strong>Sustentabilidade</strong> - Pressão por operações mais eficientes</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Estratégia de Penetração no Mercado</h2>
+                <p>Para dominar este mercado de US$ 100 bilhões, a ValeCard deve focar em:</p>
+                <ul class="checklist">
+                    <li><strong>Segmentação vertical</strong> por tipo de carga e operação</li>
+                    <li><strong>Soluções especializadas</strong> para cada segmento</li>
+                    <li><strong>Expansão geográfica</strong> com foco em rotas estratégicas</li>
+                    <li><strong>Parcerias estratégicas</strong> com players do ecossistema</li>
+                    <li><strong>Inovação contínua</strong> em tecnologia e serviços</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="segmentos" class="content-section">
+            <h1>Segmentos Especializados <span class="update-badge"> 6.5</span></h1>
+            
+            <div class="premium-card">
+                <h2>Estratégia de Segmentação para o Mercado de Frota Pesada</h2>
+                <p>No mercado de US$ 100 bilhões, a segmentação por tipo de transporte é essencial para oferecer soluções personalizadas que resolvam desafios específicos de cada operação.</p>
+                <p>Abaixo, os principais segmentos com maior potencial no mercado brasileiro:</p>
+            </div>
+            
+            <div class="segmentos-grid">
+                <div class="segmento-card" data-segmento="granel-solidos">
+                    <div class="segmento-icon">
+                        <i class="fas fa-wheat-alt"></i>
+                    </div>
+                    <div class="segmento-content">
+                        <h3 class="segmento-title">Granel Sólidos</h3>
+                        <p class="segmento-desc">Transporte de grãos, minérios, cimento e outros materiais a granel com alto volume e rotas fixas.</p>
+                        <button class="btn-solucao" onclick="abrirModal('granel-solidos')">Ver Solução Específica</button>
+                    </div>
+                </div>
+                
+                <div class="segmento-card" data-segmento="frigorificadas">
+                    <div class="segmento-icon">
+                        <i class="fas fa-snowflake"></i>
+                    </div>
+                    <div class="segmento-content">
+                        <h3 class="segmento-title">Cargas Frigorificadas</h3>
+                        <p class="segmento-desc">Transporte de alimentos perecíveis com controle rigoroso de temperatura e prazos apertados.</p>
+                        <button class="btn-solucao" onclick="abrirModal('frigorificadas')">Ver Solução Específica</button>
+                    </div>
+                </div>
+                
+                <div class="segmento-card" data-segmento="perigosos">
+                    <div class="segmento-icon">
+                        <i class="fas fa-radiation-alt"></i>
+                    </div>
+                    <div class="segmento-content">
+                        <h3 class="segmento-title">Produtos Perigosos</h3>
+                        <p class="segmento-desc">Transporte de combustíveis, químicos e outros materiais com requisitos especiais de segurança.</p>
+                        <button class="btn-solucao" onclick="abrirModal('perigosos')">Ver Solução Específica</button>
+                    </div>
+                </div>
+                
+                <div class="segmento-card" data-segmento="veiculos">
+                    <div class="segmento-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="segmento-content">
+                        <h3 class="segmento-title">Veículos</h3>
+                        <p class="segmento-desc">Transporte de automóveis, caminhões e máquinas com necessidade de rastreamento especializado.</p>
+                        <button class="btn-solucao" onclick="abrirModal('veiculos')">Ver Solução Específica</button>
+                    </div>
+                </div>
+                
+                <div class="segmento-card" data-segmento="mudancas">
+                    <div class="segmento-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="segmento-content">
+                        <h3 class="segmento-title">Mudanças</h3>
+                        <p class="segmento-desc">Serviços residenciais e corporativos com alto valor agregado e atendimento personalizado.</p>
+                        <button class="btn-solucao" onclick="abrirModal('mudancas')">Ver Solução Específica</button>
+                    </div>
+                </div>
+                
+                <div class="segmento-card" data-segmento="carga-geral">
+                    <div class="segmento-icon">
+                        <i class="fas fa-pallet"></i>
+                    </div>
+                    <div class="segmento-content">
+                        <h3 class="segmento-title">Carga Geral</h3>
+                        <p class="segmento-desc">Transporte diversificado de mercadorias em geral com operações flexíveis e variadas.</p>
+                        <button class="btn-solucao" onclick="abrirModal('carga-geral')">Ver Solução Específica</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Benefícios da Segmentação</h2>
+                <ul class="checklist">
+                    <li><strong>Maior taxa de conversão</strong> - Soluções específicas para necessidades específicas</li>
+                    <li><strong>Menor custo de aquisição</strong> - Mensagens direcionadas ressoam melhor</li>
+                    <li><strong>Maior valor médio</strong> - Soluções especializadas justificam preços premium</li>
+                    <li><strong>Maior retenção</strong> - Soluções que resolvem problemas reais geram fidelidade</li>
+                    <li><strong>Diferenciação competitiva</strong> - Posicionamento único em cada segmento</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="positioning" class="content-section">
+            <h1>Posicionamento Competitivo <span class="update-badge">6.5</span></h1>
+            
+            <div class="premium-card">
+                <h2>Análise da Concorrência no Mercado US$ 100 Bi</h2>
+                <p>No mercado de US$ 100 bilhões, conhecer a concorrência é fundamental para posicionar a ValeCard como a solução superior para gestão de frotas.</p>
+            </div>
+            
+            
+            <h2>Posicionamento ValeCard</h2>
+            
+            <div class="card">
+                <h3>💎 Diferenciais Competitivos</h3>
+                <ul class="checklist">
+                    <li><strong>Crédito próprio</strong> - Flexibilidade financeira exclusiva</li>
+                    <li><strong>30 anos de expertise</strong> - Conhecimento profundo do setor</li>
+                    <li><strong>Telemetria integrada</strong> - Dados em tempo real para decisões</li>
+                    <li><strong>Suporte 24/7</strong> - Atendimento humanizado sempre disponível</li>
+                    <li><strong>Rede nacional</strong> - Amplo aceite em todo território nacional</li>
+                    <li><strong>Soluções personalizadas</strong> - Portfolio amplo</li>
+                </ul>
+            </div>
+            
+            <h2>Matriz de Posicionamento Integrada (v6.0)</h2>
+
+<style>
+/* Torna todo o cabeçalho da Matriz clicável */
+.table-blitz thead th a{display:block;width:100%;height:100%;padding:6px 8px;color:inherit;text-decoration:underline;}
+.table-blitz thead th a:hover{text-decoration:underline;}
+</style><style>
+/* Ícones de link externo e estilo dos cabeçalhos clicáveis */
+.table-blitz thead th a{display:block;width:100%;height:100%;padding:6px 8px;color:inherit;text-decoration:underline;}
+.table-blitz thead th a:hover{text-decoration:underline;}
+.ext-icon{display:inline-block;margin-left:6px;vertical-align:baseline;opacity:.7}
+.ext-icon svg{width:12px;height:12px}
+</style><table class="table-blitz">
+    <thead>
+        <tr>
+            <th>Critério</th>
+            <th>ValeCard</th>
+            <th><a href="https://www.alelofrota.com.br/" target="_blank" rel="noopener noreferrer">Alelo</a></th>
+            <th><a href="https://www.ticketlog.com.br/" target="_blank" rel="noopener noreferrer">Ticket Log</a></th>
+            <th><a href="https://www.stone.com.br/" target="_blank" rel="noopener noreferrer">Mesa (Stone)</a></th>
+            <th><a href="https://www.profrotas.com.br/" target="_blank" rel="noopener noreferrer">PróFrotas</a></th>
+            <th><a href="https://www2.x7bank.com/" target="_blank" rel="noopener noreferrer">X7 Bank</a></th>
+            <th><a href="https://www.truckpag.com.br/" target="_blank" rel="noopener noreferrer">TruckPag</a></th>
+            <th><a href="https://www.portalexpers.com/" target="_blank" rel="noopener noreferrer">Expers</a></th>
+            <th><a href="https://redefrota.com.br/" target="_blank" rel="noopener noreferrer">Rede Frota</a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Crédito Próprio</strong></td>
+            <td>✅ Sim (IP BACEN)</td>
+            <td>❌ Não (BB ou Bradesco)</td>
+            <td>✅ Sim </td>
+            <td>❌ Não</td>
+            <td>Via parceiros(XP)</td>
+            <td>Capital de Giro com Bancos</td>
+            <td>Prazo curto foco pequenas empresas</td>
+            <td>Via parceiros</td>
+            <td>Crédito/prazo personalizados< FIDC/td>
+        </tr>
+        <tr>
+            <td><strong>Telemetria / Roteirização</strong></td>
+            <td>✅ Integrada (tempo real)</td>
+            <td>❌ Limitada</td>
+            <td>✅ Completa / Parcial</td>
+            <td>⚠️ Parcial</td>
+            <td>Roteirizador/gestão</td>
+            <td>IA de rotas (sem embarcada)</td>
+            <td>Telemetria própria</td>
+            <td>✅ Completa</td>
+            <td>Roteirizador (sem telemetria)</td>
+        </tr>
+        <tr>
+            <td><strong>Capilaridade</strong></td>
+            <td>30.000+ postos</td>
+            <td>Rede ampla</td>
+            <td>21.000+ postos</td>
+            <td>Rede limitada</td>
+            <td>Ipiranga Rodovias (1.100+)</td>
+            <td>3.200+ postos</td>
+            <td>4.000+ postos</td>
+            <td>Shell/Edenred (1.200+)</td>
+            <td>2.000–2.200 postos</td>
+        </tr>
+        <tr>
+            <td><strong>Inovaç cliete e postos, + 100 parametro</strong></td>
+            <td>preço validado</td>
+            <td>Benefícios</td>
+            <td>Telemetria / IA</td>
+            <td>Investimento; foco PMEs</td>
+            <td>100% digital (sem cartão)</td>
+            <td>IA para rotas</td>
+            <td>Mapa abastecimento/rotas</td>
+            <td>Painel de inteligência</td>
+            <td>Roteirizador, Frotabank</td>
+        </tr>
+        <tr>
+            <td><strong>Suporte</strong></td>
+            <td>✅ Humanizado 24/7</td>
+            <td>⚠️ Limitado</td>
+            <td>⚠️ 0800 para clientes pequenos e médios</td>
+            <td>⚠️ Digital</td>
+            <td>Ecossistema</td>
+            <td>Digital</td>
+            <td>Humano 24h (Whats)</td>
+            <td>Central 24h</td>
+            <td>Atendimento 24/7</td>
+        </tr>
+        <tr>
+            <td><strong>Foco</strong></td>
+            <td>Gestão completa + crédito</td>
+            <td>Benefícios corporativos</td>
+            <td>Gestão frota corporativa</td>
+            <td>Fintech / PMEs</td>
+            <td>Abastecimento 100% digital</td>
+            <td>Financeiro + abastecimento</td>
+            <td>Pagamentos, rotas</td>
+            <td>Frota pesada + NF</td>
+            <td>Abastecimento + crédito + NF</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Links de Concorrentes (atalhos) -->
+<h3 id="links-concorrentes">Links rápidos dos concorrentes</h3>
+<ul>
+  <li><a href="https://www.alelofrota.com.br/" target="_blank" rel="noopener noreferrer">Alelo <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://www.ticketlog.com.br/" target="_blank" rel="noopener noreferrer">Ticket Log <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://www.stone.com.br/" target="_blank" rel="noopener noreferrer">Mesa (Stone) <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://www.profrotas.com.br/" target="_blank" rel="noopener noreferrer">PróFrotas <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://www2.x7bank.com/" target="_blank" rel="noopener noreferrer">X7 Bank <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://www.truckpag.com.br/" target="_blank" rel="noopener noreferrer">TruckPag <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://www.portalexpers.com/" target="_blank" rel="noopener noreferrer">Expers <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+  <li><a href="https://redefrota.com.br/" target="_blank" rel="noopener noreferrer">Rede Frota <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></li>
+</ul>
+
+
+
+
+<h2>SWOT (v6.5)</h2>
+<div class="competitor-analysis">
+  <div class="card"><h3>ValeCard</h3>
+    <p><strong>Forças:</strong> Xcrédito próprio (BACEN), plataforma completa, 30 mil postos, suporte 24/7.</p>
+    <p><strong>Fraquezas:</strong> S=ependência de POS/cartão; custos para  expansão de rede.</p>
+    <p><strong>Oportunidades:</strong> mercado >  Pagamento de Frete e VPO; Parcerias estratégicas; digitalização.</p>
+    <p><strong>Ameaças:</strong> concorrentes com crédito/IA; cenário macro/regulatório; players globais.</p>
+  </div>
+  <div class="card"><h3>PróFrotas</h3>
+    <p><strong>Forças:</strong> 100% digital; apps; integração Ipiranga; roteirizador.</p>
+    <p><strong>Fraquezas:</strong> capilaridade inferior.</p>
+    <p><strong>Oportunidades:</strong> integrações TMS/telemática; analytics.</p>
+    <p><strong>Ameaças:</strong> multibandeira e fintechs.</p>
+  </div>
+  <div class="card"><h3>E‑Fleet</h3>
+    <p><strong>Forças:</strong> telemetria avançada; dashboards; integrações ERP.</p>
+    <p><strong>Fraquezas:</strong> não é IP; crédito via terceiros; capilaridade não divulgada.</p>
+    <p><strong>Oportunidades:</strong> demanda por telemetria/analytics.</p>
+    <p><strong>Ameaças:</strong> competidores com finanças integradas e redes maiores.</p>
+  </div>
+  <div class="card"><h3>X7 Bank</h3>
+    <p><strong>Forças:</strong> conta digital; 3.200+ postos; IA de rotas.</p>
+    <p><strong>Fraquezas:</strong> ênfase financeira > operacional; telemetria embarcada não destacada.</p>
+    <p><strong>Oportunidades:</strong> integrar TMS/telemetria; ampliar rede.</p>
+    <p><strong>Ameaças:</strong> regulação e competição com IPs/bancos consolidados.</p>
+  </div>
+  <div class="card"><h3>TruckPag</h3>
+    <p><strong>Forças:</strong> 4.000+ postos; NFs automáticas; TMS; suporte 24h; telemetria/manutenção DAF.</p>
+    <p><strong>Fraquezas:</strong> foco em pagamentos/abastecimento.</p>
+    <p><strong>Oportunidades:</strong> oficinas e analytics.</p>
+    <p><strong>Ameaças:</strong> players com crédito próprio e redes maiores.</p>
+  </div>
+  <div class="card"><h3>Expers</h3>
+    <p><strong>Forças:</strong> Shell/Edenred; 100% NFs; central 24h; app Gestor.</p>
+    <p><strong>Fraquezas:</strong> capilaridade de rede.</p>
+    <p><strong>Oportunidades:</strong> BI e expansão no pesado.</p>
+    <p><strong>Ameaças:</strong> concorrentes com crédito próprio e IA.</p>
+  </div>
+  <div class="card"><h3>Rede Frota</h3>
+    <p><strong>Forças:</strong> 2.000+ postos; crédito/prazo personalizados; roteirizador; Frotabank.</p>
+    <p><strong>Fraquezas:</strong> foco em abastecimento/pagamentos.</p>
+    <p><strong>Oportunidades:</strong> integrações TMS/ERP; capilaridade e analytics.</p>
+    <p><strong>Ameaças:</strong> redes maiores e players com crédito próprio.</p>
+  </div>
+</div>
+
+<div class="highlight">
+                <h3>🎯 Posicionamento Estratégico</h3>
+                <p><em>"A ValeCard não é apenas um cartão de combustível - somos a única plataforma completa com crédito próprio e expertise de 30 anos para transformar sua gestão de frota em uma vantagem competitiva no mercado de US$ 100 bilhões."</em></p>
+            </div>
+        </section>
+
+        <section id="logistics" class="content-section">
+            <h1>Logística e Operação de Frotas Pesadas <span class="update-badge">NOVO CAPÍTULO - V6.0</span></h1>
+            
+            <div class="card">
+                <h2>O Desafio Logístico na Frota Pesada</h2>
+                <p>A gestão de logística para frotas pesadas (>15 veículos) é intrinsecamente ligada à eficiência operacional e ao controle de custos. Nossos clientes buscam resolver a tríade crítica: <strong>Tempo, Rota e Custo</strong>.</p>
+            </div>
+            
+            <h2>Integração Telemetria & Controle Financeiro</h2>
+            <p>O diferencial da ValeCard reside na união de soluções financeiras (crédito próprio) e operacionais (telemetria e gestão de abastecimento), garantindo um ciclo de controle completo. </p>
+            
+            <div class="value-prop">
+                <h3>Impacto da IA na Logística</h3>
+                <p>Nossa plataforma utiliza <strong>IA Predictiva</strong> para otimização de rotas e monitoramento de consumo, transformando dados brutos de telemetria em ações corretivas imediatas. Isso impacta diretamente na redução de <strong>45% dos custos operacionais</strong> (custo do combustível), que é o maior desafio logístico do setor.</p>
+                <ul class="checklist">
+                    <li>Otimização de Rota (Menor KM rodado)</li>
+                    <li>Combate a Fraude (Identificação de desvios no abastecimento)</li>
+                    <li>Manutenção Preditiva (Alertas baseados no comportamento do motorista)</li>
+                </ul>
+            </div>
+            
+            <h2>Vantagem Competitiva na Operação</h2>
+            <table class="table-blitz">
+                <thead>
+                    <tr>
+                        <th>Pilar Operacional</th>
+                        <th>Vantagem ValeCard</th>
+                        <th>Impacto no Cliente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Capilaridade</strong></td>
+                        <td>Mais de 30 mil postos credenciados (Nacional)</td>
+                        <td>Redução de tempo inativo por busca de posto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Crédito</strong></td>
+                        <td>Instituição de Pagamento própria (BACEN)</td>
+                        <td>Fluidez no fluxo de caixa e melhores condições</td>
+                    </tr>
+                    <tr>
+                    <td><strong>Suporte</strong></td>
+                        <td>Suporte Humanizado 24/7 (Motorista/Gestor)</td>
+                        <td>Resolução rápida de problemas em estrada, garantindo a entrega (Receita)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 2rem;">
+                <h2>Análise de Margem Bruta Operacional por KM (V6.0)</h2>
+                <p>A margem bruta por KM é a receita por km (CCD ANTT) menos os principais custos variáveis. Em veículos **novos ou na garantia**, a margem é mais alta devido à menor manutenção e consumo mais otimizado. **Toda economia que a ValeCard gera no Diesel ou Pneu impacta diretamente essa margem.**</p>
+
+                <table class="table-blitz margin-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Conjunto (Porte)</th>
+                            <th>Frete Bruto/KM (CCD ANTT Est.)</th>
+                            <th>Custo Diesel/KM (Est. R$ 6,00/L)</th>
+                            <th>Custo Pneu/KM (CPK Est. Baixa)</th>
+                            <th>**Margem Bruta/KM (R$)**</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>**Toco (VUC/Toco)** (3.5 km/L)</td>
+                            <td>R$ 2,45</td>
+                            <td>R$ 1,71</td>
+                            <td>R$ 0,10</td>
+                            <td>**R$ 0,64**</td>
+                        </tr>
+                        <tr>
+                            <td>**Truck (Caminhão Pesado)** (3.0 km/L)</td>
+                            <td>R$ 2,90</td>
+                            <td>R$ 2,00</td>
+                            <td>R$ 0,20</td>
+                            <td>**R$ 0,70**</td>
+                        </tr>
+                        <tr>
+                            <td>**Carreta (41 T)** (2.25 km/L)</td>
+                            <td>R$ 3,80</td>
+                            <td>R$ 2,67</td>
+                            <td>R$ 0,40</td>
+                            <td>**R$ 0,73**</td>
+                        </tr>
+                        <tr>
+                            <td>**Bitrem/Rodotrem (74 T)** (1.75 km/L)</td>
+                            <td>R$ 4,75</td>
+                            <td>R$ 3,43</td>
+                            <td>R$ 0,60</td>
+                            <td>**R$ 0,72**</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="alert-info">
+                    <h4>Fórmula Aplicada e Alavancagem ValeCard</h4>
+                    <p>A **Margem Bruta/KM** é a base do lucro do transportador. Nossa proposta de valor se concentra em **aumentar essa margem** através de:</p>
+                    <ol>
+                        <li>**Redução do Custo Diesel/KM:** Otimização de consumo e combate a fraudes (com ValeCard Frota).</li>
+                        <li>**Redução do Custo Pneu/KM:** Manutenção preditiva e monitoramento (com Telemetria integrada).</li>
+                    </ol>
+                    <p>Um aumento de R$ 0,05/km em uma frota de 50 caminhões que rodam 10.000 km/mês representa um ganho anual de **R$ 300.000,00** para o cliente.</p>
+                </div>
+
+
+                <h3>Tabela de Especificações e Faturamento (Estimativas V6.0)</h3>
+                <table class="table-blitz competitor-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Veículo/Conjunto (Implemento)</th>
+                            <th>Capacidade de Carga (T)</th>
+                            <th>Pneus (Total no Conjunto)</th>
+                            <th>Capacidade do Tanque (L)</th>
+                            <th>Consumo Diesel (km/L) Est.</th>
+                            <th>Custo Pneus/KM (CPK) Est.</th>
+                            <th>Faturamento Bruto Mensal Esperado (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VUC (Veículo Urbano de Carga)</td>
+                            <td>3 a 3,5 T</td>
+                            <td>6</td>
+                            <td>90 a 150 L</td>
+                            <td>4 a 6 km/L (Carga Leve)</td>
+                            <td>R$ 0,08 a R$ 0,15</td>
+                            <td>R$ 10.000 a R$ 20.000 (Fretes Urbanos)</td>
+                        </tr>
+                        <tr>
+                            <td>Toco (Caminhão Semipesado)</td>
+                            <td>6 T (PBT até 16 T)</td>
+                            <td>6</td>
+                            <td>200 a 300 L</td>
+                            <td>3 a 4 km/L (Média Distância)</td>
+                            <td>R$ 0,10 a R$ 0,20</td>
+                            <td>R$ 15.000 a R$ 30.000 (Carga Seca, Frigorificada)</td>
+                        </tr>
+                        <tr>
+                            <td>Truck (Caminhão Pesado)</td>
+                            <td>10 a 14 T (PBT até 23 T)</td>
+                            <td>8 a 10</td>
+                            <td>400 a 700 L</td>
+                            <td>2,5 a 3,5 km/L (Longa Distância)</td>
+                            <td>R$ 0,20 a R$ 0,35</td>
+                            <td>R$ 20.000 a R$ 40.000 (Graneleiro, Baú)</td>
+                        </tr>
+                        <tr>
+                            <td>Carreta (Cavalo Simples + 3 Eixos)</td>
+                            <td>33 T a 41,5 T</td>
+                            <td>18 (6 no Cavalo + 12 no Semi)</td>
+                            <td>500 a 900 L</td>
+                            <td>2,0 a 2,5 km/L (Carregado)</td>
+                            <td>R$ 0,40 a R$ 0,60</td>
+                            <td>R$ 35.000 a R$ 55.000 (Cargas Gerais, Sider)</td>
+                        </tr>
+                        <tr>
+                            <td>Bitrem/Rodotrem (Acima de 7 Eixos)</td>
+                            <td>57 T a 74 T</td>
+                            <td>22 a 26</td>
+                            <td>900 a 1.200 L</td>
+                            <td>1,5 a 2,0 km/L (Alto Peso)</td>
+                            <td>R$ 0,60 a R$ 1,00+</td>
+                            <td>R$ 50.000 a R$ 90.000+ (Grãos, Combustíveis)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert-info">
+                    <h4>Observações de Custo e Faturamento</h4>
+                    <p>O consumo de diesel (km/L), o Custo Pneus/KM (CPK) e o faturamento bruto mensal (R$) são **estimativas médias** e variam drasticamente conforme o tipo de carga, modelo do motor, topografia da rota, peso transportado, preço do diesel e o tipo de operação (frete próprio vs. agregado). O **CPK** foi estimado com base no preço médio de um pneu novo (R$ 2.000 a R$ 3.100) e sua vida útil (incluindo recapagens), sendo um dos maiores custos variáveis da frota, geralmente representando 8% a 15% do custo total por km rodado.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="etc-blitz" class="content-section">
+            <h1>I. Estratégia de Acesso Executivo: 49.000 Transportadoras ETC ANTT <span class="update-badge">NOVO - V6.0</span></h1>
+            
+            <div class="alert-info">
+                <i class="fas fa-exclamation-triangle"></i> **Lembrete da Metodologia:** O objetivo do Call Blitz é vender uma **REUNIÃO** com o Executivo Sênior (Presidente/Dono), não o produto. O foco é obter **Acesso** (Presidente/Assistente) e **Aceitação** (Executivo Indicado).
+            </div>
+
+            <h2>Acesso às 49.000 Transportadoras ETC ANTT (Base de Prospecção)</h2>
+            <p>Utilize as bases oficiais para segmentar e qualificar as Transportadoras ETC (Empresas de Transporte de Cargas) que se encaixem no ICP:</p>
+            <div class="card blitz-driver">
+                <div class="card-header"><i class="fas fa-table"></i> **Base de Dados LookerStudio (Time Comercial)**</div>
+                <p>Acesso rápido à lista de 49.000 transportadoras com segmentação e filtros pré-aplicados. (Necessário acesso da equipe de Vendas/BI).</p>
+                <p>Link: <a href="https://lookerstudio.google.com/reporting/bb6bc159-1f37-4e09-b2ad-81c6fe595160/page/ieEaF" target="_blank">Acessar LookerStudio - ETC ANTT <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></p>
+            </div>
+            <div class="card blitz-driver">
+                <div class="card-header"><i class="fas fa-link"></i> **Base de Dados Oficial ANTT (PowerBI)**</div>
+                <p>Visualização oficial dos dados de transportadoras ANTT. Útil para verificar informações cadastrais e dados atualizados.</p>
+                <p>Link: <a href="https://app.powerbi.com/view?r=eyJrIjoiMWNkOTdlNGYtZjQ1Mi00Mzk2LTg3M2UtZDEyYmZhMzY3ZTNhIiwidCI6Ijg3YmJlOWRlLWE4OTItNGNkZS1hNDY2LTg4Zjk4MmZiYzQ5MCJ9" target="_blank">Acessar PowerBI Oficial - ANTT <span class="ext-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></svg></span></a></p>
+            </div>
+            <h2>1. Os 3Rs da Venda Executiva (Drivers de Valor)</h2>
+            <p>O Executivo Sênior só se move por grandes números. Sua mensagem (F.P.S.) deve sempre focar nos 3Rs, adaptados para a Frota Pesada:</p>
+            
+            <div class="card blitz-driver">
+                <div class="card-header"><i class="fas fa-shield-alt"></i> **Risco (O Medo)**</div>
+                Impacto de **multas**, **regulação** (ANTT/ETCs), **fraude** (combustível e desvio) e **acidentes**. Qual o risco financeiro e de imagem que a transportadora corre? O que impede o Presidente de dormir?
+            </div>
+            
+            <div class="card blitz-driver">
+                <div class="card-header"><i class="fas fa-percentage"></i> **Reduzir o Custo (O Ganho)**</div>
+                **Economia de combustível** (maior custo variável da Frota Pesada), **otimização de manutenção** (pneus/peças) e **eficiência operacional** (redução de tempo parado/inatividade).
+            </div>
+            
+            <div class="card blitz-driver">
+                <div class="card-header"><i class="fas fa-money-bill-wave"></i> **Receita (A Oportunidade)**</div>
+                Aumento de **produtividade** da frota, **pontualidade** nas entregas e melhoria da **qualidade do serviço** percebida pelo cliente (que permite faturar mais).
+            </div>
+
+            <h2>2. Perfil do Prospect Ideal para o Blitz</h2>
+            <p>Priorize as Transportadoras ETC (acima de 49.000 no Brasil) que se encaixem no ICP e que garantam o maior ROI (Retorno sobre o Investimento) do seu tempo:</p>
+            <ul>
+                <li>Frotas com volume potencial **> 20.000 litros/mês**.</li>
+                <li>Empresas com operação em **múltiplas praças/estados** (maior complexidade, maior valor de controle centralizado).</li>
+                <li>Identificar o **nome da Assistente Executiva** (ela é a "proxy" do Presidente e a chave de acesso).</li>
+            </ul>
+        </section>
+
+        <section id="rotina-semanal" class="content-section">
+            <h1>II. Rotina Semanal de Call Blitz e Métricas <span class="update-badge">NOVO</span></h1>
+            <p>A execução do Executive Call Blitz exige **disciplina e foco**. A rotina deve ser inegociável, dedicando os dias mais produtivos (Terça/Quarta) ao acesso aos Diretores.</p>
+            
+            <h2>1. O Ciclo Semanal do Time</h2>
+            <table class="table-blitz">
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Foco Principal</th>
+                        <th>Ações Detalhadas (Fases)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>**Segunda-feira**</td>
+                        <td>**Preparação e Lista de Blitz**</td>
+                        <td>1. Filtrar a lista ETC: 20 a 30 contatos de alto valor (Presidente/Dono). 2. Pesquisa de Executivo (Nome, Cargo, **Assistente**). 3. Customização do Roteiro F.P.S. (Baseado nos 3Rs).</td>
+                    </tr>
+                    <tr>
+                        <td>**Terça-feira**</td>
+                        <td>**Call Blitz - FASE 1 (Acesso)**</td>
+                        <td>**Ligações para o Presidente/Dono**. Objetivo: 1. Agendar Reunião OU 2. Obter a **indicação** (Ricochete) do Executivo Subordinado. *Evite falar do produto.*</td>
+                    </tr>
+                    <tr>
+                        <td>**Quarta-feira**</td>
+                        <td>**Call Blitz - FASE 1 (Continuação)**</td>
+                        <td>Continuar as ligações para o Presidente/Dono para bater a meta de Acesso/Indicações. Enviar o "material de tendência" ao Presidente/Assistente após a ligação.</td>
+                    </tr>
+                    <tr>
+                        <td>**Quinta-feira**</td>
+                        <td>**Call Blitz - FASE 2 (Aceitação)**</td>
+                        <td>**Ligações para o Executivo Indicado** (Diretor de Logística/Operações). Usar o nome do Presidente como alavanca. Foco em **Agendamento** e Qualificação detalhada.</td>
+                    </tr>
+                    <tr>
+                        <td>**Sexta-feira**</td>
+                        <td>**Análise e Planejamento**</td>
+                        <td>1. **Revisão das Métricas** (Ligações, Reuniões Agendadas, Indicações). 2. Refinar o Roteiro. 3. Preparar a lista ETC e agenda da próxima semana.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>2. Métricas de Sucesso do Call Blitz</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card" style="border-top: 4px solid var(--secondary);">
+                    <div class="kpi-value">X</div>
+                    <div class="kpi-label">Ligações Efetivas/dia</div>
+                </div>
+                <div class="kpi-card" style="border-top: 4px solid var(--secondary);">
+                    <div class="kpi-value">2-3</div>
+                    <div class="kpi-label">Reuniões Agendadas/semana</div>
+                </div>
+                <div class="kpi-card" style="border-top: 4px solid var(--secondary);">
+                    <div class="kpi-value">Y%</div>
+                    <div class="kpi-label">Taxa de Indicação (Ricochete)</div>
+                </div>
+                <div class="kpi-card" style="border-top: 4px solid var(--primary);">
+                    <div class="kpi-value">30 min</div>
+                    <div class="kpi-label">Duração máxima solicitada</div>
+                </div>
+            </div>
+            <p class="highlight">Se a taxa de sucesso for baixa, revise e melhore sua Proposta de Valor (F.P.S.). Você pode estar falando de "bits & bytes" e não de **negócios** (os 3Rs).</p>
+        </section>
+
+        <section id="roteiro-fps" class="content-section">
+            <h1>III. Roteiro F.P.S. (Fato, Prova, Solicitação) <span class="update-badge">NOVO</span></h1>
+            <p>O F.P.S. (Fato, Prova, Solicitação) é o formato padrão, profissional e de alto impacto para acessar Executivos Sênior.</p>
+
+            <h2>Roteiro de Ligação (Call To Action - Foco ETC/Risco)</h2>
+            <div class="script-box" style="border-left: 5px solid var(--danger);">
+                <h3><span class="step-indicator">1</span> Abertura e Gancho (Valor/Tempo)</h3>
+                <p><em>"Olá, [Nome do Executivo/Dono]. Meu nome é [Seu Nome], e sou da ValeCard. Estou ligando porque temos analisado o mercado de Transportadoras classificadas como **ETC** e a gestão de frotas pesadas. **Posso usar 30 segundos?**"</em></p>
+
+                <h3><span class="step-indicator">2</span> FATO (O Medo/Risco do Executivo)</h3>
+                <p>*"O que estamos observando é que, com o aumento da fiscalização e o peso regulatório, o **risco de multas e a fraude de combustível estão erodindo a margem operacional** das Transportadoras de forma alarmante. É um desafio de **Risco e Custo** (2Rs) que impacta o lucro líquido. "*</p>
+                
+                <h3><span class="step-indicator">3</span> PROVA (A Referência/Credibilidade)</h3>
+                <p>*"A ValeCard tem ajudado empresas como [Cliente Referência do Setor] e [Outro Cliente] a **reduzir estes riscos e otimizar o custo de combustível/manutenção em X%**, através de um controle rigoroso de gestão de frotas."*</p>
+                
+                <h3><span class="step-indicator">4</span> SOLICITAÇÃO (O Único CTA)</h3>
+                <p>*"Gostaria de solicitar apenas **30 minutos na sua agenda** para lhe apresentar, de forma objetiva, como podemos ajudar a [Nome da Transportadora] a resolver problemas semelhantes. Que tal na [Data/Hora 1] ou [Data/Hora 2]?"*</p>
+                <p>***(PARAR DE FALAR. O silêncio pressiona a resposta.)***</p>
+            </div>
+            
+            <h2>Lidando com Objeções Chave (Durante o Blitz)</h2>
+            <table class="table-blitz">
+                <thead>
+                    <tr>
+                        <th>Objeção</th>
+                        <th>Resposta (Foco na Reunião)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Envie um e-mail. Não tenho tempo."</td>
+                        <td>"Entendo. Mas o nosso tema é um desafio estratégico de **Risco/Custo** na Frota Pesada. Isso requer uma discussão de 30 minutos na qual consigo lhe mostrar o cálculo de ROI. Meu e-mail não faria justiça ao valor que podemos gerar. Que tal na [Data/Hora]? "</td>
+                    </tr>
+                    <tr>
+                        <td>"Fale mais sobre a solução/produto."</td>
+                        <td>"A solução envolve gestão de combustível, manutenção e telemetria, mas o ponto crucial é o **impacto de X% na redução do seu custo/risco** (Repita os 2Rs). É exatamente isso que quero mostrar em 30 minutos, com base em clientes ETC. [Repita Solicitação: Que tal na Data/Hora?]"</td>
+                    </tr>
+                    <tr>
+                        <td>*Obtendo Indicação (Ricochete)*</td>
+                        <td>"Obrigado, [Nome do Presidente], entrarei em contato com [Nome da Indicação] conforme sua sugestão. Enviarei um breve material sobre tendências da indústria antes do nosso contato para que ele tenha o contexto."</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="process" class="content-section">
+            <h1>Processo Comercial - 5 Etapas Principais <span class="update-badge">Atualizado 2025</span></h1>
+            
+            <div class="process-flow">
+                <div class="process-step">
+                    <span class="process-number">1</span>
+                    <h3>Prospecção</h3>
+                    <p>Identificar e qualificar leads de acordo com o ICP</p>
+                </div>
+                <div class="process-step">
+                    <span class="process-number">2</span>
+                    <h3>Abordagem</h3>
+                    <p>Contato inicial com script estruturado (F.P.S. no Call Blitz)</p>
+                </div>
+                <div class="process-step">
+                    <span class="process-number">3</span>
+                    <h3>Qualificação</h3>
+                    <p>Levantamento de informações e necessidades</p>
+                </div>
+                <div class="process-step">
+                    <span class="process-number">4</span>
+                    <h3>Apresentação</h3>
+                    <p>Demonstração de valor e proposta</p>
+                </div>
+                <div class="process-step">
+                    <span class="process-number">5</span>
+                    <h3>Fechamento</h3>
+                    <p>Negociação e ativação do cliente</p>
+                </div>
+            </div>
+            
+            <h2>Fontes de Prospecção</h2>
+            <ul>
+                <li><strong>LinkedIn</strong> - Busca por gestores de frota e transportadoras</li>
+                <li><strong>Google</strong> - Empresas de transporte rodoviário por região</li>
+                <li><strong>Associações</strong> - NTC, ANTT, associações regionais</li>
+                <li><strong>Indicações</strong> - Clientes atuais e parceiros</li>
+                <li><strong>Bases setoriais</strong> - Listas de transportadoras credenciadas</li>
+            </ul>
+            
+            <h2>Critérios de Qualificação</h2>
+            <ul class="checklist">
+                <li>+15 veículos em operação</li>
+                <li>Rotas superiores a 200km da base</li>
+                <li>Volume potencial > 20.000L/mês</li>
+                <li>Decisor identificado e contatado</li>
+                <li>Sem restrições cadastrais graves</li>
+                <li>Interesse confirmado em melhorar gestão</li>
+            </ul>
+        </section>
+        
+        <section id="playbooks" class="content-section">
+            <h1>Playbooks por Função Comercial <span class="update-badge">Atualizado 2025</span></h1>
+            
+            <div class="function-tabs">
+                <div class="function-tab active" data-target="sdr">Vendas Internas (SDR)</div>
+                <div class="function-tab" data-target="hunter">Vendas Hunter</div>
+                <div class="function-tab" data-target="postsales">Pós-Vendas</div>
+            </div>
+            
+            <div id="sdr" class="function-content active">
+                <h2>Vendas Internas (SDR & Qualificação)</h2>
+                <p><strong>Objetivo:</strong> Gerar pipeline qualificado e agendar reuniões para hunters. O Call Blitz é a principal rotina do SDR.</p>
+                
+                <h3>Critérios de Qualificação</h3>
+                <ul class="checklist">
+                    <li>+15 veículos</li>
+                    <li>Rotas >200km</li>
+                    <li>Não usa concorrente estratégico</li>
+                    <li>Decisor identificado</li>
+                </ul>
+                
+                <h3>Metas Diárias</h3>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">100</div>
+                        <div class="kpi-label">Contatos/dia</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">15</div>
+                        <div class="kpi-label">Leads qualificados/dia</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">5</div>
+                        <div class="kpi-label">Reuniões agendadas/semana</div>
+                    </div>
+                </div>
+                
+                <h3>Ferramentas de Apoio</h3>
+                <ul>
+                    <li>CRM com scripts pré-definidos</li>
+                    <li>Listas segmentadas por região e porte</li>
+                    <li>Material de apoio para envio (PDF, cases)</li>
+                    <li>Template de e-mails e mensagens</li>
+                </ul>
+            </div>
+            
+            <div id="hunter" class="function-content">
+                <h2>Vendas Hunter (Fechamento)</h2>
+                <p><strong>Objetivo:</strong> Converter oportunidades qualificadas em clientes ativos.</p>
+                
+                <h3>Táticas de Negociação por Concorrente</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Se o cliente usa:</th>
+                            <th>Argumento de Contorno:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>TruckPag</strong></td>
+                            <td>"Além da plataforma, oferecemos análise de crédito própria com taxas mais competitivas e suporte dedicado para frota."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sem Parar/Ticket</strong></td>
+                            <td>"Nosso sistema vai além da tag: integramos telemetria, gestão de consumo e fornecemos relatórios preditivos que eles não oferecem."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pro-Frotas</strong></td>
+                            <td>"Enquanto eles focam em tecnologia, nós somos a única solução que combina plataforma moderna com crédito próprio e capilaridade nacional de mais de 30 mil postos."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expers</strong></td>
+                            <td>"A Expers tem tradição, mas nossa plataforma com IA preditiva oferece economia comprovada de 3-6% que soluções tradicionais não alcançam."</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Estratégias de Fechamento</h3>
+                <ul class="checklist">
+                    <li><strong>Piloto Gratuito</strong>: 30 dias de plataforma + relatório de economia</li>
+                    <li><strong>Garantia de Performance</strong>: "Se não reduzir 3% nos custos, revisamos juntos"</li>
+                    <li><strong>Onboarding Conjunto</strong>: Implantação com suporte dedicado</li>
+                    <li><strong>Case de Sucesso</strong>: Apresentar resultados de clientes similares</li>
+                </ul>
+                
+                <h3>Metas</h3>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">10</div>
+                        <div class="kpi-label">Apresentações/semana</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">25%</div>
+                        <div class="kpi-label">Taxa de conversão</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">5</div>
+                        <div class="kpi-label">Clientes ativados/mês</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="postsales" class="function-content">
+                <h2>Pós-Vendas & Customer Success — Playbook prático</h2>
+                <p><strong>Objetivo:</strong> Transformar ativação em uso recorrente e em advocacy: objetivo operacional NPS > 70, churn < 3%.</p>
+                
+                <h3>Rotina de Onboarding (checklist)</h3>
+                <ul class="checklist">
+                    <li>Dia 0: Envio de boas-vindas + acesso ao portal (login e guia rápido).</li>
+                    <li>Dia 1–3: Onboarding com gestor operacional — configurar regras, limites e rotas. (Responsável: CSM).</li>
+                    <li>Primeira semana: 1 abastecimento monitorado com suporte (CS liga ao gestor e ao motorista).</li>
+                    <li>Dia 7: Survey rápido (2 perguntas) — experiência inicial (CS fecha qualquer problema em 48h).</li>
+                    <li>Dia 30: Relatório de economia e reunião de revisão (30–45 minutos).</li>
+                </ul>
+                <small>Essa sequência é suportada por rotinas recomendadas no Manual Comercial e no treinamento de vendas (ativação, estabilização e acompanhamento).</small>
+                
+                <h3>Programa NPS — processo operacional</h3>
+                <ol>
+                    <li>Momento da pesquisa: 7 dias (após 1º abastecimento) e 90 dias (reavaliação).</li>
+                    <li>Pergunta primária: "Em uma escala de 0 a 10, o quanto você recomendaria a ValeCard a outro gestor?"</li>
+                    <li>Pergunta adicional (aberta, opcional): "O que poderíamos fazer para melhorar?"</li>
+                    <li>Classificação: 0-6 Detratores / 7-8 Neutros / 9-10 Promotores.</li>
+                    <li>Regra SLA: toda resposta de Detrator -> contato do CSM em até 24 horas; root-cause e ação corretiva em 48 horas; registro e follow-up até resolução.</li>
+                    <li>Fechamento do loop: enviar ao cliente a ação tomada e pedir reavaliação em 30 dias.</li>
+                </ul>
+                
+                <h3>Script de follow-up NPS (CS)</h3>
+                <div class="script-box">
+                    <strong>Ligação/WhatsApp — se Detrator (0–6):</strong>
+                    <p>Olá [Nome], sou [CSM] da ValeCard. Vi que sua avaliação foi [nota]. Quero entender rapidamente o que aconteceu e como podemos resolver — posso fazer 2 perguntas rápidas?</p>
+                    <ol>
+                        <li>Qual foi o principal motivo da sua nota?</li>
+                        <li>O que seria necessário para que você nos desse uma nota 9 ou 10?</li>
+                    </ol>
+                    <p>Fechar com: "Obrigado — vou coordenar a ação com [Operações / Comercial / Posto] e volto em até 48h com uma solução."</p>
+                </div>
+                
+                <h3>KPIs operacionais para CS</h3>
+                <ul>
+                    <li>% respostas NPS enviadas (meta 90% de respostas enviadas/contatadas)</li>
+                    <li>SLA de contato para Detratores: 24h</li>
+                    <li>Tempo médio de resolução: 48h</li>
+                    <li>Taxa de re-avaliação positiva (após ação): >60%</li>
+                    <li>Taxa de adoção do portal no 1º mês: >80%</li>
+                </ul>
+                
+                <h3>Automação sugerida</h3>
+                    <p>Usar o CRM para disparos automáticos da pesquisa 7d/90d, criar tasks automáticas para CSMs em caso de nota ≤6 e usar template de e-mail/WhatsApp para padrões de resposta. (Inspirações: playbooks de ativação e estabilização do Manual Comercial).</p>
+            </div>
+        </section>
+        
+        <section id="scripts" class="content-section">
+            <h1>Scripts de Vendas & Resposta a Objeções <span class="update-badge">Atualizado 2025</span></h1>
+            
+            <h2>Script de Prospecção Fría (WhatsApp/Telefone)</h2>
+            
+            <div class="script-box">
+                <h3><span class="step-indicator">1</span> Gatilho de Valor</h3>
+                <p><em>"Olá [Nome], tudo bem? Sou [Seu Nome] da ValeCard. Vi que vocês têm uma operação forte na rota [Região] e estamos com uma oportunidade de crédito pré-aprovado para empresas do porte de vocês. Posso explicar em 2 minutos?"</em></p>
+            </div>
+            
+            <div class="script-box">
+                <h3><span class="step-indicator">2</span> Diferenciação Competitiva</h3>
+                <p><em>"Diferente de outras soluções do mercado, somos a única plataforma que combina meio de pagamento próprio, telemetria integrada e suporte 24 horas diretamente para seus motoristas."</em></p>
+            </div>
+            
+            <div class="script-box">
+                <h3><span class="step-indicator">3</span> Qualificação Rápida</h3>
+                <p><em>"Só para confirmar se faz sentido: vocês têm quantos veículos em operação? E utilizam algum sistema de gestão de abastecimento atualmente?"</em></p>
+            </div>
+            
+            <h2>Resposta a Objeções Comuns</h2>
+            
+            <div class="script-box">
+                <h3>Objeção: "Já tenho um bom relacionamento com meu posto"</h3>
+                <p><em>"Entendemos! Na verdade, muitos de nossos clientes mantêm seus postos preferidos. A diferença é que agora você terá controle total sobre cada abastecimento, relatórios detalhados e ainda pode negociar preços melhores através do nosso poder de compra agregado."</em></p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Objeção: "Não quero mudar tudo agora"</h3>
+                <p><em>"Por isso sugerimos começar com uma rota piloto. Implementamos em 5-10 veículos por 30 dias para você ver os resultados sem risco. Se não gostar, revertemos sem custo algum."</em></p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Objeção: "O preço do seu crédito é mais alto"</h3>
+                <p><em>"Nosso valor vai além da taxa de juros. Considerando a economia com combustível, redução de fraudes e o tempo que sua equipe economiza na gestão, o retorno é líquido e positivo. Podemos simular juntos?"</em></p>
+            </div>
+            
+            <div class="script-box">
+                <h3>Objeção: "Já trabalho com Pro-Frotas/Expers"</h3>
+                <p><em>"Excelente! Conhecemos bem essas soluções. Nosso diferencial está na integração completa entre crédito próprio, telemetria avançada e capilaridade nacional. Enquanto eles focam em tecnologia ou benefícios tradicionais, nós oferecemos resultados operacionais mensuráveis com economia comprovada de 3-6% nos custos totais."</em></p>
+            </div>
+        </section>
+        
+        <section id="metrics" class="content-section">
+            <h1>Métricas & KPIs — Sucesso do Cliente <span class="update-badge">Atualizado 2025</span></h1>
+
+            <div class="kpi-grid" aria-hidden="false">
+                <div class="kpi-card">
+                    <div class="kpi-value">> 70</div>
+                    <div class="kpi-label">NPS (meta pós-vendas)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">< 3%</div>
+                    <div class="kpi-label">Churn mensal</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">+15%</div>
+                    <div class="kpi-label">Expansão trimestral</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">95%</div>
+                    <div class="kpi-label">Onboardings concluídos (7 dias)</div>
+                </div>
+            </div>
+
+            <p class="highlight">Nota: elevar o NPS para >70 exige rotina de check-ins, pesquisa fechada + ação em 48h, e um programa de Customer Success associado a playbooks de estabilização e expansão. (Base: Treinamento + Manual Comercial).</p>
+            
+            <h2>Indicadores por Função</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Função</th>
+                        <th>Métricas Principais</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vendas Internas</strong></td>
+                        <td>
+                            <span class="badge badge-primary">100 contatos/dia</span>
+                            <span class="badge badge-primary">15 leads qualificados/dia</span>
+                            <span class="badge badge-primary">5 reuniões agendadas/semana</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hunters</strong></td>
+                        <td>
+                            <span class="badge badge-secondary">10 apresentações/semana</span>
+                            <span class="badge badge-secondary">Taxa de conversão: 25%</span>
+                            <span class="badge badge-secondary">5 clientes ativados/mês</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pós-Vendas</strong></td>
+                        <td>
+                            <span class="badge badge-success">NPS > 70</span>
+                            <span class="badge badge-success">Churn < 3%</span>
+                            <span class="badge badge-success">Expansão de carteira: +15% trimestral</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Indicadores de Performance Geral</h2>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">50</div>
+                    <div class="kpi-label">Novos leads qualificados/mês</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">10</div>
+                    <div class="kpi-label">Novos clientes ativados/mês</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">15%</div>
+                    <div class="kpi-label">Clientes com volume expandido/mês</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">< 3%</div>
+                    <div class="kpi-label">Retenção (Churn)</div>
+                </div>
+            </div>
+            
+            <h2>Call to Action Imediato</h2>
+            <ul class="checklist">
+                <li><strong>Internas</strong>: Implementar script F.P.S. e a Rotina Semanal de Call Blitz</li>
+                <li><strong>Hunters</strong>: Treinar argumentação competitiva e os 3Rs</li>
+                <li><strong>Pós-Vendas</strong>: Criar plano de onboarding padrão</li>
+                <li><strong>Todos</strong>: Dominar análise competitiva</li>
+            </ul>
+            
+            <div class="highlight">
+                <h3>📈 Foco em Resultados</h3>
+                <p><strong>"Só conseguimos melhorar aquilo que conseguimos medir."</strong> - Esta apostila fornece as ferramentas para medir e melhorar continuamente o desempenho comercial.</p>
+            </div>
+        </section>
+        
+        <footer>
+            <div class="container">
+                <p>Apostila 6.5 - ValeCard Gestão de Frotas | Mercado US$ 100 Bi</p>
+                <p>© 2025 ValeCard - Todos os direitos reservados</p>
+                <p>Material de uso interno - Versão 6.0 - Dezembro 2025</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal para Segmentos Especializados -->
+    <div id="modal-segmentos" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-segmento-title">Segmento Especializado</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-segmento-content">
+                    <!-- Conteúdo será preenchido via JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-proposta">Solicitar Proposta Personalizada</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navegação entre abas
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remover classe active de todas as abas e seções
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                
+                // Adicionar classe active à aba clicada e seção correspondente
+                tab.classList.add('active');
+                const target = tab.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+        
+        // Navegação entre abas de função
+        document.querySelectorAll('.function-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const container = tab.closest('.function-tabs');
+                const target = tab.getAttribute('data-target');
+                
+                // Remover classe active de todas as abas e conteúdos no mesmo container
+                container.querySelectorAll('.function-tab').forEach(t => t.classList.remove('active'));
+                container.parentElement.querySelectorAll('.function-content').forEach(c => c.classList.remove('active'));
+                
+                // Adicionar classe active à aba clicada e conteúdo correspondente
+                tab.classList.add('active');
+                container.parentElement.querySelector(`#${target}`).classList.add('active');
+            });
+        });
+        
+        // Modal para Segmentos Especializados
+        function abrirModal(segmento) {
+            const modal = document.getElementById('modal-segmentos');
+            const title = document.getElementById('modal-segmento-title');
+            const content = document.getElementById('modal-segmento-content');
+            
+            // Definir conteúdo baseado no segmento
+            let segmentoData = {};
+            
+            switch(segmento) {
+                case 'granel-solidos':
+                    segmentoData = {
+                        title: 'Granel Sólidos',
+                        icon: 'fas fa-wheat-alt',
+                        desc: 'Transporte de grãos, minérios, cimento e outros materiais a granel com alto volume e rotas fixas.',
+                        desafios: [
+                            'Controle de peso e cubagem dos veículos',
+                            'Risco de contaminação cruzada entre cargas',
+                            'Otimização de rotas para maximizar capacidade',
+                            'Gestão de tempo de espera em carregamento/descarga',
+                            'Cumprimento de prazos rigorosos de entrega'
+                        ],
+                        solucoes: [
+                            'Sistema de controle de peso integrado com telemetria',
+                            'Relatórios específicos por tipo de carga',
+                            'Otimização de rotas considerando capacidade máxima',
+                            'Alertas de tempo ocioso em terminais',
+                            'Integração com balanças e sistemas de pesagem'
+                        ],
+                        caso: 'Uma transportadora de grãos com 35 caminhões reduziu o tempo ocioso em 22% e aumentou a capacidade média de carga em 8% com nossa solução integrada.'
+                    };
+                    break;
+                    
+                case 'frigorificadas':
+                    segmentoData = {
+                        title: 'Cargas Frigorificadas',
+                        icon: 'fas fa-snowflake',
+                        desc: 'Transporte de alimentos perecíveis com controle rigoroso de temperatura e prazos apertados.',
+                        desafios: [
+                            'Controle preciso de temperatura durante todo o trajeto',
+                            'Risco de quebra da cadeia de frio',
+                            'Prazos de entrega extremamente curtos',
+                            'Custos elevados com energia e manutenção de equipamentos',
+                            'Conformidade com normas sanitárias rigorosas'
+                        ],
+                        solucoes: [
+                            'Monitoramento contínuo de temperatura com alertas em tempo real',
+                            'Relatórios de conformidade para auditorias',
+                            'Otimização de rotas considerando prazos críticos',
+                            'Gestão de manutenção preventiva para equipamentos de refrigeração',
+                            'Integração com sistemas de controle de qualidade'
+                        ],
+                        caso: 'Uma transportadora de laticínios eliminou 100% das perdas por quebra de cadeia de frio e reduziu multas por atraso em 65% com nosso sistema de monitoramento.'
+                    };
+                    break;
+                    
+                case 'perigosos':
+                    segmentoData = {
+                        title: 'Produtos Perigosos',
+                        icon: 'fas fa-radiation-alt',
+                        desc: 'Transporte de combustíveis, químicos e outros materiais com requisitos especiais de segurança.',
+                        desafios: [
+                            'Conformidade com normas rigorosas de transporte (ANTT, ANP)',
+                            'Risco de acidentes com consequências graves',
+                            'Necessidade de rotas específicas e evitamento de áreas urbanas',
+                            'Treinamento especializado para motoristas',
+                            'Gestão de documentação e certificações'
+                        ],
+                        solucoes: [
+                            'Sistema de gestão de conformidade regulatória',
+                            'Monitoramento de rotas com alertas de áreas restritas',
+                            'Relatórios específicos para órgãos fiscalizadores',
+                            'Gestão de certificações e documentação obrigatória',
+                            'Treinamento integrado para motoristas'
+                        ],
+                        caso: 'Uma transportadora de produtos químicos reduziu em 40% o tempo dedicado à documentação regulatória e eliminou infrações por rotas inadequadas com nossa solução.'
+                    };
+                    break;
+                    
+                case 'veiculos':
+                    segmentoData = {
+                        title: 'Veículos',
+                        icon: 'fas fa-car',
+                        desc: 'Transporte de automóveis, caminhões e máquinas com necessidade de rastreamento especializado.',
+                        desafios: [
+                            'Risco de danos aos veículos transportados',
+                            'Controle de localização em tempo real',
+                            'Gestão de prazos de entrega para concessionárias',
+                            'Otimização do carregamento dos caminhões-socorro',
+                            'Comunicação com clientes finais sobre status de entrega'
+                        ],
+                        solucoes: [
+                            'Sistema de monitoramento de impactos e vibração',
+                            'Rastreamento em tempo real com atualizações automáticas',
+                            'Plataforma de comunicação com clientes finais',
+                            'Otimização de carregamento para maximizar capacidade',
+                            'Relatórios de condição dos veículos transportados'
+                        ],
+                        caso: 'Uma transportadora de veículos novos reduziu em 78% os danos durante o transporte e melhorou a satisfação do cliente com atualizações automáticas de entrega.'
+                    };
+                    break;
+                    
+                case 'mudancas':
+                    segmentoData = {
+                        title: 'Mudanças',
+                        icon: 'fas fa-boxes',
+                        desc: 'Serviços residenciais e corporativos com alto valor agregado e atendimento personalizado.',
+                        desafios: [
+                            'Gestão de múltiplos pequenos serviços simultaneamente',
+                            'Comunicação eficiente com clientes durante o processo',
+                            'Otimização de rotas para coletas e entregas',
+                            'Controle de inventário e itens transportados',
+                            'Gestão de equipes em diferentes localizações'
+                        ],
+                        solucoes: [
+                            'Sistema de agendamento e roteirização inteligente',
+                            'Plataforma de comunicação com clientes com atualizações automáticas',
+                            'Controle de inventário com checklist digital',
+                            'Relatórios de produtividade por equipe',
+                            'Integração com sistemas de pagamento'
+                        ],
+                        caso: 'Uma empresa de mudanças aumentou em 35% o número de serviços realizados por mês e melhorou a avaliação dos clientes em 4,7 estrelas com nossa solução.'
+                    };
+                    break;
+                    
+                case 'carga-geral':
+                    segmentoData = {
+                        title: 'Carga Geral',
+                        icon: 'fas fa-pallet',
+                        desc: 'Transporte diversificado de mercadorias em geral com operações flexíveis e variadas.',
+                        desafios: [
+                            'Gestão de diferentes tipos de carga simultaneamente',
+                            'Otimização de espaço de carga para produtos diversos',
+                            'Controle de documentação variada (notas fiscais, conhecimentos)',
+                            'Gestão de múltiplos clientes com necessidades diferentes',
+                            'Adaptação a rotas e prazos variáveis'
+                        ],
+                        solucoes: [
+                            'Sistema unificado para gestão de diferentes tipos de carga',
+                            'Ferramentas de otimização de cubagem e peso',
+                            'Gestão centralizada de documentação',
+                            'Relatórios customizáveis por cliente',
+                            'Plataforma flexível para adaptação a diferentes operações'
+                        ],
+                        caso: 'Uma transportadora de carga geral reduziu em 28% o tempo de planejamento de cargas e aumentou a taxa de ocupação média dos veículos em 15% com nossa solução.'
+                    };
+                    break;
+            }
+            
+            // Preencher modal com dados do segmento
+            title.innerHTML = `<i class="${segmentoData.icon}"></i> ${segmentoData.title}`;
+            
+            content.innerHTML = `
+                <div class="modal-section">
+                    <h3><i class="fas fa-info-circle"></i> Descrição</h3>
+                    <p>${segmentoData.desc}</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Desafios Específicos</h3>
+                    <ul class="desafios-list">
+                        ${segmentoData.desafios.map(desafio => `<li>${desafio}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3><i class="fas fa-check-circle"></i> Soluções ValeCard</h3>
+                    <ul class="solucoes-list">
+                        ${segmentoData.solucoes.map(solucao => `<li>${solucao}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📊 Case de Sucesso</h4>
+                    <p>${segmentoData.caso}</p>
+                </div>
+                
+                <div class="alert-info">
+                    <p><strong>💡 Dica de Vendas:</strong> Destaque nossa capacidade de customização para atender às necessidades específicas do segmento ${segmentoData.title}. Use o case de sucesso como prova social.</p>
+                </div>
+            `;
+            
+            // Exibir modal
+            modal.style.display = 'block';
+        }
+        
+        // Fechar modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.getElementById('modal-segmentos').style.display = 'none';
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('modal-segmentos');
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Botão de proposta no modal
+        document.querySelector('.btn-proposta').addEventListener('click', () => {
+            alert('Solicitação de proposta registrada! Nossa equipe entrará em contato em até 24h para preparar uma solução personalizada.');
+            document.getElementById('modal-segmentos').style.display = 'none';
+        });
+        
+        // Adicionar classe de atualização para elementos novos
+        document.addEventListener('DOMContentLoaded', () => {
+            // Adicionar badge de atualização para elementos novos na versão 6.0
+            const newElements = document.querySelectorAll('.premium-card, .market-size, .segmento-card, .new-competitor');
+            newElements.forEach(el => {
+                if (!el.querySelector('.update-badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'update-badge';
+                    badge.textContent = 'NOVO 6.0';
+                    el.querySelector('h2, h3, .competitor-name').appendChild(badge);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
