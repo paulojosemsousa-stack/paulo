@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚚 Simulador Avançado ICMS - Múltiplas Rotas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1f2a38, #2c3e50);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-valecard {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .client-info {
+            background: #e8f5e8;
+            padding: 20px;
+            border-bottom: 2px solid #27ae60;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section, .results-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #219653;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-warning:hover {
+            background: #d35400;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+        }
+
+        .routes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .routes-table th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .routes-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .routes-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .routes-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .result-card {
+            background: #eaf3f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+        }
+
+        .result-value {
+            font-size: 2.0em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .summary-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .report-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #3498db;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .state-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #3498db;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .insumo-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #27ae60;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .download-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            background: #8e44ad;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="ValeCard" class="logo-valecard">
+            <h1>🚚 Simulador Avançado ICMS - Múltiplas Rotas</h1>
+            <p>Simulação de créditos por estado de origem e tipo de insumo</p>
+        </div>
+
+        <div class="client-info">
+            <div class="form-group">
+                <label for="cnpjTransportadora">CNPJ da Transportadora:</label>
+                <input type="text" id="cnpjTransportadora" placeholder="00.000.000/0000-00">
+            </div>
+            <div class="form-group">
+                <label for="nomeTransportadora">Nome da Transportadora:</label>
+                <input type="text" id="nomeTransportadora" placeholder="Razão Social da Empresa">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="input-section">
+                <h2>📋 Adicionar Rota/Insumo</h2>
+                
+                <div class="form-group">
+                    <label for="stateOrigem">Estado de Origem:</label>
+                    <select id="stateOrigem">
+                        <option value="">Selecione o estado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoInsumo">Tipo de Insumo:</label>
+                    <select id="tipoInsumo">
+                        <option value="">Selecione o insumo</option>
+                        <option value="diesel">⛽ Diesel</option>
+                        <option value="pecas">🔧 Peças de Reposição</option>
+                        <option value="pneus">🚗 Pneus e Câmaras de Ar</option>
+                        <option value="lubrificantes">🛢️ Lubrificantes/Óleos</option>
+                        <option value="equipamentos">🚛 Ativo Imobilizado</option>
+                        <option value="outros">📦 Outros Insumos</option>
+                    </select>
+                </div>
+
+                <div id="dieselFields" class="hidden">
+                    <div class="form-group">
+                        <label for="litrosDiesel">Quantidade de Litros:</label>
+                        <input type="number" id="litrosDiesel" placeholder="Ex: 1000" step="0.01">
+                    </div>
+                </div>
+
+                <div id="insumosFields" class="hidden">
+                    <div class="form-group">
+                        <label for="valorInsumo">Valor do Insumo (R$):</label>
+                        <input type="number" id="valorInsumo" placeholder="Ex: 1000.00" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="aliquotaInsumo">Alíquota do ICMS (%):</label>
+                        <input type="number" id="aliquotaInsumo" placeholder="Ex: 18" value="18" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="proporcaoTributada">Proporção de Serviços TRIBUTADOS (%):</label>
+                    <input type="number" id="proporcaoTributada" placeholder="Ex: 100" value="100" step="0.01">
+                </div>
+
+                <button class="btn btn-success" onclick="adicionarRota()">
+                    ➕ Adicionar à Simulação
+                </button>
+
+                <div class="alert alert-info">
+                    💡 <strong>Dica:</strong> Adicione múltiplas rotas de diferentes estados e tipos de insumos para simular um cenário completo.
+                </div>
+
+                <h3>🛣️ Rotas e Insumos Adicionados</h3>
+                <table class="routes-table">
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Insumo</th>
+                            <th>Detalhes</th>
+                            <th>Proporção</th>
+                            <th>Crédito Estimado</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rotasTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                                Nenhuma rota adicionada. Use o formulário acima para adicionar a primeira rota.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="action-buttons" style="margin-top: 20px;">
+                    <button class="btn btn-success" onclick="calcularTudo()">
+                        🧮 Calcular Todas as Rotas
+                    </button>
+                    <button class="btn btn-warning" onclick="limparTudo()">
+                        🗑️ Limpar Tudo
+                    </button>
+                    <button class="btn btn-info" onclick="gerarRelatorio()">
+                        📊 Gerar Relatório HTML
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2>📊 Resultados da Simulação</h2>
+                <div id="resultadosContainer">
+                    <div class="alert alert-info">
+                        ⚠️ Adicione rotas e clique em "Calcular Todas as Rotas" para ver os resultados.
+                    </div>
+                </div>
+
+                <div id="relatorioContainer" class="hidden">
+                    <div class="report-section">
+                        <h3>📋 Relatório Consolidado</h3>
+                        <div class="report-actions">
+                            <button class="btn btn-success" onclick="downloadRelatorioHTML()">
+                                💾 Download Relatório HTML
+                            </button>
+                            <button class="btn" onclick="imprimirRelatorio()">
+                                🖨️ Imprimir Relatório
+                            </button>
+                        </div>
+                        <div id="relatorioConteudo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS TRIBUTÁRIOS
+        const BASE_CONFAZ_DIESEL = 0.9456;
+
+        const estadosConfig = {
+            'SP': { name: 'São Paulo', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MG': { name: 'Minas Gerais', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 33.33, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RJ': { name: 'Rio de Janeiro', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RS': { name: 'Rio Grande do Sul', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 0, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PR': { name: 'Paraná', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'SC': { name: 'Santa Catarina', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'BA': { name: 'Bahia', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'GO': { name: 'Goiás', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'DF': { name: 'Distrito Federal', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AL': { name: 'Alagoas', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AP': { name: 'Amapá', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AC': { name: 'Acre', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AM': { name: 'Amazonas', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'CE': { name: 'Ceará', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'ES': { name: 'Espírito Santo', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MA': { name: 'Maranhão', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MS': { name: 'Mato Grosso do Sul', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MT': { name: 'Mato Grosso', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PA': { name: 'Pará', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PB': { name: 'Paraíba', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PE': { name: 'Pernambuco', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PI': { name: 'Piauí', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RN': { name: 'Rio Grande do Norte', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RO': { name: 'Rondônia', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RR': { name: 'Roraima', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'SE': { name: 'Sergipe', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'TO': { name: 'Tocantins', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } }
+        };
+
+        const rotas = [];
+        let resultados = [];
+
+        // Funções de Formatação
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        };
+
+        const formatNumber = (value) => {
+            return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            initSelectors();
+            document.getElementById('tipoInsumo').addEventListener('change', toggleFields);
+        });
+
+        function initSelectors() {
+            const stateSelect = document.getElementById('stateOrigem');
+            const ufKeys = Object.keys(estadosConfig).sort();
+
+            ufKeys.forEach(uf => {
+                const option = document.createElement('option');
+                option.value = uf;
+                option.textContent = `${uf} - ${estadosConfig[uf].name}`;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        function toggleFields() {
+            const tipo = document.getElementById('tipoInsumo').value;
+            document.getElementById('dieselFields').classList.add('hidden');
+            document.getElementById('insumosFields').classList.add('hidden');
+
+            if (tipo === 'diesel') {
+                document.getElementById('dieselFields').classList.remove('hidden');
+            } else if (tipo !== '') {
+                document.getElementById('insumosFields').classList.remove('hidden');
+            }
+        }
+
+        function adicionarRota() {
+            const estado = document.getElementById('stateOrigem').value;
+            const tipo = document.getElementById('tipoInsumo').value;
+            const proporcao = parseFloat(document.getElementById('proporcaoTributada').value);
+
+            if (!estado || !tipo || isNaN(proporcao) || proporcao < 0 || proporcao > 100) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+
+            const rota = {
+                id: Date.now(),
+                estado: estado,
+                tipo: tipo,
+                proporcao: proporcao
+            };
+
+            if (tipo === 'diesel') {
+                const litros = parseFloat(document.getElementById('litrosDiesel').value);
+                if (isNaN(litros) || litros <= 0) {
+                    alert('Por favor, informe a quantidade de litros.');
+                    return;
+                }
+                rota.litros = litros;
+            } else {
+                const valor = parseFloat(document.getElementById('valorInsumo').value);
+                const aliquota = parseFloat(document.getElementById('aliquotaInsumo').value);
+                if (isNaN(valor) || valor <= 0 || isNaN(aliquota) || aliquota < 0 || aliquota > 100) {
+                    alert('Por favor, informe o valor e alíquota corretamente.');
+                    return;
+                }
+                rota.valor = valor;
+                rota.aliquota = aliquota;
+            }
+
+            rotas.push(rota);
+            atualizarTabelaRotas();
+            limparFormulario();
+        }
+
+        function atualizarTabelaRotas() {
+            const tbody = document.getElementById('rotasTableBody');
+            
+            if (rotas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px; color: #666;">Nenhuma rota adicionada.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = rotas.map(rota => `
+                <tr>
+                    <td><span class="state-badge">${rota.estado}</span></td>
+                    <td><span class="insumo-badge">${getNomeInsumo(rota.tipo)}</span></td>
+                    <td>${getDetalhesInsumo(rota)}</td>
+                    <td>${rota.proporcao}%</td>
+                    <td>${rota.credito ? formatCurrency(rota.credito) : '<em>Não calculado</em>'}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-small btn-danger" onclick="removerRota(${rota.id})">🗑️</button>
+                        <button class="btn btn-small" onclick="calcularRota(${rota.id})">🧮</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getNomeInsumo(tipo) {
+            const nomes = {
+                'diesel': '⛽ Diesel',
+                'pecas': '🔧 Peças',
+                'pneus': '🚗 Pneus',
+                'lubrificantes': '🛢️ Lubrificantes',
+                'equipamentos': '🚛 Equipamentos',
+                'outros': '📦 Outros'
+            };
+            return nomes[tipo] || tipo;
+        }
+
+        function getDetalhesInsumo(rota) {
+            if (rota.tipo === 'diesel') {
+                return `${formatNumber(rota.litros)} litros`;
+            } else {
+                return `${formatCurrency(rota.valor)} (${rota.aliquota}% ICMS)`;
+            }
+        }
+
+        function removerRota(id) {
+            const index = rotas.findIndex(r => r.id === id);
+            if (index !== -1) {
+                rotas.splice(index, 1);
+                atualizarTabelaRotas();
+            }
+        }
+
+        function calcularRota(id) {
+            const rota = rotas.find(r => r.id === id);
+            if (!rota) return;
+
+            const credito = calcularCredito(rota);
+            rota.credito = credito;
+            atualizarTabelaRotas();
+        }
+
+        function calcularTudo() {
+            if (rotas.length === 0) {
+                alert('Adicione pelo menos uma rota antes de calcular.');
+                return;
+            }
+
+            resultados = [];
+            let totalCredito = 0;
+
+            rotas.forEach(rota => {
+                const credito = calcularCredito(rota);
+                rota.credito = credito;
+                totalCredito += credito;
+
+                resultados.push({
+                    estado: rota.estado,
+                    tipo: rota.tipo,
+                    detalhes: getDetalhesInsumo(rota),
+                    proporcao: rota.proporcao,
+                    credito: credito
+                });
+            });
+
+            atualizarTabelaRotas();
+            exibirResultados(totalCredito);
+        }
+
+        function calcularCredito(rota) {
+            const config = estadosConfig[rota.estado];
+            const proporcaoFator = rota.proporcao / 100;
+
+            if (rota.tipo === 'diesel') {
+                const creditoBruto = rota.litros * BASE_CONFAZ_DIESEL * config.diesel.fator;
+                return creditoBruto * proporcaoFator;
+            } else {
+                const icmsDestacado = rota.valor * (rota.aliquota / 100);
+                const fatorInsumo = config.insumos[rota.tipo] / 100;
+                const creditoBruto = icmsDestacado * fatorInsumo;
+                
+                let creditoFinal = creditoBruto * proporcaoFator;
+                
+                if (rota.tipo === 'equipamentos') {
+                    creditoFinal = creditoFinal / 48; // CIAP - 48 meses
+                }
+                
+                return creditoFinal;
+            }
+        }
+
+        function exibirResultados(totalCredito) {
+            const container = document.getElementById('resultadosContainer');
+            
+            container.innerHTML = `
+                <div class="result-card">
+                    <h3>💰 Total de Créditos ICMS</h3>
+                    <div class="result-value">${formatCurrency(totalCredito)}</div>
+                    <p>Valor total considerando todas as rotas e insumos</p>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h4>🛣️ Total de Rotas</h4>
+                        <div class="summary-value">${rotas.length}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>🏢 Estados Diferentes</h4>
+                        <div class="summary-value">${new Set(rotas.map(r => r.estado)).size}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>📦 Tipos de Insumos</h4>
+                        <div class="summary-value">${new Set(rotas.map(r => r.tipo)).size}</div>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    ✅ Cálculo concluído! ${rotas.length} rota(s) processada(s) com sucesso.
+                </div>
+            `;
+        }
+
+        function gerarRelatorio() {
+            if (resultados.length === 0) {
+                alert('Calcule as rotas primeiro para gerar o relatório.');
+                return;
+            }
+
+            const cnpj = document.getElementById('cnpjTransportadora').value || 'Não informado';
+            const nome = document.getElementById('nomeTransportadora').value || 'Não informado';
+            const totalCredito = resultados.reduce((sum, r) => sum + r.credito, 0);
+
+            const relatorioHTML = `
+                <div class="report-header">
+                    <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="ValeCard" style="height: 50px; margin-bottom: 20px;">
+                    <h2>Relatório de Simulação ICMS - Múltiplas Rotas</h2>
+                    <p><strong>Transportadora:</strong> ${nome} | <strong>CNPJ:</strong> ${cnpj}</p>
+                    <p><strong>Data de Geração:</strong> ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
+                </div>
+
+                <div class="summary-grid" style="margin: 30px 0;">
+                    <div class="summary-card" style="background: #e8f5e8;">
+                        <h4>💰 Crédito Total</h4>
+                        <div class="summary-value">${formatCurrency(totalCredito)}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>🛣️ Total de Rotas</h4>
+                        <div class="summary-value">${resultados.length}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>🏢 Estados</h4>
+                        <div class="summary-value">${new Set(resultados.map(r => r.estado)).size}</div>
+                    </div>
+                </div>
+
+                <h3>📋 Detalhamento por Rota</h3>
+                <table class="routes-table">
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Tipo</th>
+                            <th>Detalhes</th>
+                            <th>Proporção</th>
+                            <th>Crédito ICMS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${resultados.map(resultado => `
+                            <tr>
+                                <td><span class="state-badge">${resultado.estado}</span></td>
+                                <td><span class="insumo-badge">${getNomeInsumo(resultado.tipo)}</span></td>
+                                <td>${resultado.detalhes}</td>
+                                <td>${resultado.proporcao}%</td>
+                                <td><strong>${formatCurrency(resultado.credito)}</strong></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info" style="margin-top: 20px;">
+                    <strong>💡 Observações:</strong><br>
+                    • Valores calculados conforme legislação de cada estado<br>
+                    • Para equipamentos (CIAP), valor apresentado é a parcela mensal<br>
+                    • Consulte a legislação específica para confirmação dos valores
+                </div>
+            `;
+
+            document.getElementById('relatorioConteudo').innerHTML = relatorioHTML;
+            document.getElementById('relatorioContainer').classList.remove('hidden');
+            
+            // Scroll para o relatório
+            document.getElementById('relatorioContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadRelatorioHTML() {
+            if (resultados.length === 0) {
+                alert('Gere o relatório primeiro antes de fazer o download.');
+                return;
+            }
+
+            const cnpj = document.getElementById('cnpjTransportadora').value || 'Não informado';
+            const nome = document.getElementById('nomeTransportadora').value || 'Não informado';
+            const totalCredito = resultados.reduce((sum, r) => sum + r.credito, 0);
+
+            // Criar conteúdo HTML completo para download
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório ICMS - ${nome}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 20px;
+        }
+        .logo {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+        .summary-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        .routes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .routes-table th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .routes-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .routes-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .state-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #3498db;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .insumo-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #27ae60;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .total-card {
+            background: #e8f5e8;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border-left: 5px solid #27ae60;
+        }
+        .total-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="ValeCard" class="logo">
+            <h1>Relatório de Simulação ICMS - Múltiplas Rotas</h1>
+            <p><strong>Transportadora:</strong> ${nome} | <strong>CNPJ:</strong> ${cnpj}</p>
+            <p><strong>Data de Geração:</strong> ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
+        </div>
+
+        <div class="total-card">
+            <h2>💰 Total de Créditos ICMS</h2>
+            <div class="total-value">${formatCurrency(totalCredito)}</div>
+            <p>Valor total considerando todas as rotas e insumos</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h4>🛣️ Total de Rotas</h4>
+                <div class="summary-value">${resultados.length}</div>
+            </div>
+            <div class="summary-card">
+                <h4>🏢 Estados Diferentes</h4>
+                <div class="summary-value">${new Set(resultados.map(r => r.estado)).size}</div>
+            </div>
+            <div class="summary-card">
+                <h4>📦 Tipos de Insumos</h4>
+                <div class="summary-value">${new Set(resultados.map(r => r.tipo)).size}</div>
+            </div>
+        </div>
+
+        <h3>📋 Detalhamento por Rota</h3>
+        <table class="routes-table">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Tipo de Insumo</th>
+                    <th>Detalhes</th>
+                    <th>Proporção</th>
+                    <th>Crédito ICMS</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${resultados.map(resultado => `
+                    <tr>
+                        <td><span class="state-badge">${resultado.estado}</span></td>
+                        <td><span class="insumo-badge">${getNomeInsumo(resultado.tipo)}</span></td>
+                        <td>${resultado.detalhes}</td>
+                        <td>${resultado.proporcao}%</td>
+                        <td><strong>${formatCurrency(resultado.credito)}</strong></td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <div class="alert">
+            <strong>💡 Observações Importantes:</strong><br>
+            • Valores calculados conforme legislação específica de cada estado<br>
+            • Para equipamentos (CIAP), o valor apresentado refere-se à parcela mensal (48 meses)<br>
+            • Proporção aplicada sobre serviços tributados conforme apuração do contribuinte<br>
+            • Consulte a legislação estadual específica para confirmação dos valores<br>
+            • Relatório gerado pelo Simulador ValeCard de Crédito ICMS para Transportadoras
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+            <p>Este relatório foi gerado automaticamente em ${new Date().toLocaleDateString('pt-BR')}</p>
+            <p>ValeCard - Soluções em Gestão de Frotas e Tributação</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+            // Criar blob e link para download
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Relatorio_ICMS_${nome.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function imprimirRelatorio() {
+            window.print();
+        }
+
+        function limparFormulario() {
+            document.getElementById('stateOrigem').value = '';
+            document.getElementById('tipoInsumo').value = '';
+            document.getElementById('litrosDiesel').value = '';
+            document.getElementById('valorInsumo').value = '';
+            document.getElementById('aliquotaInsumo').value = '18';
+            document.getElementById('proporcaoTributada').value = '100';
+            document.getElementById('dieselFields').classList.add('hidden');
+            document.getElementById('insumosFields').classList.add('hidden');
+        }
+
+        function limparTudo() {
+            if (confirm('Tem certeza que deseja limpar todas as rotas?')) {
+                rotas.length = 0;
+                resultados.length = 0;
+                atualizarTabelaRotas();
+                document.getElementById('resultadosContainer').innerHTML = `
+                    <div class="alert alert-info">
+                        ⚠️ Adicione rotas e clique em "Calcular Todas as Rotas" para ver os resultados.
+                    </div>
+                `;
+                document.getElementById('relatorioContainer').classList.add('hidden');
+                limparFormulario();
+            }
+        }
+    </script>
+</body>
+</html>
