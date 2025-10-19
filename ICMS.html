@@ -1,0 +1,565 @@
+
+### Código HTML/JavaScript (Revisão por Tipo de Insumo)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚚 Simulador Completo ICMS - Transportadoras (v3)</title>
+    <style>
+        /* Estilos CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1f2a38, #2c3e50);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #2c3e50;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #3498db;
+            color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 800px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section, .results-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .result-card {
+            background: #eaf3f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+
+        .result-value {
+            font-size: 2.0em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .state-config {
+            background: #f0f4f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            border-left: 3px solid #3498db;
+        }
+
+        .calculation-steps {
+            background: #eaf3f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.85em;
+            white-space: pre-wrap; /* Garante quebras de linha */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚚 Simulador Completo ICMS - Transportadoras</h1>
+            <p>Cálculo Revisado por Tipo de Insumo e Proporcionalidade</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'diesel')">⛽ Diesel (Monofásico)</button>
+            <button class="tab" onclick="openTab(event, 'insumos')">🛠️ Outros Insumos (Por Tipo)</button>
+        </div>
+
+        <div id="diesel" class="tab-content active">
+            <div class="content">
+                <div class="form-section">
+                    <h2>⛽ Cálculo do Crédito de Diesel</h2>
+                    
+                    <div class="form-group">
+                        <label for="stateDiesel">Estado da Transportadora:</label>
+                        <select id="stateDiesel" onchange="updateDieselConfig(); calculateDiesel()">
+                            <option value="">Selecione o estado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="liters">Quantidade de Litros Abastecidos:</label>
+                        <input type="number" id="liters" placeholder="Ex: 1000" step="0.01" oninput="calculateDiesel()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="proporcaoDiesel">Proporção de Serviços TRIBUTADOS (%):</label>
+                        <input type="number" id="proporcaoDiesel" placeholder="Ex: 100" value="100" step="0.01" oninput="calculateDiesel()">
+                    </div>
+
+                    <div id="stateConfigDiesel" class="state-config" style="display: none;">
+                    </div>
+
+                    <button class="btn" onclick="calculateDiesel()">
+                        🧮 Calcular Crédito Final do Diesel
+                    </button>
+                </div>
+
+                <div class="results-section">
+                    <h2>📊 Resultado - Diesel</h2>
+                    <div id="resultsDiesel" style="display: none;">
+                    </div>
+                    <div id="noResultsDiesel" class="alert-error">
+                        ⚠️ Preencha os campos para simular o crédito.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="insumos" class="tab-content">
+            <div class="content">
+                <div class="form-section">
+                    <h2>🛠️ Crédito sobre Insumos</h2>
+                    
+                    <div class="form-group">
+                        <label for="stateInsumos">Estado da Transportadora:</label>
+                        <select id="stateInsumos" onchange="updateInsumosConfig(); calculateInsumos()">
+                            <option value="">Selecione o estado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Tipo de Insumo:</label>
+                        <select id="categoria" onchange="updateInsumosConfig(); calculateInsumos()">
+                            <option value="">Selecione o insumo</option>
+                            <option value="pecas">Peças de Reposição</option>
+                            <option value="pneus">Pneus e Câmaras de Ar</option>
+                            <option value="lubrificantes">Lubrificantes/Óleos</option>
+                            <option value="equipamentos">Ativo Imobilizado (Caminhões/Máquinas)</option>
+                            <option value="outros">Outros Insumos Essenciais</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="icmsDestacado">ICMS DESTACADO na Nota Fiscal (R$):</label>
+                        <input type="number" id="icmsDestacado" placeholder="Ex: 900.00 (Valor exato do ICMS da NF)" step="0.01" oninput="calculateInsumos()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="proporcaoInsumos">Proporção de Serviços TRIBUTADOS (%):</label>
+                        <input type="number" id="proporcaoInsumos" placeholder="Ex: 100" value="100" step="0.01" oninput="calculateInsumos()">
+                    </div>
+
+                    <div id="stateConfigInsumos" class="state-config" style="display: none;">
+                    </div>
+
+                    <button class="btn" onclick="calculateInsumos()">
+                        🧮 Calcular Crédito Final
+                    </button>
+                </div>
+
+                <div class="results-section">
+                    <h2>📊 Resultado - Outros Insumos</h2>
+                    <div id="resultsInsumos" style="display: none;">
+                    </div>
+                    <div id="noResultsInsumos" class="alert-error">
+                        ⚠️ Selecione o estado e o tipo de insumo e preencha os valores.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS TRIBUTÁRIOS CHAVE
+        const BASE_CONFAZ_DIESEL = 0.9456; // Convênio ICMS 199/2022 - Alíquota Ad Rem Nacional
+
+        // Configuração por Estado
+        // insumos: Fator de Crédito (0 a 100%) permitido por UF para a categoria, ANTES da Proporcionalidade.
+        const estadosConfig = {
+            'SP': { 
+                name: 'São Paulo', 
+                diesel: { fator: 0.9976, legislacao: 'Decisão CAT 02/2024 (FCV 0,9976)' }, 
+                insumos: { 
+                    pecas: 100, 
+                    pneus: 100, 
+                    lubrificantes: 100, 
+                    equipamentos: 100, // CIAP
+                    outros: 100 
+                } 
+            },
+            'MG': { 
+                name: 'Minas Gerais', 
+                diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, 
+                insumos: { 
+                    pecas: 100, 
+                    pneus: 100, // MG tem legislação específica, mas usamos 100% como default para fins didáticos
+                    lubrificantes: 100, 
+                    equipamentos: 100, 
+                    outros: 100 
+                } 
+            },
+            'RJ': { 
+                name: 'Rio de Janeiro', 
+                diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, 
+                insumos: { 
+                    pecas: 100, 
+                    pneus: 100, 
+                    lubrificantes: 100, 
+                    equipamentos: 100, 
+                    outros: 100 
+                } 
+            },
+            'RS': { 
+                name: 'Rio Grande do Sul', 
+                diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, 
+                insumos: { 
+                    pecas: 100, 
+                    pneus: 100, // RS é conhecido por regras específicas para PNEUS, mas mantemos 100% para simulação simples.
+                    lubrificantes: 100, 
+                    equipamentos: 100, 
+                    outros: 100 
+                } 
+            },
+            // Demais estados como regra geral (100% de crédito permitido)
+            'BA': { name: 'Bahia', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'GO': { name: 'Goiás', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'DF': { name: 'Distrito Federal', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PR': { name: 'Paraná', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'SC': { name: 'Santa Catarina', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            // ... (incluir outros estados, usando 100% como default)
+            'AL': { name: 'Alagoas', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AP': { name: 'Amapá', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AC': { name: 'Acre', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AM': { name: 'Amazonas', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'CE': { name: 'Ceará', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'ES': { name: 'Espírito Santo', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MA': { name: 'Maranhão', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MS': { name: 'Mato Grosso do Sul', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MT': { name: 'Mato Grosso', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PA': { name: 'Pará', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PB': { name: 'Paraíba', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PE': { name: 'Pernambuco', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PI': { name: 'Piauí', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RN': { name: 'Rio Grande do Norte', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RO': { name: 'Rondônia', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RR': { name: 'Roraima', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'SE': { name: 'Sergipe', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'TO': { name: 'Tocantins', diesel: { fator: 1.0000, legislacao: 'Regra Geral' }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } }
+        };
+
+
+        // Função para formatar moeda
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        };
+
+        // 1. Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            initSelectors();
+        });
+
+        function initSelectors() {
+            const stateSelects = ['stateDiesel', 'stateInsumos'];
+            const ufKeys = Object.keys(estadosConfig).sort();
+
+            stateSelects.forEach(id => {
+                const select = document.getElementById(id);
+                ufKeys.forEach(uf => {
+                    const option = document.createElement('option');
+                    option.value = uf;
+                    option.textContent = `${uf} - ${estadosConfig[uf].name}`;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // 2. Troca de Abas
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // 3. Funções de Configuração (Exibir dados na tela)
+        function updateDieselConfig() {
+            const uf = document.getElementById('stateDiesel').value;
+            const configDiv = document.getElementById('stateConfigDiesel');
+            
+            if (uf && estadosConfig[uf]) {
+                const config = estadosConfig[uf].diesel;
+                const fatorInfo = config.fator === 1.0000 ? 'R$ 0,9456/L (Sem FCV)' : `R$ ${BASE_CONFAZ_DIESEL.toFixed(4)}/L × ${config.fator.toFixed(4)} (FCV)`;
+
+                configDiv.innerHTML = `
+                    <strong>Base Legal ICMS Diesel (${uf}):</strong><br>
+                    • **Crédito Bruto por Litro**: ${fatorInfo}<br>
+                    • **Legislação**: Convênio ICMS 199/2022 e ${config.legislacao}
+                `;
+                configDiv.style.display = 'block';
+            } else {
+                configDiv.style.display = 'none';
+            }
+        }
+
+        function updateInsumosConfig() {
+            const uf = document.getElementById('stateInsumos').value;
+            const categoria = document.getElementById('categoria').value;
+            const configDiv = document.getElementById('stateConfigInsumos');
+            
+            if (uf && categoria && estadosConfig[uf]) {
+                const config = estadosConfig[uf].insumos[categoria];
+                const nomeInsumo = document.querySelector(`#categoria option[value="${categoria}"]`).textContent;
+
+                let avisoEspecial = '';
+                if (categoria === 'equipamentos') {
+                    avisoEspecial = '⚠️ **Tratamento CIAP (48 Meses)**: O crédito deve ser apropriado em 48 parcelas mensais, proporcionalmente às saídas tributadas.';
+                } else if (categoria === 'pneus' || categoria === 'pecas') {
+                    avisoEspecial = '💡 **Crédito Imediato**: O crédito é imediato, mas apenas se o insumo for integralmente consumido ou desgastado no processo de prestação de serviço de transporte (Decisão Normativa CAT 01/2001 - SP, regra geral)';
+                }
+
+                configDiv.innerHTML = `
+                    <strong>Regra Específica (${uf} - ${nomeInsumo}):</strong><br>
+                    • **Crédito Bruto Aceito**: ${config.toFixed(0)}% do ICMS Destacado na NF.<br>
+                    • **Cálculo Geral**: (ICMS Destacado × ${config.toFixed(0)}%) × Proporcionalidade.<br>
+                    • **Aviso Fiscal**: ${avisoEspecial || 'Não há avisos específicos para esta simulação.'}
+                `;
+                configDiv.style.display = 'block';
+            } else {
+                configDiv.style.display = 'none';
+            }
+        }
+
+        // 4. Funções de Cálculo (Revisadas)
+
+        function calculateDiesel() {
+            const uf = document.getElementById('stateDiesel').value;
+            const liters = parseFloat(document.getElementById('liters').value);
+            const proporcao = parseFloat(document.getElementById('proporcaoDiesel').value);
+            const resultsDiv = document.getElementById('resultsDiesel');
+            const noResultsDiv = document.getElementById('noResultsDiesel');
+
+            if (!uf || isNaN(liters) || liters <= 0 || isNaN(proporcao) || proporcao < 0 || proporcao > 100) {
+                resultsDiv.style.display = 'none';
+                noResultsDiv.style.display = 'block';
+                return;
+            }
+
+            const config = estadosConfig[uf].diesel;
+            const proporcaoFator = proporcao / 100;
+            
+            // Passo 1: Cálculo do Crédito Bruto Monofásico
+            const creditoICMS_Bruto = liters * BASE_CONFAZ_DIESEL * config.fator;
+            
+            // Passo 2: Aplicação da Proporcionalidade (Não-Cumulatividade)
+            const creditoICMS_Final = creditoICMS_Bruto * proporcaoFator;
+
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    Crédito ICMS FINAL (Após Proporcionalidade)
+                    <div class="result-value">${formatCurrency(creditoICMS_Final)}</div>
+                </div>
+                <div class="alert-success">
+                    ✅ Crédito calculado pela regra Monofásica (Convênio ICMS 199/2022) ajustado pela proporção de saídas tributadas.
+                </div>
+                <div class="calculation-steps">
+                    <strong>Detalhes do Cálculo:</strong>\n
+                    1. Crédito Bruto = ${liters.toFixed(2)} L × R$ ${BASE_CONFAZ_DIESEL.toFixed(4)}/L × ${config.fator.toFixed(4)} (Fator ${uf}) = ${formatCurrency(creditoICMS_Bruto)}\n
+                    2. Crédito Final = ${formatCurrency(creditoICMS_Bruto)} × ${proporcao.toFixed(2)}% = ${formatCurrency(creditoICMS_Final)}
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+            noResultsDiv.style.display = 'none';
+        }
+
+        function calculateInsumos() {
+            const uf = document.getElementById('stateInsumos').value;
+            const categoria = document.getElementById('categoria').value;
+            const icmsDestacado = parseFloat(document.getElementById('icmsDestacado').value);
+            const proporcao = parseFloat(document.getElementById('proporcaoInsumos').value);
+            const resultsDiv = document.getElementById('resultsInsumos');
+            const noResultsDiv = document.getElementById('noResultsInsumos');
+
+            if (!uf || !categoria || isNaN(icmsDestacado) || icmsDestacado < 0 || isNaN(proporcao) || proporcao < 0 || proporcao > 100) {
+                resultsDiv.style.display = 'none';
+                noResultsDiv.style.display = 'block';
+                return;
+            }
+
+            const proporcaoFator = proporcao / 100;
+            const fatorInsumo = estadosConfig[uf].insumos[categoria] / 100;
+
+            // Passo 1: Limitação por Insumo/UF (Ex: se o estado só permite 80% do crédito de Pneus)
+            const creditoICMS_Apos_Insumo = icmsDestacado * fatorInsumo;
+            
+            // Passo 2: Aplicação da Proporcionalidade (Não-Cumulatividade)
+            let creditoICMS_Final = creditoICMS_Apos_Insumo * proporcaoFator;
+
+            let avisoCIAP = '';
+            if (categoria === 'equipamentos') {
+                // Para CIAP, o crédito final é o valor da parcela mensal
+                const creditoMensal = creditoICMS_Final / 48; 
+                avisoCIAP = `<div class="alert-warning">⚠️ CIAP (Ativo Imobilizado): O crédito deve ser apropriado em 48 parcelas. O valor abaixo é a **PARCELA MENSAL** (Crédito Final Total / 48).</div>`;
+                creditoICMS_Final = creditoMensal;
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    Crédito ICMS FINAL (Ajustado por Insumo e Proporcionalidade)
+                    <div class="result-value">${formatCurrency(creditoICMS_Final)}</div>
+                </div>
+                ${avisoCIAP}
+                <div class="alert-success">
+                    ✅ Cálculo realizado. Consulte a legislação do ICMS do seu estado (${uf}) para confirmar a elegibilidade e os percentuais de crédito exatos para este tipo de insumo.
+                </div>
+                <div class="calculation-steps">
+                    <strong>Detalhes do Cálculo:</strong>\n
+                    1. ICMS Destacado: ${formatCurrency(icmsDestacado)}\n
+                    2. Fator Insumo/UF (Simulado): ${fatorInsumo.toFixed(4)} (${estadosConfig[uf].insumos[categoria].toFixed(0)}%)\n
+                    3. Crédito Bruto Ajustado (1 × 2): ${formatCurrency(creditoICMS_Apos_Insumo)}\n
+                    4. Crédito Final (3 × ${proporcao.toFixed(2)}%): ${formatCurrency(creditoICMS_Final * (categoria === 'equipamentos' ? 48 : 1))}${categoria === 'equipamentos' ? ' (Total Bruto)' : ''}\n
+                    ${categoria === 'equipamentos' ? '5. Crédito Mensal (Total / 48): ' + formatCurrency(creditoICMS_Final) : ''}
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+            noResultsDiv.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+```
