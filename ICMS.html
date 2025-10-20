@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💰 A gestão da sua Tranportadora mais eficiente- Soluções ValeCard+++</title>
+    <style>
+        /* Reset e Variáveis */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #27ae60;
+            --secondary-dark: #219653;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --warning: #f39c12;
+            --warning-dark: #d35400;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 0;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+
+        /* Container Principal */
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            background: white;
+        }
+
+        /* Header */
+        .app-header {
+            background: white;
+            color: var(--dark);
+            padding: 20px 16px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .logo {
+            height: 35px;
+            margin-bottom: 12px;
+        }
+
+        .app-header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: var(--dark);
+            background: linear-gradient(135deg, #27ae60, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-header .slogan {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        /* Soluções */
+        .solucoes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .solucao-item {
+            padding: 12px 8px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            font-size: 0.75rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .solucao-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .solucao-icon {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .solucao-text {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Botão estudo de rede dentro do card */
+        .btn-estudo-rede {
+            margin-top: 8px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            width: auto;
+            min-height: auto;
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-estudo-rede:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Navegação por Tabs */
+        .tab-nav {
+            display: flex;
+            background: var(--light);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 16px 12px;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-align: center;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: white;
+        }
+
+        /* Conteúdo das Tabs */
+        .tab-content {
+            display: none;
+            padding: 20px 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards e Seções */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+
+        /* Botões */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            min-height: 54px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:active {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:active {
+            background: var(--secondary-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:active {
+            background: var(--danger-dark);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:active {
+            background: var(--warning-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:active {
+            background: #128C7E;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            min-height: auto;
+        }
+
+        /* Lista de Rotas */
+        .routes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .route-item {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .route-info {
+            flex: 1;
+        }
+
+        .route-badges {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-state {
+            background: var(--primary);
+            color: white;
+        }
+
+        .badge-insumo {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .route-details {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+
+        .route-credit {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .route-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            min-height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Resultados */
+        .result-total {
+            background: linear-gradient(135deg, #eaf3f8, #d4e7f7);
+            text-align: center;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary);
+        }
+
+        .result-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 8px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 4px 0;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        /* Relatório */
+        .report-section {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid var(--primary);
+        }
+
+        .report-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .share-buttons .btn {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* Parâmetros de Cálculo */
+        .parametros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .parametro-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .parametro-valor {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+
+        .parametro-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Tabela de Fatores Editável */
+        .fatores-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.8rem;
+        }
+
+        .fatores-table th,
+        .fatores-table td {
+            padding: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .fatores-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .fatores-table input {
+            width: 60px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+
+        .fatores-table input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .estado-header {
+            background: var(--dark) !important;
+            text-align: left !important;
+        }
+
+        /* Tabela de Postos */
+        .postos-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.8rem;
+        }
+
+        .postos-table th,
+        .postos-table td {
+            padding: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .postos-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .postos-table input {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+
+        .postos-table input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .postos-table .btn-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 0.8rem;
+        }
+
+        /* Estados Especiais */
+        .hidden {
+            display: none !important;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        /* Swipe Hint */
+        .swipe-hint {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* ROI Calculator */
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .roi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .roi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 10px 0;
+        }
+
+        .roi-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .economia-mensal {
+            border-left-color: #27ae60 !important;
+        }
+
+        .economia-anual {
+            border-left-color: #2ecc71 !important;
+        }
+
+        .roi-periodo {
+            border-left-color: #3498db !important;
+        }
+
+        .investimento {
+            border-left-color: #f39c12 !important;
+        }
+
+        /* Estilos para Impressão */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+                font-size: 12pt;
+                color: black !important;
+            }
+            
+            .app-container {
+                max-width: 100% !important;
+                min-height: auto !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: white !important;
+            }
+            
+            .app-header {
+                position: static !important;
+                background: white !important;
+                color: black !important;
+                padding: 20px !important;
+                text-align: center;
+                border-bottom: 2px solid #3498db;
+            }
+            
+            .app-header .logo {
+                filter: none !important;
+                height: 40px;
+            }
+            
+            .solucoes-grid {
+                display: none !important;
+            }
+            
+            .tab-nav,
+            .btn,
+            .route-actions,
+            .report-actions,
+            .floating-action,
+            .swipe-hint,
+            .toast {
+                display: none !important;
+            }
+            
+            .tab-content {
+                display: block !important;
+                padding: 0 !important;
+                animation: none !important;
+                background: white !important;
+            }
+            
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                margin-bottom: 10px !important;
+                page-break-inside: avoid;
+                background: white !important;
+            }
+            
+            .result-total {
+                background: #f8f9fa !important;
+                border: 2px solid #3498db !important;
+                color: black !important;
+            }
+            
+            .result-value {
+                font-size: 16pt !important;
+                color: black !important;
+            }
+            
+            .stats-grid {
+                display: grid !important;
+                gap: 8px !important;
+            }
+            
+            .route-item {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+                background: white !important;
+            }
+            
+            .alert {
+                border: 1px solid #ccc !important;
+                background: #f8f9fa !important;
+                color: black !important;
+            }
+            
+            /* Mostrar apenas a tab de resultados na impressão */
+            #info,
+            #add,
+            #routes,
+            #parametros {
+                display: none !important;
+            }
+            
+            #results {
+                display: block !important;
+            }
+            
+            .report-section {
+                border: 1px solid #3498db !important;
+                margin-top: 10px !important;
+                background: white !important;
+            }
+            
+            /* Informações do relatório */
+            .relatorio-info {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 10px 0;
+                border-left: 4px solid #3498db;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            }
+
+            .app-container {
+                max-width: 800px;
+                margin: 0 auto;
+                min-height: calc(100vh - 40px);
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .tab-content {
+                padding: 24px 20px;
+            }
+
+            .report-actions {
+                flex-direction: row;
+            }
+
+            .share-buttons {
+                flex-direction: row;
+            }
+
+            .btn {
+                width: auto;
+                min-width: 160px;
+            }
+
+            .solucoes-grid {
+                gap: 15px;
+            }
+
+            .solucao-item {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+
+            .app-header h1 {
+                font-size: 2rem;
+            }
+
+            .fatores-table {
+                font-size: 0.85rem;
+            }
+
+            .fatores-table input {
+                width: 70px;
+                font-size: 0.8rem;
+            }
+
+            .postos-table {
+                font-size: 0.85rem;
+            }
+
+            .postos-table input {
+                width: 90px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Melhorias de Acessibilidade */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="ValeCard" class="logo">
+            <h1>💰 Mais eficiência com VALECARD </h1>
+            <div class="slogan">Seja mais lucrativo com ValeCard</div>
+            
+            <div class="solucoes-grid">
+                <div class="solucao-item">
+                    <a href="https://www.valecard.com.br/mobilidade/abastecimento/" target="_blank" style="text-decoration: none; color: inherit;">
+                        <span class="solucao-icon">⛽</span>
+                        <div class="solucao-text">Abastecimento</div>
+                    </a>
+                    <button class="btn-estudo-rede" onclick="openEstudoRede()">
+                        🏪 Estudo de Rede
+                    </button>
+                </div>
+                <div class="solucao-item">
+                    <a href="https://www.valecard.com.br/mobilidade/manutencao/" target="_blank" style="text-decoration: none; color: inherit;">
+                        <span class="solucao-icon">🔧</span>
+                        <div class="solucao-text">Manutenção</div>
+                    </a>
+                </div>
+                <div class="solucao-item">
+                     <a href="https://www.valecard.com.br/calculadora-recolha-de-notas/" target="_blank" style="text-decoration: none; color: inherit;">
+                        <span class="solucao-icon">📄</span>
+                        <div class="solucao-text">Recolha de NF</div>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="info">📋 Dados</button>
+            <button class="tab-btn" data-tab="add">➕ Adicionar</button>
+            <button class="tab-btn" data-tab="routes">🛣️ Rotas</button>
+            <button class="tab-btn" data-tab="results">📊 Resultados</button>
+            <button class="tab-btn" data-tab="parametros">⚙️ Parâmetros</button>
+        </nav>
+
+        <div id="info" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    🏢 Informações da Transportadora
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cnpjTransportadora">CNPJ:</label>
+                    <input type="text" id="cnpjTransportadora" class="form-control" placeholder="00.000.000/0000-00">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="nomeTransportadora">Razão Social:</label>
+                    <input type="text" id="nomeTransportadora" class="form-control" placeholder="Nome da empresa">
+                </div>
+                <button class="btn btn-primary" onclick="openTab('add')">
+                    ➕ Continuar para Adicionar Rotas
+                </button>
+            </div>
+        </div>
+
+        <div id="add" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    📋 Nova Rota/Insumo
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="stateOrigem">Estado de Origem:</label>
+                    <select id="stateOrigem" class="form-control">
+                        <option value="">Selecione o estado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="tipoInsumo">Tipo de Insumo:</label>
+                    <select id="tipoInsumo" class="form-control">
+                        <option value="">Selecione o insumo</option>
+                        <option value="diesel">⛽ Diesel</option>
+                        <option value="pecas">🔧 Peças</option>
+                        <option value="pneus">🚗 Pneus</option>
+                        <option value="lubrificantes">🛢️ Lubrificantes</option>
+                        <option value="equipamentos">🚛 Equipamentos</option>
+                        <option value="outros">📦 Outros</option>
+                    </select>
+                </div>
+
+                <div id="dieselFields" class="hidden">
+                    <div class="form-group">
+                        <label class="form-label" for="litrosDiesel">Quantidade de Litros:</label>
+                        <input type="number" id="litrosDiesel" class="form-control" placeholder="Ex: 1000" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <div id="insumosFields" class="hidden">
+                    <div class="form-group">
+                        <label class="form-label" for="valorInsumo">Valor do Insumo (R$):</label>
+                        <input type="number" id="valorInsumo" class="form-control" placeholder="Ex: 1000.00" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="aliquotaInsumo">Alíquota do ICMS (%):</label>
+                        <input type="number" id="aliquotaInsumo" class="form-control" placeholder="Ex: 18" value="18" step="0.01" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="proporcaoTributada">Proporção de Serviços TRIBUTADOS (%):</label>
+                    <input type="number" id="proporcaoTributada" class="form-control" placeholder="Ex: 100" value="100" step="0.01" min="0" max="100">
+                </div>
+
+                <button class="btn btn-success" onclick="adicionarRota()">
+                    ➕ Adicionar Rota
+                </button>
+            </div>
+
+            <div class="alert alert-info">
+                💡 <strong>Dica:</strong> Adicione múltiplas rotas de diferentes estados para simular um cenário completo.
+            </div>
+        </div>
+
+        <div id="routes" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    🛣️ Rotas Adicionadas
+                </div>
+                
+                <div class="swipe-hint">
+                    ← Deslize para ver opções →
+                </div>
+
+                <div id="rotasList" class="routes-list">
+                    <div class="empty-state">
+                        <div class="icon">🛣️</div>
+                        <p>Nenhuma rota adicionada</p>
+                        <p class="text-muted">Use a aba "Adicionar" para incluir a primeira rota</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="calcularTudo()">
+                        🧮 Calcular Todas as Rotas
+                    </button>
+                    <button class="btn btn-warning" onclick="limparTudo()">
+                        🗑️ Limpar Tudo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="results" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    📊 Resultados da Simulação
+                </div>
+                
+                <div id="resultadosContainer">
+                    <div class="empty-state">
+                        <div class="icon">📊</div>
+                        <p>Nenhum cálculo realizado</p>
+                        <p class="text-muted">Adicione rotas e clique em "Calcular" para ver os resultados</p>
+                    </div>
+                </div>
+
+                <div id="relatorioContainer" class="hidden">
+                    <div class="report-section">
+                        <div class="card-header">
+                            📋 Relatório de Economia de ICMS
+                        </div>
+                        
+                        <div class="report-actions">
+                            <div class="share-buttons">
+                                <button class="btn btn-success" onclick="downloadRelatorioHTML()">
+                                    💾 Download HTML
+                                </button>
+                                <button class="btn btn-primary" onclick="imprimirRelatorio()">
+                                    🖨️ Imprimir
+                                </button>
+                                <button class="btn btn-whatsapp" onclick="compartilharWhatsApp()">
+                                    💬 WhatsApp
+                                </button>
+                                <button class="btn btn-outline" onclick="compartilharResultados()">
+                                    📤 Compartilhar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="relatorioConteudo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="parametros" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    ⚙️ Parâmetros de Cálculo
+                </div>
+                
+                <div class="alert alert-info">
+                    💡 <strong>Informação:</strong> Estes são os parâmetros utilizados nos cálculos de crédito de ICMS.
+                    Você pode ajustá-los conforme necessário.
+                </div>
+
+                <div class="parametros-grid">
+                    <div class="parametro-card">
+                        <div class="parametro-label">Base CONFAZ Diesel</div>
+                        <div class="parametro-valor" id="paramBaseConfa">0.9456</div>
+                        <div class="parametro-desc">Base de cálculo para crédito de diesel</div>
+                        <input type="number" id="inputBaseConfa" class="form-control mt-2" value="0.9456" step="0.0001" min="0" max="1" style="display: none;">
+                        <button class="btn btn-outline btn-sm mt-2" onclick="toggleEditarParametro('baseConfa')">✏️ Editar</button>
+                    </div>
+
+                    <div class="parametro-card">
+                        <div class="parametro-label">Preço Médio Diesel (R$/L)</div>
+                        <div class="parametro-valor" id="paramPrecoDiesel">5.50</div>
+                        <div class="parametro-desc">Preço médio do diesel para cálculo</div>
+                        <input type="number" id="inputPrecoDiesel" class="form-control mt-2" value="5.50" step="0.01" min="0" style="display: none;">
+                        <button class="btn btn-outline btn-sm mt-2" onclick="toggleEditarParametro('precoDiesel')">✏️ Editar</button>
+                    </div>
+
+                    <div class="parametro-card">
+                        <div class="parametro-label">Alíquota Média Diesel (%)</div>
+                        <div class="parametro-valor" id="paramAliqDiesel">18.00%</div>
+                        <div class="parametro-desc">Alíquota média de ICMS para diesel</div>
+                        <input type="number" id="inputAliqDiesel" class="form-control mt-2" value="18.00" step="0.01" min="0" max="100" style="display: none;">
+                        <button class="btn btn-outline btn-sm mt-2" onclick="toggleEditarParametro('aliqDiesel')">✏️ Editar</button>
+                    </div>
+                </div>
+
+                <div class="action-buttons mt-3">
+                    <button class="btn btn-primary" onclick="salvarParametros()">
+                        💾 Salvar Parâmetros
+                    </button>
+                    <button class="btn btn-outline" onclick="resetarParametros()">
+                        🔄 Restaurar Padrão
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    📋 Fatores por Estado (Editável)
+                </div>
+                
+                <div class="alert alert-warning">
+                    ⚠️ <strong>Atenção:</strong> Estes fatores são baseados na legislação atual e podem ser ajustados conforme necessário.
+                </div>
+
+                <div id="tabelaFatoresContainer">
+                    </div>
+
+                <div class="action-buttons mt-3">
+                    <button class="btn btn-success" onclick="salvarFatoresEstado()">
+                        💾 Salvar Fatores
+                    </button>
+                    <button class="btn btn-outline" onclick="resetarFatoresEstado()">
+                        🔄 Restaurar Padrão
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    🏪 Gestão de Postos de Rodovia
+                </div>
+                <div class="alert alert-info">
+                    Importe um arquivo CSV com sua lista de postos (Formato esperado: Nome,Cidade,Estado,PrecoAtual).
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="csvPostosInput">Importar CSV de Postos:</label>
+                    <input type="file" id="csvPostosInput" class="form-control" accept=".csv" onchange="handleFileSelect(event)">
+                </div>
+                <div id="statusImportacao" class="mt-2" style="font-size: 0.9rem; color: var(--gray);"></div>
+                <button class="btn btn-primary mt-3" onclick="processarCSV()">
+                    🚀 Processar Lista de Postos
+                </button>
+            </div>
+            </div>
+    </div>
+
+    <div id="modalEstudoRede" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; border-radius: 12px; padding: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">🏪 Estudo de Rede - Economia ValeCard</h3>
+                <button onclick="fecharEstudoRede()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            
+            <div class="alert alert-info">
+                💡 <strong>Informação:</strong> Adicione postos de abastecimento para calcular a economia com a rede ValeCard.
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="custoFixoMensal">Custo Fixo Mensal ValeCard (R$):</label>
+                <input type="number" id="custoFixoMensal" class="form-control" placeholder="Ex: 500.00" value="500" step="0.01" min="0">
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h4 style="margin-bottom: 15px;">📋 Adicionar Posto/Abastecimento</h4>
+
+                <div class="form-group">
+                    <label class="form-label" for="nomePosto">Nome do Posto/Rede:</label>
+                    <input type="text" id="nomePosto" class="form-control" placeholder="Digite para buscar..." oninput="filtrarPostos(this.value)" autocomplete="off">
+                    <div id="autocompletePostos" style="border: 1px solid #ddd; border-top: none; max-height: 150px; overflow-y: auto; background: white; z-index: 1001; position: relative;">
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rotaPosto">Rota/Origem-Destino:</label>
+                    <input type="text" id="rotaPosto" class="form-control" placeholder="Ex: São Paulo - Rio de Janeiro">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="volumeMensal">Volume Mensal (Litros):</label>
+                    <input type="number" id="volumeMensal" class="form-control" placeholder="Ex: 5000" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="precoAtual">Preço Atual (R$/L):</label>
+                    <input type="number" id="precoAtual" class="form-control" placeholder="Ex: 5.80" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="precoValeCard">Preço ValeCard (R$/L):</label>
+                    <input type="number" id="precoValeCard" class="form-control" placeholder="Ex: 5.50" step="0.01" min="0">
+                </div>
+
+                <button class="btn btn-success" onclick="adicionarPosto()">
+                    ➕ Adicionar Posto
+                </button>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h4 style="margin-bottom: 15px;">🏪 Postos Adicionados</h4>
+
+                <div id="tabelaPostosContainer">
+                    <div class="empty-state">
+                        <div class="icon">🏪</div>
+                        <p>Nenhum posto adicionado</p>
+                        <p class="text-muted">Use o formulário acima para adicionar o primeiro posto</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h4 style="margin-bottom: 15px;">📊 Resultados do Estudo de Rede</h4>
+
+                <div id="resultadosRedeContainer">
+                    <div class="empty-state">
+                        <div class="icon">📊</div>
+                        <p>Nenhum cálculo realizado</p>
+                        <p class="text-muted">Adicione postos para ver os resultados de economia</p>
+                    </div>
+                </div>
+
+                <div id="roiContainer" class="hidden">
+                    <div class="roi-grid">
+                        <div class="roi-card economia-mensal">
+                            <div class="roi-label">💰 Economia Mensal</div>
+                            <div class="roi-value" id="economiaMensal">R$ 0,00</div>
+                            <div class="parametro-desc">Economia líquida mensal</div>
+                        </div>
+                        
+                        <div class="roi-card economia-anual">
+                            <div class="roi-label">📈 Economia Anual</div>
+                            <div class="roi-value" id="economiaAnual">R$ 0,00</div>
+                            <div class="parametro-desc">Projeção para 12 meses</div>
+                        </div>
+                        
+                        <div class="roi-card roi-periodo">
+                            <div class="roi-label">⏱️ ROI (Meses)</div>
+                            <div class="roi-value" id="roiMeses">0</div>
+                            <div class="parametro-desc">Retorno sobre investimento</div>
+                        </div>
+                        
+                        <div class="roi-card investimento">
+                            <div class="roi-label">💼 Investimento Mensal</div>
+                            <div class="roi-value" id="investimentoMensal">R$ 0,00</div>
+                            <div class="parametro-desc">Custo fixo ValeCard</div>
+                        </div>
+                    </div>
+
+                    <div class="report-actions mt-4">
+                        <div class="share-buttons">
+                            <button class="btn btn-success" onclick="downloadRelatorioRedeHTML()">
+                                💾 Download HTML
+                            </button>
+                            <button class="btn btn-whatsapp" onclick="compartilharRedeWhatsApp()">
+                                💬 WhatsApp
+                            </button>
+                            <button class="btn btn-primary" onclick="imprimirRelatorioRede()">
+                                🖨️ Imprimir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="fecharEstudoRede()" style="flex: 1;">
+                    Fechar
+                </button>
+                <button class="btn btn-primary" onclick="calcularROI()" style="flex: 1;">
+                    🧮 Calcular Economia
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS TRIBUTÁRIOS COMPLETOS - VALORES PADRÃO
+        const BASE_CONFAZ_DIESEL = 0.9456;
+        const PRECO_MEDIO_DIESEL = 5.50;
+        const ALIQUOTA_MEDIA_DIESEL = 18.00;
+
+        const ESTADOS_CONFIG_PADRAO = {
+            'SP': { name: 'São Paulo', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MG': { name: 'Minas Gerais', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 33.33, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RJ': { name: 'Rio de Janeiro', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RS': { name: 'Rio Grande do Sul', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 0, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PR': { name: 'Paraná', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'SC': { name: 'Santa Catarina', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'BA': { name: 'Bahia', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'GO': { name: 'Goiás', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'DF': { name: 'Distrito Federal', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AL': { name: 'Alagoas', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AP': { name: 'Amapá', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AC': { name: 'Acre', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'AM': { name: 'Amazonas', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'CE': { name: 'Ceará', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'ES': { name: 'Espírito Santo', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MA': { name: 'Maranhão', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MS': { name: 'Mato Grosso do Sul', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'MT': { name: 'Mato Grosso', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PA': { name: 'Pará', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PB': { name: 'Paraíba', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PE': { name: 'Pernambuco', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'PI': { name: 'Piauí', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RN': { name: 'Rio Grande do Norte', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RO': { name: 'Rondônia', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'RR': { name: 'Roraima', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'SE': { name: 'Sergipe', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } },
+            'TO': { name: 'Tocantins', diesel: { fator: 1.0000 }, insumos: { pecas: 100, pneus: 100, lubrificantes: 100, equipamentos: 100, outros: 100 } }
+        };
+
+        // VARIÁVEIS GLOBAIS
+        let rotas = [];
+        let postos = [];
+        let parametros = {
+            baseConfa: BASE_CONFAZ_DIESEL,
+            precoDiesel: PRECO_MEDIO_DIESEL,
+            aliqDiesel: ALIQUOTA_MEDIA_DIESEL
+        };
+        let estadosConfig = JSON.parse(JSON.stringify(ESTADOS_CONFIG_PADRAO));
+        
+        // NOVAS VARIÁVEIS GLOBAIS PARA IMPORTAÇÃO
+        let postosMasterList = [];
+        let csvFileContent = null;
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', function() {
+            popularEstados();
+            carregarParametros();
+            carregarFatoresEstado();
+            carregarDadosSalvos();
+            carregarPostosSalvos();
+            carregarPostosMasterList(); // NOVO: Carrega postos importados
+            atualizarTabelaFatores();
+            configurarEventListeners();
+        });
+
+        function configurarEventListeners() {
+            // Controle de exibição dos campos
+            document.getElementById('tipoInsumo').addEventListener('change', function() {
+                const tipo = this.value;
+                document.getElementById('dieselFields').classList.toggle('hidden', tipo !== 'diesel');
+                document.getElementById('insumosFields').classList.toggle('hidden', tipo === 'diesel');
+            });
+
+            // Navegação por tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    openTab(this.getAttribute('data-tab'));
+                });
+            });
+
+            // Cálculo automático na aba de rede
+            document.getElementById('custoFixoMensal').addEventListener('input', calcularROI);
+        }
+
+        function popularEstados() {
+            const select = document.getElementById('stateOrigem');
+            select.innerHTML = '<option value="">Selecione o estado</option>';
+            Object.keys(estadosConfig).forEach(uf => {
+                const option = document.createElement('option');
+                option.value = uf;
+                option.textContent = `${uf} - ${estadosConfig[uf].name}`;
+                select.appendChild(option);
+            });
+        }
+
+        function carregarParametros() {
+            const saved = localStorage.getItem('parametrosCalculo');
+            if (saved) {
+                parametros = { ...parametros, ...JSON.parse(saved) };
+            }
+            atualizarDisplayParametros();
+        }
+
+        function carregarFatoresEstado() {
+            const saved = localStorage.getItem('fatoresEstado');
+            if (saved) {
+                estadosConfig = JSON.parse(saved);
+            }
+        }
+
+        function carregarDadosSalvos() {
+            const rotasSalvas = localStorage.getItem('rotasICMS');
+            const dadosTransportadora = localStorage.getItem('dadosTransportadora');
+
+            if (rotasSalvas) {
+                rotas = JSON.parse(rotasSalvas);
+                atualizarListaRotas();
+            }
+
+            if (dadosTransportadora) {
+                const dados = JSON.parse(dadosTransportadora);
+                document.getElementById('cnpjTransportadora').value = dados.cnpj || '';
+                document.getElementById('nomeTransportadora').value = dados.nome || '';
+            }
+        }
+
+        function carregarPostosSalvos() {
+            const saved = localStorage.getItem('postosRede');
+            if (saved) {
+                postos = JSON.parse(saved);
+                atualizarTabelaPostos();
+                calcularROI();
+            }
+        }
+
+        // NOVO: Carregar lista mestre de postos
+        function carregarPostosMasterList() {
+            const saved = localStorage.getItem('postosMasterList');
+            if (saved) {
+                postosMasterList = JSON.parse(saved);
+                const statusEl = document.getElementById('statusImportacao');
+                if (statusEl) {
+                    statusEl.textContent = `${postosMasterList.length} postos carregados da memória.`;
+                }
+            }
+        }
+
+        function salvarParametros() {
+            localStorage.setItem('parametrosCalculo', JSON.stringify(parametros));
+            showToast('Parâmetros salvos com sucesso!', 'success');
+        }
+
+        function salvarFatoresEstado() {
+            const inputs = document.querySelectorAll('#tabelaFatoresContainer input[type="number"]');
+            
+            inputs.forEach(input => {
+                const [estado, tipo, campo] = input.id.split('_');
+                const valor = parseFloat(input.value) || 0;
+                
+                if (tipo === 'diesel') {
+                    estadosConfig[estado].diesel.fator = valor / 100;
+                } else if (tipo === 'insumo') {
+                    estadosConfig[estado].insumos[campo] = valor;
+                }
+            });
+
+            localStorage.setItem('fatoresEstado', JSON.stringify(estadosConfig));
+            showToast('Fatores por estado salvos com sucesso!', 'success');
+        }
+
+        function salvarDados() {
+            localStorage.setItem('rotasICMS', JSON.stringify(rotas));
+            localStorage.setItem('dadosTransportadora', JSON.stringify({
+                cnpj: document.getElementById('cnpjTransportadora').value,
+                nome: document.getElementById('nomeTransportadora').value
+            }));
+        }
+
+        function salvarPostos() {
+            localStorage.setItem('postosRede', JSON.stringify(postos));
+        }
+
+        function resetarParametros() {
+            parametros = {
+                baseConfa: BASE_CONFAZ_DIESEL,
+                precoDiesel: PRECO_MEDIO_DIESEL,
+                aliqDiesel: ALIQUOTA_MEDIA_DIESEL
+            };
+            atualizarDisplayParametros();
+            salvarParametros();
+        }
+
+        function resetarFatoresEstado() {
+            if (confirm('Tem certeza que deseja restaurar os fatores padrão? Isso substituirá todas as alterações.')) {
+                estadosConfig = JSON.parse(JSON.stringify(ESTADOS_CONFIG_PADRAO));
+                atualizarTabelaFatores();
+                salvarFatoresEstado();
+                showToast('Fatores restaurados para os valores padrão!', 'success');
+            }
+        }
+
+        function atualizarDisplayParametros() {
+            document.getElementById('paramBaseConfa').textContent = parametros.baseConfa.toFixed(4);
+            document.getElementById('paramPrecoDiesel').textContent = `R$ ${parametros.precoDiesel.toFixed(2)}`;
+            document.getElementById('paramAliqDiesel').textContent = `${parametros.aliqDiesel.toFixed(2)}%`;
+            
+            document.getElementById('inputBaseConfa').value = parametros.baseConfa;
+            document.getElementById('inputPrecoDiesel').value = parametros.precoDiesel;
+            document.getElementById('inputAliqDiesel').value = parametros.aliqDiesel;
+        }
+
+        function toggleEditarParametro(tipo) {
+            const display = document.getElementById(`param${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+            const input = document.getElementById(`input${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
+            
+            if (display.style.display !== 'none') {
+                display.style.display = 'none';
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                const novoValor = parseFloat(input.value);
+                if (!isNaN(novoValor)) {
+                    parametros[tipo] = novoValor;
+                    atualizarDisplayParametros();
+                }
+                display.style.display = 'block';
+                input.style.display = 'none';
+            }
+        }
+
+        function atualizarTabelaFatores() {
+            const container = document.getElementById('tabelaFatoresContainer');
+            
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table class="fatores-table">
+                        <thead>
+                            <tr>
+                                <th class="estado-header">Estado</th>
+                                <th>Diesel (%)</th>
+                                <th>Peças (%)</th>
+                                <th>Pneus (%)</th>
+                                <th>Lubrificantes (%)</th>
+                                <th>Equipamentos (%)</th>
+                                <th>Outros (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            Object.keys(estadosConfig).sort().forEach(uf => {
+                const config = estadosConfig[uf];
+                html += `
+                    <tr>
+                        <td style="text-align: left; font-weight: 600;">
+                            <strong>${uf}</strong><br>
+                            <small style="font-size: 0.7rem; color: #666;">${config.name}</small>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                   id="${uf}_diesel_fator" 
+                                   value="${(config.diesel.fator * 100).toFixed(2)}" 
+                                   min="0" max="100" step="0.01"
+                                   style="width: 60px;">
+                        </td>
+                        <td>
+                            <input type="number" 
+                                   id="${uf}_insumo_pecas" 
+                                   value="${config.insumos.pecas}" 
+                                   min="0" max="100" step="0.01"
+                                   style="width: 60px;">
+                        </td>
+                        <td>
+                            <input type="number" 
+                                   id="${uf}_insumo_pneus" 
+                                   value="${config.insumos.pneus}" 
+                                   min="0" max="100" step="0.01"
+                                   style="width: 60px;">
+                        </td>
+                        <td>
+                            <input type="number" 
+                                   id="${uf}_insumo_lubrificantes" 
+                                   value="${config.insumos.lubrificantes}" 
+                                   min="0" max="100" step="0.01"
+                                   style="width: 60px;">
+                        </td>
+                        <td>
+                            <input type="number" 
+                                   id="${uf}_insumo_equipamentos" 
+                                   value="${config.insumos.equipamentos}" 
+                                   min="0" max="100" step="0.01"
+                                   style="width: 60px;">
+                        </td>
+                        <td>
+                            <input type="number" 
+                                   id="${uf}_insumo_outros" 
+                                   value="${config.insumos.outros}" 
+                                   min="0" max="100" step="0.01"
+                                   style="width: 60px;">
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // FUNÇÕES DO ESTUDO DE REDE (MODAL)
+        function openEstudoRede() {
+            document.getElementById('modalEstudoRede').classList.remove('hidden');
+        }
+
+        function fecharEstudoRede() {
+            document.getElementById('modalEstudoRede').classList.add('hidden');
+            document.getElementById('autocompletePostos').innerHTML = ''; // Limpa autocomplete
+        }
+
+        // FUNÇÕES DA VERSÃO ANTERIOR (ICMS)
+        function adicionarRota() {
+            const estado = document.getElementById('stateOrigem').value;
+            const tipoInsumo = document.getElementById('tipoInsumo').value;
+            const proporcaoTributada = parseFloat(document.getElementById('proporcaoTributada').value) || 100;
+
+            if (!estado || !tipoInsumo) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+
+            let rota = {
+                id: Date.now(),
+                estado: estado,
+                tipoInsumo: tipoInsumo,
+                proporcaoTributada: proporcaoTributada,
+                data: new Date().toLocaleDateString('pt-BR')
+            };
+
+            if (tipoInsumo === 'diesel') {
+                const litros = parseFloat(document.getElementById('litrosDiesel').value);
+                if (!litros || litros <= 0) {
+                    showToast('Informe a quantidade de litros', 'error');
+                    return;
+                }
+                rota.litrosDiesel = litros;
+            } else {
+                const valor = parseFloat(document.getElementById('valorInsumo').value);
+                const aliquota = parseFloat(document.getElementById('aliquotaInsumo').value);
+                if (!valor || valor <= 0) {
+                    showToast('Informe o valor do insumo', 'error');
+                    return;
+                }
+                rota.valorInsumo = valor;
+                rota.aliquotaInsumo = aliquota || 18;
+            }
+
+            rotas.push(rota);
+            salvarDados();
+            atualizarListaRotas();
+            limparFormulario();
+            showToast('Rota adicionada com sucesso!', 'success');
+            openTab('routes');
+        }
+
+        function atualizarListaRotas() {
+            const container = document.getElementById('rotasList');
+            
+            if (rotas.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">🛣️</div><p>Nenhuma rota adicionada</p><p class="text-muted">Use a aba "Adicionar" para incluir a primeira rota</p></div>';
+                return;
+            }
+
+            let html = '';
+            rotas.forEach((rota, index) => {
+                const config = estadosConfig[rota.estado];
+                const tipoInsumoText = {
+                    'diesel': '⛽ Diesel',
+                    'pecas': '🔧 Peças',
+                    'pneus': '🚗 Pneus',
+                    'lubrificantes': '🛢️ Lubrificantes',
+                    'equipamentos': '🚛 Equipamentos',
+                    'outros': '📦 Outros'
+                }[rota.tipoInsumo];
+
+                html += `
+                <div class="route-item" data-id="${rota.id}">
+                    <div class="route-info">
+                        <div class="route-badges">
+                            <span class="badge badge-state">${rota.estado} - ${config.name}</span>
+                            <span class="badge badge-insumo">${tipoInsumoText}</span>
+                            <span class="badge" style="background: #6c757d; color: white;">${rota.proporcaoTributada}% tributado</span>
+                        </div>
+                        <div class="route-details">
+                            ${rota.tipoInsumo === 'diesel' 
+                                ? `${rota.litrosDiesel.toLocaleString('pt-BR')} litros de diesel`
+                                : `R$ ${rota.valorInsumo.toLocaleString('pt-BR')} - ${rota.aliquotaInsumo}% ICMS`
+                            }
+                        </div>
+                        <div class="route-credit">
+                            Crédito estimado: R$ ${calcularCreditoRota(rota).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </div>
+                    </div>
+                    <div class="route-actions">
+                        <button class="btn btn-icon btn-danger" onclick="removerRota(${rota.id})" title="Remover">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function calcularCreditoRota(rota) {
+            const config = estadosConfig[rota.estado];
+            let credito = 0;
+
+            if (rota.tipoInsumo === 'diesel') {
+                // Cálculo para diesel
+                const baseCalculo = rota.litrosDiesel * parametros.precoDiesel * parametros.baseConfa;
+                const valorICMS = baseCalculo * (parametros.aliqDiesel / 100);
+                const fatorEstado = config.diesel.fator;
+                credito = valorICMS * fatorEstado * (rota.proporcaoTributada / 100);
+            } else {
+                // Cálculo para insumos
+                const fatorInsumo = config.insumos[rota.tipoInsumo] / 100;
+                const valorICMS = rota.valorInsumo * (rota.aliquotaInsumo / 100);
+                credito = valorICMS * fatorInsumo * (rota.proporcaoTributada / 100);
+            }
+
+            return credito;
+        }
+
+        function calcularTudo() {
+            if (rotas.length === 0) {
+                showToast('Adicione pelo menos uma rota para calcular', 'warning');
+                return;
+            }
+
+            const resultados = {
+                totalCredito: 0,
+                totalRotas: rotas.length,
+                porEstado: {},
+                porInsumo: {},
+                detalhes: []
+            };
+
+            rotas.forEach(rota => {
+                const credito = calcularCreditoRota(rota);
+                resultados.totalCredito += credito;
+
+                // Agrupar por estado
+                if (!resultados.porEstado[rota.estado]) {
+                    resultados.porEstado[rota.estado] = 0;
+                }
+                resultados.porEstado[rota.estado] += credito;
+
+                // Agrupar por tipo de insumo
+                if (!resultados.porInsumo[rota.tipoInsumo]) {
+                    resultados.porInsumo[rota.tipoInsumo] = 0;
+                }
+                resultados.porInsumo[rota.tipoInsumo] += credito;
+
+                // Detalhes
+                resultados.detalhes.push({
+                    ...rota,
+                    creditoCalculado: credito
+                });
+            });
+
+            exibirResultados(resultados);
+            openTab('results');
+        }
+
+        function exibirResultados(resultados) {
+            const container = document.getElementById('resultadosContainer');
+            const relatorioContainer = document.getElementById('relatorioContainer');
+            
+            let html = `
+                <div class="result-total">
+                    <div style="font-size: 1.1rem; color: #6c757d; margin-bottom: 8px;">💰 Crédito Total de ICMS</div>
+                    <div class="result-value">R$ ${resultados.totalCredito.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div style="color: #27ae60; font-weight: 600; font-size: 1rem;">
+                        ✅ Economia estimada em ${resultados.totalRotas} rota${resultados.totalRotas > 1 ? 's' : ''}
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${resultados.totalRotas}</div>
+                        <div class="stat-label">Total de Rotas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.keys(resultados.porEstado).length}</div>
+                        <div class="stat-label">Estados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.keys(resultados.porInsumo).length}</div>
+                        <div class="stat-label">Tipos de Insumo</div>
+                    </div>
+                </div>
+            `;
+
+            // Detalhamento por estado
+            if (Object.keys(resultados.porEstado).length > 0) {
+                html += `<div class="card"><div class="card-header">📊 Crédito por Estado</div>`;
+                Object.keys(resultados.porEstado).sort((a, b) => resultados.porEstado[b] - resultados.porEstado[a]).forEach(estado => {
+                    const percentual = (resultados.porEstado[estado] / resultados.totalCredito * 100);
+                    html += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
+                            <div>
+                                <strong>${estado}</strong> - ${estadosConfig[estado].name}
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600;">R$ ${resultados.porEstado[estado].toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div style="font-size: 0.8rem; color: #6c757d;">${percentual.toFixed(1)}% do total</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+            relatorioContainer.classList.remove('hidden');
+            
+            // Gerar relatório completo
+            gerarRelatorioCompleto(resultados);
+        }
+
+        function gerarRelatorioCompleto(resultados) {
+            const container = document.getElementById('relatorioConteudo');
+            const transportadora = {
+                cnpj: document.getElementById('cnpjTransportadora').value || 'Não informado',
+                nome: document.getElementById('nomeTransportadora').value || 'Não informado'
+            };
+
+            let html = `
+                <div class="relatorio-info">
+                    <h4>📋 Informações da Transportadora</h4>
+                    <p><strong>CNPJ:</strong> ${transportadora.cnpj}</p>
+                    <p><strong>Razão Social:</strong> ${transportadora.nome}</p>
+                    <p><strong>Data do Relatório:</strong> ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">📊 Resumo dos Parâmetros Utilizados</div>
+                    <div class="parametros-grid">
+                        <div class="parametro-card">
+                            <div class="parametro-label">Base CONFAZ Diesel</div>
+                            <div class="parametro-valor">${parametros.baseConfa.toFixed(4)}</div>
+                        </div>
+                        <div class="parametro-card">
+                            <div class="parametro-label">Preço Médio Diesel</div>
+                            <div class="parametro-valor">R$ ${parametros.precoDiesel.toFixed(2)}</div>
+                        </div>
+                        <div class="parametro-card">
+                            <div class="parametro-label">Alíquota Média Diesel</div>
+                            <div class="parametro-valor">${parametros.aliqDiesel.toFixed(2)}%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">🛣️ Detalhamento das Rotas</div>
+            `;
+
+            resultados.detalhes.forEach((rota, index) => {
+                const config = estadosConfig[rota.estado];
+                html += `
+                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 10px; background: #f8f9fa;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <strong>Rota ${index + 1}</strong> - ${rota.estado} - ${config.name}
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: #27ae60;">R$ ${rota.creditoCalculado.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.9rem;">
+                            <p><strong>Tipo:</strong> ${rota.tipoInsumo === 'diesel' ? '⛽ Diesel' : '🔧 Insumo'} | 
+                            <strong>Proporção Tributada:</strong> ${rota.proporcaoTributada}%</p>
+                            ${rota.tipoInsumo === 'diesel' 
+                                ? `<p><strong>Litros:</strong> ${rota.litrosDiesel.toLocaleString('pt-BR')} | 
+                                   <strong>Valor Base:</strong> R$ ${(rota.litrosDiesel * parametros.precoDiesel).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>`
+                                : `<p><strong>Valor Insumo:</strong> R$ ${rota.valorInsumo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | 
+                                   <strong>Alíquota ICMS:</strong> ${rota.aliquotaInsumo}%</p>`
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // FUNÇÕES DE COMPARTILHAMENTO PARA ICMS
+        function compartilharWhatsApp() {
+            const resultados = calcularResultadosAtuais();
+            if (!resultados) {
+                showToast('Calcule os resultados primeiro', 'warning');
+                return;
+            }
+
+            const htmlCompleto = gerarHTMLCompletoWhatsApp(resultados);
+            
+            // Mensagem para WhatsApp
+            const transportadora = {
+                cnpj: document.getElementById('cnpjTransportadora').value || 'Não informado',
+                nome: document.getElementById('nomeTransportadora').value || 'Não informado'
+            };
+
+            let texto = `💰 *RELATÓRIO DE ECONOMIA DE ICMS - ValeCard*\n\n`;
+            texto += `*Transportadora:* ${transportadora.nome}\n`;
+            texto += `*CNPJ:* ${transportadora.cnpj}\n`;
+            texto += `*Data:* ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+            texto += `📊 *RESULTADO PRINCIPAL*\n`;
+            texto += `💰 *Crédito Total de ICMS:* R$ ${resultados.totalCredito.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\n`;
+            texto += `🛣️ *DETALHES DAS ROTAS*\n`;
+            texto += `• Total de Rotas: ${resultados.totalRotas}\n`;
+            texto += `• Estados: ${Object.keys(resultados.porEstado).length}\n`;
+            texto += `• Tipos de Insumo: ${Object.keys(resultados.porInsumo).length}\n\n`;
+            texto += `⚙️ *PARÂMETROS UTILIZADOS*\n`;
+            texto += `• Base CONFAZ: ${parametros.baseConfa.toFixed(4)}\n`;
+            texto += `• Preço Diesel: R$ ${parametros.precoDiesel.toFixed(2)}\n`;
+            texto += `• Alíquota Diesel: ${parametros.aliqDiesel.toFixed(2)}%\n\n`;
+            texto += `📎 *Relatório HTML completo disponível para download*\n\n`;
+            texto += `_Relatório gerado pelo Sistema Economize ICMS ValeCard_`;
+
+            const mensagemCodificada = encodeURIComponent(texto);
+            const urlWhatsApp = `https://wa.me/?text=${mensagemCodificada}`;
+            
+            window.open(urlWhatsApp, '_blank');
+            
+            setTimeout(() => {
+                if (confirm('Deseja baixar o relatório HTML completo?')) {
+                    downloadRelatorioHTML();
+                }
+            }, 1000);
+        }
+
+        function calcularResultadosAtuais() {
+            if (rotas.length === 0) return null;
+
+            const resultados = {
+                totalCredito: 0,
+                totalRotas: rotas.length,
+                porEstado: {},
+                porInsumo: {},
+                detalhes: []
+            };
+
+            rotas.forEach(rota => {
+                const credito = calcularCreditoRota(rota);
+                resultados.totalCredito += credito;
+
+                if (!resultados.porEstado[rota.estado]) {
+                    resultados.porEstado[rota.estado] = 0;
+                }
+                resultados.porEstado[rota.estado] += credito;
+
+                if (!resultados.porInsumo[rota.tipoInsumo]) {
+                    resultados.porInsumo[rota.tipoInsumo] = 0;
+                }
+                resultados.porInsumo[rota.tipoInsumo] += credito;
+
+                resultados.detalhes.push({
+                    ...rota,
+                    creditoCalculado: credito
+                });
+            });
+
+            return resultados;
+        }
+
+        function downloadRelatorioHTML() {
+            const resultados = calcularResultadosAtuais();
+            if (!resultados) {
+                showToast('Calcule os resultados primeiro', 'warning');
+                return;
+            }
+
+            const htmlCompleto = gerarHTMLCompletoWhatsApp(resultados);
+            const blob = new Blob([htmlCompleto], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio-economia-icms-${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Relatório HTML baixado com sucesso!', 'success');
+        }
+
+        function gerarHTMLCompletoWhatsApp(resultados) {
+            const transportadora = {
+                cnpj: document.getElementById('cnpjTransportadora').value || 'Não informado',
+                nome: document.getElementById('nomeTransportadora').value || 'Não informado'
+            };
+
+            // Gerar tabela de fatores atualizados
+            let tabelaFatoresHTML = '';
+            Object.keys(estadosConfig).sort().forEach(uf => {
+                const config = estadosConfig[uf];
+                tabelaFatoresHTML += `
+                    <tr>
+                        <td>${uf} - ${config.name}</td>
+                        <td>${(config.diesel.fator * 100).toFixed(2)}%</td>
+                        <td>${config.insumos.pecas}%</td>
+                        <td>${config.insumos.pneus}%</td>
+                        <td>${config.insumos.lubrificantes}%</td>
+                        <td>${config.insumos.equipamentos}%</td>
+                        <td>${config.insumos.outros}%</td>
+                    </tr>
+                `;
+            });
+
+            return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Economia ICMS - ValeCard</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { height: 50px; margin-bottom: 15px; }
+        .result-total { background: linear-gradient(135deg, #eaf3f8, #d4e7f7); padding: 25px; border-radius: 12px; text-align: center; margin: 25px 0; border: 2px solid #3498db; }
+        .result-value { font-size: 2.5rem; font-weight: 700; color: #2c3e50; margin: 10px 0; }
+        .section { margin: 25px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa; }
+        .parametros-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0; }
+        .parametro-card { background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .rota-item { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 10px 0; background: white; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.8rem; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #3498db; color: white; }
+        .fatores-table th { font-size: 0.7rem; padding: 6px; }
+        .fatores-table td { font-size: 0.75rem; padding: 6px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="ValeCard" class="logo">
+            <h1>💰 Relatório de Economia de ICMS</h1>
+            <p>Soluções ValeCard para Transportadoras</p>
+        </div>
+
+        <div class="section">
+            <h2>📋 Informações da Transportadora</h2>
+            <p><strong>CNPJ:</strong> ${transportadora.cnpj}</p>
+            <p><strong>Razão Social:</strong> ${transportadora.nome}</p>
+            <p><strong>Data do Relatório:</strong> ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</p>
+        </div>
+
+        <div class="result-total">
+            <div style="font-size: 1.2rem; color: #666; margin-bottom: 10px;">💰 Crédito Total de ICMS Estimado</div>
+            <div class="result-value">R$ ${resultados.totalCredito.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            <div style="color: #27ae60; font-weight: 600; font-size: 1.1rem; margin-top: 10px;">
+                ✅ Economia estimada em ${resultados.totalRotas} rota${resultados.totalRotas > 1 ? 's' : ''}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Parâmetros de Cálculo Utilizados</h2>
+            <div class="parametros-grid">
+                <div class="parametro-card">
+                    <div style="font-weight: 600; color: #666;">Base CONFAZ Diesel</div>
+                    <div style="font-size: 1.3rem; font-weight: 700; color: #3498db;">${parametros.baseConfa.toFixed(4)}</div>
+                </div>
+                <div class="parametro-card">
+                    <div style="font-weight: 600; color: #666;">Preço Médio Diesel</div>
+                    <div style="font-size: 1.3rem; font-weight: 700; color: #3498db;">R$ ${parametros.precoDiesel.toFixed(2)}</div>
+                </div>
+                <div class="parametro-card">
+                    <div style="font-weight: 600; color: #666;">Alíquota Média Diesel</div>
+                    <div style="font-size: 1.3rem; font-weight: 700; color: #3498db;">${parametros.aliqDiesel.toFixed(2)}%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Fatores por Estado Utilizados</h2>
+            <div style="overflow-x: auto;">
+                <table class="fatores-table">
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Diesel</th>
+                            <th>Peças</th>
+                            <th>Pneus</th>
+                            <th>Lubrificantes</th>
+                            <th>Equipamentos</th>
+                            <th>Outros</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tabelaFatoresHTML}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Resumo por Estado</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Valor do Crédito</th>
+                        <th>% do Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Object.keys(resultados.porEstado).sort((a, b) => resultados.porEstado[b] - resultados.porEstado[a]).map(estado => {
+                        const percentual = (resultados.porEstado[estado] / resultados.totalCredito * 100);
+                        return `
+                        <tr>
+                            <td><strong>${estado}</strong> - ${estadosConfig[estado].name}</td>
+                            <td>R$ ${resultados.porEstado[estado].toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td>${percentual.toFixed(1)}%</td>
+                        </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🛣️ Detalhamento das Rotas</h2>
+            ${resultados.detalhes.map((rota, index) => {
+                const config = estadosConfig[rota.estado];
+                return `
+                <div class="rota-item">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <div>
+                            <strong>Rota ${index + 1}</strong> - ${rota.estado} - ${config.name}
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600; color: #27ae60; font-size: 1.1rem;">
+                                R$ ${rota.creditoCalculado.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <p><strong>Tipo:</strong> ${rota.tipoInsumo === 'diesel' ? '⛽ Diesel' : '🔧 Insumo'} | 
+                        <strong>Proporção Tributada:</strong> ${rota.proporcaoTributada}%</p>
+                        ${rota.tipoInsumo === 'diesel' 
+                            ? `<p><strong>Litros:</strong> ${rota.litrosDiesel.toLocaleString('pt-BR')} | 
+                               <strong>Valor Base:</strong> R$ ${(rota.litrosDiesel * parametros.precoDiesel).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>`
+                            : `<p><strong>Valor Insumo:</strong> R$ ${rota.valorInsumo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | 
+                               <strong>Alíquota ICMS:</strong> ${rota.aliquotaInsumo}%</p>`
+                        }
+                    </div>
+                </div>
+                `;
+            }).join('')}
+        </div>
+
+        <div class="footer">
+            <p>Relatório gerado pelo Sistema Economize ICMS ValeCard</p>
+            <p>📞 Entre em contato: www.valecard.com.br</p>
+            <p>© ${new Date().getFullYear()} ValeCard - Todos os direitos reservados</p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        function imprimirRelatorio() {
+            window.print();
+        }
+
+        // FUNÇÕES DA NOVA ABA DE REDE
+        function adicionarPosto() {
+            const nomePosto = document.getElementById('nomePosto').value;
+            const rotaPosto = document.getElementById('rotaPosto').value;
+            const volumeMensal = parseFloat(document.getElementById('volumeMensal').value);
+            const precoAtual = parseFloat(document.getElementById('precoAtual').value);
+            const precoValeCard = parseFloat(document.getElementById('precoValeCard').value);
+
+            if (!nomePosto || !rotaPosto || !volumeMensal || !precoAtual || !precoValeCard) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+
+            if (volumeMensal <= 0 || precoAtual <= 0 || precoValeCard <= 0) {
+                showToast('Valores devem ser maiores que zero', 'error');
+                return;
+            }
+
+            const posto = {
+                id: Date.now(),
+                nome: nomePosto,
+                rota: rotaPosto,
+                volume: volumeMensal,
+                precoAtual: precoAtual,
+                precoValeCard: precoValeCard,
+                economiaUnit: (precoAtual - precoValeCard),
+                economiaTotal: (precoAtual - precoValeCard) * volumeMensal,
+                data: new Date().toLocaleDateString('pt-BR')
+            };
+
+            postos.push(posto);
+            salvarPostos();
+            atualizarTabelaPostos();
+            limparFormularioPosto();
+            calcularROI();
+            showToast('Posto adicionado com sucesso!', 'success');
+        }
+
+        function atualizarTabelaPostos() {
+            const container = document.getElementById('tabelaPostosContainer');
+            
+            if (postos.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">🏪</div><p>Nenhum posto adicionado</p><p class="text-muted">Use o formulário acima para adicionar o primeiro posto</p></div>';
+                return;
+            }
+
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table class="postos-table">
+                        <thead>
+                            <tr>
+                                <th>Posto/Rede</th>
+                                <th>Rota</th>
+                                <th>Volume (L)</th>
+                                <th>Preço Atual</th>
+                                <th>Preço VC</th>
+                                <th>Economia/L</th>
+                                <th>Economia Total</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            postos.forEach(posto => {
+                html += `
+                    <tr>
+                        <td style="text-align: left; font-weight: 600;">${posto.nome}</td>
+                        <td>${posto.rota}</td>
+                        <td>${posto.volume.toLocaleString('pt-BR')}</td>
+                        <td>R$ ${posto.precoAtual.toFixed(3)}</td>
+                        <td>R$ ${posto.precoValeCard.toFixed(3)}</td>
+                        <td style="color: #27ae60; font-weight: 600;">R$ ${posto.economiaUnit.toFixed(3)}</td>
+                        <td style="color: #27ae60; font-weight: 600;">R$ ${posto.economiaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td>
+                            <button class="btn btn-icon btn-danger" onclick="removerPosto(${posto.id})" title="Remover">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function removerPosto(id) {
+            if (confirm('Tem certeza que deseja remover este posto?')) {
+                postos = postos.filter(posto => posto.id !== id);
+                salvarPostos();
+                atualizarTabelaPostos();
+                calcularROI();
+                showToast('Posto removido com sucesso!', 'success');
+            }
+        }
+
+        function limparFormularioPosto() {
+            document.getElementById('nomePosto').value = '';
+            document.getElementById('rotaPosto').value = '';
+            document.getElementById('volumeMensal').value = '';
+            document.getElementById('precoAtual').value = '';
+            document.getElementById('precoValeCard').value = '';
+            document.getElementById('autocompletePostos').innerHTML = ''; // Limpa autocomplete
+        }
+
+        function calcularROI() {
+            if (postos.length === 0) {
+                document.getElementById('roiContainer').classList.add('hidden');
+                document.getElementById('resultadosRedeContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📊</div>
+                        <p>Nenhum cálculo realizado</p>
+                        <p class="text-muted">Adicione postos para ver os resultados de economia</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const custoFixo = parseFloat(document.getElementById('custoFixoMensal').value) || 0;
+            
+            // Calcular totais
+            const totais = {
+                volumeTotal: 0,
+                economiaTotal: 0,
+                custoAtual: 0,
+                custoValeCard: 0
+            };
+
+            postos.forEach(posto => {
+                totais.volumeTotal += posto.volume;
+                totais.economiaTotal += posto.economiaTotal;
+                totais.custoAtual += posto.volume * posto.precoAtual;
+                totais.custoValeCard += posto.volume * posto.precoValeCard;
+            });
+
+            // Calcular ROI
+            const economiaMensal = totais.economiaTotal - custoFixo;
+            const economiaAnual = economiaMensal * 12;
+            const roiMeses = custoFixo > 0 ? Math.ceil(custoFixo / (totais.economiaTotal / 30)) : 0;
+
+            // Atualizar display
+            document.getElementById('economiaMensal').textContent = `R$ ${economiaMensal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('economiaAnual').textContent = `R$ ${economiaAnual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('roiMeses').textContent = roiMeses;
+            document.getElementById('investimentoMensal').textContent = `R$ ${custoFixo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            // Mostrar resultados detalhados
+            let resultadosHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${postos.length}</div>
+                        <div class="stat-label">Postos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totais.volumeTotal.toLocaleString('pt-BR')} L</div>
+                        <div class="stat-label">Volume Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">R$ ${totais.economiaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                        <div class="stat-label">Economia Bruta</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">📈 Análise Financeira</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                        <div>
+                            <h4 style="color: #e74c3c; margin-bottom: 10px;">💸 Custo Atual</h4>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: #e74c3c;">
+                                R$ ${totais.custoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: #27ae60; margin-bottom: 10px;">💰 Com ValeCard</h4>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: #27ae60;">
+                                R$ ${totais.custoValeCard.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultadosRedeContainer').innerHTML = resultadosHTML;
+            document.getElementById('roiContainer').classList.remove('hidden');
+        }
+
+        // FUNÇÕES DE COMPARTILHAMENTO PARA REDE
+        function compartilharRedeWhatsApp() {
+            if (postos.length === 0) {
+                showToast('Adicione postos primeiro', 'warning');
+                return;
+            }
+
+            const resultados = calcularResultadosRede();
+            const htmlCompleto = gerarHTMLCompletoRede(resultados);
+            
+            // Mensagem para WhatsApp
+            const transportadora = {
+                cnpj: document.getElementById('cnpjTransportadora').value || 'Não informado',
+                nome: document.getElementById('nomeTransportadora').value || 'Não informado'
+            };
+
+            let texto = `🏪 *ESTUDO DE REDE - ValeCard*\n\n`;
+            texto += `*Transportadora:* ${transportadora.nome}\n`;
+            texto += `*CNPJ:* ${transportadora.cnpj}\n`;
+            texto += `*Data:* ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+            texto += `📊 *RESULTADO PRINCIPAL*\n`;
+            texto += `💰 *Economia Mensal:* R$ ${resultados.economiaMensal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+            texto += `📈 *Economia Anual:* R$ ${resultados.economiaAnual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+            texto += `⏱️ *ROI:* ${resultados.roiMeses} meses\n\n`;
+            texto += `🏪 *DETALHES DA REDE*\n`;
+            texto += `• Postos: ${resultados.totais.postos}\n`;
+            texto += `• Volume: ${resultados.totais.volumeTotal.toLocaleString('pt-BR')} litros\n`;
+            texto += `• Economia Bruta: R$ ${resultados.totais.economiaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\n`;
+            texto += `📎 *Relatório HTML completo disponível para download*\n\n`;
+            texto += `_Estudo gerado pelo Sistema Economize ICMS ValeCard_`;
+
+            const mensagemCodificada = encodeURIComponent(texto);
+            const urlWhatsApp = `https://wa.me/?text=${mensagemCodificada}`;
+            
+            window.open(urlWhatsApp, '_blank');
+            
+            setTimeout(() => {
+                if (confirm('Deseja baixar o relatório HTML completo?')) {
+                    downloadRelatorioRedeHTML();
+                }
+            }, 1000);
+        }
+
+        function calcularResultadosRede() {
+            const custoFixo = parseFloat(document.getElementById('custoFixoMensal').value) || 0;
+            
+            const totais = {
+                volumeTotal: 0,
+                economiaTotal: 0,
+                custoAtual: 0,
+                custoValeCard: 0,
+                postos: postos.length
+            };
+
+            postos.forEach(posto => {
+                totais.volumeTotal += posto.volume;
+                totais.economiaTotal += posto.economiaTotal;
+                totais.custoAtual += posto.volume * posto.precoAtual;
+                totais.custoValeCard += posto.volume * posto.precoValeCard;
+            });
+
+            const economiaMensal = totais.economiaTotal - custoFixo;
+            const economiaAnual = economiaMensal * 12;
+            const roiMeses = custoFixo > 0 ? Math.ceil(custoFixo / (totais.economiaTotal / 30)) : 0;
+
+            return {
+                economiaMensal,
+                economiaAnual,
+                roiMeses,
+                totais,
+                custoFixo
+            };
+        }
+
+        function downloadRelatorioRedeHTML() {
+            const resultados = calcularResultadosRede();
+            const htmlCompleto = gerarHTMLCompletoRede(resultados);
+            const blob = new Blob([htmlCompleto], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `estudo-rede-valecard-${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Relatório de rede baixado com sucesso!', 'success');
+        }
+
+        function gerarHTMLCompletoRede(resultados) {
+            const transportadora = {
+                cnpj: document.getElementById('cnpjTransportadora').value || 'Não informado',
+                nome: document.getElementById('nomeTransportadora').value || 'Não informado'
+            };
+
+            let tabelaPostosHTML = '';
+            postos.forEach(posto => {
+                tabelaPostosHTML += `
+                    <tr>
+                        <td>${posto.nome}</td>
+                        <td>${posto.rota}</td>
+                        <td>${posto.volume.toLocaleString('pt-BR')} L</td>
+                        <td>R$ ${posto.precoAtual.toFixed(3)}</td>
+                        <td>R$ ${posto.precoValeCard.toFixed(3)}</td>
+                        <td style="color: #27ae60;">R$ ${posto.economiaUnit.toFixed(3)}</td>
+                        <td style="color: #27ae60;">R$ ${posto.economiaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                `;
+            });
+
+            return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo de Rede - ValeCard</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { height: 50px; margin-bottom: 15px; }
+        .roi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 25px 0; }
+        .roi-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #27ae60; }
+        .roi-value { font-size: 1.8rem; font-weight: 700; color: #27ae60; margin: 10px 0; }
+        .section { margin: 25px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.8rem; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #3498db; color: white; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.valecard.com.br/wp-content/uploads/2024/02/logo-1.svg" alt="ValeCard" class="logo">
+            <h1>🏪 Estudo de Rede - Economia ValeCard</h1>
+            <p>Soluções ValeCard para Transportadoras</p>
+        </div>
+
+        <div class="section">
+            <h2>📋 Informações da Transportadora</h2>
+            <p><strong>CNPJ:</strong> ${transportadora.cnpj}</p>
+            <p><strong>Razão Social:</strong> ${transportadora.nome}</p>
+            <p><strong>Data do Relatório:</strong> ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</p>
+        </div>
+
+        <div class="roi-grid">
+            <div class="roi-card">
+                <div style="font-weight: 600; color: #666;">💰 Economia Mensal</div>
+                <div class="roi-value">R$ ${resultados.economiaMensal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div style="font-size: 0.8rem; color: #666;">Economia líquida mensal</div>
+            </div>
+            
+            <div class="roi-card">
+                <div style="font-weight: 600; color: #666;">📈 Economia Anual</div>
+                <div class="roi-value">R$ ${resultados.economiaAnual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div style="font-size: 0.8rem; color: #666;">Projeção para 12 meses</div>
+            </div>
+            
+            <div class="roi-card">
+                <div style="font-weight: 600; color: #666;">⏱️ ROI (Meses)</div>
+                <div class="roi-value">${resultados.roiMeses}</div>
+                <div style="font-size: 0.8rem; color: #666;">Retorno sobre investimento</div>
+            </div>
+            
+            <div class="roi-card">
+                <div style="font-weight: 600; color: #666;">💼 Investimento Mensal</div>
+                <div class="roi-value">R$ ${resultados.custoFixo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div style="font-size: 0.8rem; color: #666;">Custo fixo ValeCard</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Resumo da Rede</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
+                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">${resultados.totais.postos}</div>
+                    <div style="font-size: 0.9rem; color: #666;">Postos na Rede</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #3498db;">${resultados.totais.volumeTotal.toLocaleString('pt-BR')} L</div>
+                    <div style="font-size: 0.9rem; color: #666;">Volume Mensal</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">R$ ${resultados.totais.custoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div style="font-size: 0.9rem; color: #666;">Custo Atual</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #27ae60;">R$ ${resultados.totais.custoValeCard.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div style="font-size: 0.9rem; color: #666;">Com ValeCard</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏪 Detalhamento dos Postos</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Posto/Rede</th>
+                            <th>Rota</th>
+                            <th>Volume (L)</th>
+                            <th>Preço Atual</th>
+                            <th>Preço VC</th>
+                            <th>Economia/L</th>
+                            <th>Economia Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tabelaPostosHTML}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Relatório gerado pelo Sistema Economize ICMS ValeCard</p>
+            <p>📞 Entre em contato: www.valecard.com.br</p>
+            <p>© ${new Date().getFullYear()} ValeCard - Todos os direitos reservados</p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        function imprimirRelatorioRede() {
+            window.print();
+        }
+
+        // FUNÇÕES AUXILIARES
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        }
+
+        function removerRota(id) {
+            if (confirm('Tem certeza que deseja remover esta rota?')) {
+                rotas = rotas.filter(rota => rota.id !== id);
+                salvarDados();
+                atualizarListaRotas();
+                showToast('Rota removida com sucesso!', 'success');
+            }
+        }
+
+        function limparTudo() {
+            if (confirm('Tem certeza que deseja limpar todas as rotas? Esta ação não pode ser desfeita.')) {
+                rotas = [];
+                salvarDados();
+                atualizarListaRotas();
+                document.getElementById('relatorioContainer').classList.add('hidden');
+                showToast('Todas as rotas foram removidas', 'success');
+            }
+        }
+
+        function limparFormulario() {
+            document.getElementById('stateOrigem').value = '';
+            document.getElementById('tipoInsumo').value = '';
+            document.getElementById('litrosDiesel').value = '';
+            document.getElementById('valorInsumo').value = '';
+            document.getElementById('aliquotaInsumo').value = '18';
+            document.getElementById('proporcaoTributada').value = '100';
+            document.getElementById('dieselFields').classList.add('hidden');
+            document.getElementById('insumosFields').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            
+            if (type === 'success') {
+                toast.style.background = '#27ae60';
+            } else if (type === 'error') {
+                toast.style.background = '#e74c3c';
+            } else if (type === 'warning') {
+                toast.style.background = '#f39c12';
+            }
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // --- NOVAS FUNÇÕES PARA IMPORTAÇÃO E AUTOCOMPLETE ---
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    csvFileContent = e.target.result;
+                    document.getElementById('statusImportacao').textContent = `Arquivo "${file.name}" pronto para processar.`;
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function processarCSV() {
+            if (!csvFileContent) {
+                showToast('Por favor, selecione um arquivo CSV primeiro', 'error');
+                return;
+            }
+            
+            postosMasterList = [];
+            const lines = csvFileContent.split(/\r?\n/);
+            
+            // Assumindo CSV: Nome,Cidade,Estado,PrecoAtual
+            // Pula o cabeçalho (lines[0])
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.trim() === '') continue;
+                
+                const parts = line.split(',');
+                
+                // Validação simples
+                if (parts.length >= 4) {
+                    const posto = {
+                        nome: parts[0].trim(),
+                        cidade: parts[1].trim(),
+                        estado: parts[2].trim(),
+                        precoAtual: parseFloat(parts[3].replace('"', '').replace('"', '').replace('R$', '').trim()) // Limpa R$ e aspas
+                    };
+                    
+                    if (posto.nome && posto.cidade && posto.estado && !isNaN(posto.precoAtual)) {
+                        postosMasterList.push(posto);
+                    }
+                }
+            }
+            
+            localStorage.setItem('postosMasterList', JSON.stringify(postosMasterList));
+            document.getElementById('statusImportacao').textContent = `${postosMasterList.length} postos importados com sucesso!`;
+            showToast('Lista de postos importada!', 'success');
+            csvFileContent = null; // Limpa o conteúdo
+            document.getElementById('csvPostosInput').value = ''; // Limpa o input
+        }
+
+        function filtrarPostos(value) {
+            const container = document.getElementById('autocompletePostos');
+            container.innerHTML = '';
+            if (value.length < 2 || postosMasterList.length === 0) {
+                return;
+            }
+
+            const filtro = value.toLowerCase();
+            const resultados = postosMasterList.filter(p => p.nome.toLowerCase().includes(filtro)).slice(0, 10); // Limita a 10 resultados
+
+            resultados.forEach((posto) => {
+                const item = document.createElement('div');
+                item.style.padding = '10px';
+                item.style.cursor = 'pointer';
+                item.style.borderBottom = '1px solid #f0f0f0';
+                item.innerHTML = `<strong>${posto.nome}</strong><br><small>${posto.cidade} - ${posto.estado} | R$ ${posto.precoAtual.toFixed(2)}</small>`;
+                
+                // Adiciona efeito hover
+                item.onmouseover = () => item.style.backgroundColor = '#f8f9fa';
+                item.onmouseout = () => item.style.backgroundColor = 'white';
+                
+                item.onclick = () => selecionarPosto(posto);
+                container.appendChild(item);
+            });
+        }
+
+        function selecionarPosto(posto) {
+            document.getElementById('nomePosto').value = posto.nome;
+            document.getElementById('rotaPosto').value = `${posto.cidade} - ${posto.estado}`;
+            document.getElementById('precoAtual').value = posto.precoAtual.toFixed(2);
+            
+            // Opcional: Sugerir um preço ValeCard com um desconto, ex: 3%
+            // document.getElementById('precoValeCard').value = (posto.precoAtual * 0.97).toFixed(2); 
+
+            document.getElementById('autocompletePostos').innerHTML = ''; // Limpa a lista
+        }
+    </script>
+</body>
+</html>
