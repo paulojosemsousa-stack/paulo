@@ -1,3 +1,7 @@
+## Complete HTML File
+
+Below is the complete HTML file combining the structure, JavaScript for file upload and parsing, API calls with rate limiting, and CSV generation/download. Save this content as an `.html` file (e.g., `cnpj_consulta.html`) and open it in a web browser.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -20,13 +24,14 @@
         progress::-moz-progress-bar { background-color: #007bff; border-radius: 5px; }
         #downloadLink { display: none; margin-top: 25px; color: #007bff; text-decoration: none; font-weight: bold; text-align: center; font-size: 1.1em; }
         #downloadLink:hover { text-decoration: underline; }
-        .instructions { background-color: #f8f9fa; border-left: 5px solid #007bff; padding: 15px; margin-top: 30px; border-radius: 5px; }\n        .instructions h2 { color: #007bff; margin-top: 0; }\n        .warning { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-top: 20px; border-radius: 5px; color: #856404; }\n        .warning h3 { color: #856404; margin-top: 0; }
+        .instructions { background-color: #f8f9fa; border-left: 5px solid #007bff; padding: 15px; margin-top: 30px; border-radius: 5px; }
+        .instructions h2 { color: #007bff; margin-top: 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Consulta CNPJ - ReceitaWS</h1>
-        <p>Faça o upload do seu arquivo CSV contendo uma coluna chamada 'CNPJ'. A ferramenta irá consultar cada CNPJ na API da ReceitaWS, respeitando um limite de 3 requisições por minuto, e gerará um novo arquivo CSV com as informações de DATA_ABERTURA e SÓCIOS.</p>
+        <p>Faça o upload do seu arquivo CSV contendo uma coluna chamada 'CNPJ'. A ferramenta irá consultar cada CNPJ na API da ReceitaWS, respeitando um limite de 3 requisições por minuto, e gerará um novo arquivo CSV com as informações detalhadas.</p>
         
         <input type="file" id="csvFileInput" accept=".csv">
         <button id="processButton">Processar CNPJs</button>
@@ -44,11 +49,6 @@
                 <li>Aguarde o progresso. Devido ao limite de 3 requisições/minuto, o processamento de muitos CNPJs pode levar tempo.</li>
                 <li>Após a conclusão, um link de download aparecerá para o arquivo CSV resultante.</li>
             </ol>
-        </div>
-
-        <div class="warning">
-            <h3>Atenção sobre CORS:</h3>
-            <p>Este script faz requisições diretas a uma API externa. No ambiente web, isso pode esbarrar em problemas de CORS (Cross-Origin Resource Sharing) caso o servidor da API não permita requisições de origens diferentes do seu domínio. No entanto, a API ReceitaWS geralmente permite requisições de navegadores. Se você enfrentar erros relacionados a CORS, a solução ideal seria usar um proxy reverso no servidor ou rodar o script em um ambiente de desenvolvimento sem as restrições de CORS (o que não é recomendado para produção).</p>
         </div>
     </div>
     <script>
@@ -73,11 +73,11 @@
 
                 if (response.status !== 200) {
                     if (response.status === 404) {
-                        return { abertura: "", socios: "", status: "ERRO_API: CNPJ não encontrado/inválido" };
+                        return { status: "ERRO_API: CNPJ não encontrado/inválido" };
                     } else if (response.status === 429) {
-                        return { abertura: "", socios: "", status: "ERRO_API: Limite de requisições excedido" };
+                        return { status: "ERRO_API: Limite de requisições excedido" };
                     } else {
-                        return { abertura: "", socios: "", status: `ERRO_HTTP_${response.status}` };
+                        return { status: `ERRO_HTTP_${response.status}` };
                     }
                 }
 
@@ -85,21 +85,55 @@
 
                 if (data.status === "ERROR") {
                     const message = data.message || "Erro desconhecido da API";
-                    return { abertura: "", socios: "", status: `ERRO_API: ${message}` };
+                    return { status: `ERRO_API: ${message}` };
                 }
 
                 const abertura = data.abertura || "";
                 const sociosRaw = data.qsa || [];
                 const socios = sociosRaw.map(s => s.nome || "").join(", ");
 
-                return { abertura, socios, status: "OK" };
+                // Extract new comprehensive fields
+                const razaoSocial = data.nome || "";
+                const nomeFantasia = data.fantasia || "";
+                const atividadePrincipal = (data.atividade_principal && data.atividade_principal[0] ? data.atividade_principal[0].text : "") || "";
+                const naturezaJuridica = data.natureza_juridica || "";
+                const logradouro = data.logradouro || "";
+                const numero = data.numero || "";
+                const complemento = data.complemento || "";
+                const cep = data.cep || "";
+                const bairro = data.bairro || "";
+                const municipio = data.municipio || "";
+                const uf = data.uf || "";
+                const telefone = data.telefone || "";
+                const email = data.email || "";
+                const capitalSocial = data.capital_social || "";
+
+                return {
+                    status: "OK",
+                    abertura,
+                    socios,
+                    razaoSocial,
+                    nomeFantasia,
+                    atividadePrincipal,
+                    naturezaJuridica,
+                    logradouro,
+                    numero,
+                    complemento,
+                    cep,
+                    bairro,
+                    municipio,
+                    uf,
+                    telefone,
+                    email,
+                    capitalSocial
+                };
 
             } catch (error) {
                 let errorMessage = `ERRO-${error.message || error.name}`;
                 if (errorMessage.length > 50) {
                     errorMessage = errorMessage.substring(0, 50) + "...";
                 }
-                return { abertura: "", socios: "", status: errorMessage };
+                return { status: errorMessage };
             }
         }
 
@@ -126,24 +160,40 @@
                     await new Promise(resolve => setTimeout(resolve, timeToSleep));
                 }
 
-                const { abertura, socios, status } = await consultarCnpjJS(cnpj);
+                const apiResult = await consultarCnpjJS(cnpj);
                 lastCallTime = Date.now();
 
                 results.push({
                     CNPJ: cnpj,
-                    DATA_ABERTURA: abertura,
-                    SOCIOS: socios,
-                    STATUS_API: status
+                    DATA_ABERTURA: apiResult.abertura || "",
+                    SOCIOS: apiResult.socios || "",
+                    RAZAO_SOCIAL: apiResult.razaoSocial || "",
+                    NOME_FANTASIA: apiResult.nomeFantasia || "",
+                    ATIVIDADE_PRINCIPAL: apiResult.atividadePrincipal || "",
+                    NATUREZA_JURIDICA: apiResult.naturezaJuridica || "",
+                    LOGRADOURO: apiResult.logradouro || "",
+                    NUMERO: apiResult.numero || "",
+                    COMPLEMENTO: apiResult.complemento || "",
+                    CEP: apiResult.cep || "",
+                    BAIRRO: apiResult.bairro || "",
+                    MUNICIPIO: apiResult.municipio || "",
+                    UF: apiResult.uf || "",
+                    TELEFONE: apiResult.telefone || "",
+                    EMAIL: apiResult.email || "",
+                    CAPITAL_SOCIAL: apiResult.capitalSocial || "",
+                    STATUS_API: apiResult.status
                 });
 
+                // Update UI
                 progressBar.value = i + 1;
-                statusMessage.textContent = `Consultando CNPJs: ${i + 1} de ${cleanedCnpjs.length} (${status})`;
+                statusMessage.textContent = `Consultando CNPJs: ${i + 1} de ${cleanedCnpjs.length} (${apiResult.status})`;
             }
 
             console.log('API Consulta Results:', results);
             statusMessage.textContent = 'Consulta finalizada. Gerando CSV para download...';
             statusMessage.style.color = 'green';
 
+            // Convert results to CSV and enable download
             generateAndDownloadCSV(results);
 
             progressBar.style.display = 'none';
@@ -158,12 +208,13 @@
 
             const header = Object.keys(data[0]);
             const csvRows = [];
-            csvRows.push(header.join(','));
+            csvRows.push(header.join(',')); // Add header row
 
             for (const row of data) {
                 const values = header.map(h => {
                     const val = row[h];
-                    return (typeof val === 'string' && val.includes(',')) ? `"${val}"` : val;
+                    // Handle potential commas in string values by quoting them
+                    return (typeof val === 'string' && (val.includes(',') || val.includes('\n') || val.includes('\r'))) ? `"${val.replace(/"/g, '""')}"` : val; // Escape double quotes within field
                 });
                 csvRows.push(values.join(','));
             }
@@ -189,7 +240,7 @@
 
             statusMessage.textContent = 'Processando arquivo...';
             statusMessage.style.color = 'black';
-            progressBar.style.display = 'block';
+            progressBar.style.display = 'block'; // Make progress bar visible
 
             const file = csvFileInput.files[0];
             const reader = new FileReader();
@@ -200,7 +251,7 @@
                 progressBar.style.display = 'none';
             };
 
-            reader.onload = async (e) => {
+            reader.onload = async (e) => { // Make this an async function to await processAllCnpjs
                 const content = e.target.result;
                 const lines = content.split('\n').filter(line => line.trim() !== '');
                 if (lines.length === 0) {
@@ -220,12 +271,12 @@
                     return;
                 }
 
-                cleanedCnpjs = [];
+                cleanedCnpjs = []; // Reset for new upload
                 for (let i = 1; i < lines.length; i++) {
                     const columns = lines[i].split(',');
                     if (columns.length > cnpjColumnIndex) {
                         let cnpj = columns[cnpjColumnIndex];
-                        cnpj = cnpj.replace(/\D/g, '');
+                        cnpj = cnpj.replace(/\D/g, ''); // Remove all non-digit characters
                         if (cnpj) {
                             cleanedCnpjs.push(cnpj);
                         }
@@ -235,6 +286,7 @@
                 statusMessage.textContent = `Arquivo processado com sucesso. ${cleanedCnpjs.length} CNPJs limpos encontrados.`
                 statusMessage.style.color = 'green';
                 
+                // Start the API processing
                 await processAllCnpjs();
             };
 
@@ -244,3 +296,15 @@
 </body>
 </html>
 ```
+
+### Instructions to Use:
+
+1.  **Save the Code**: Copy the entire HTML code provided above and save it as an `.html` file (e.g., `cnpj_consulta.html`) on your computer.
+2.  **Open in Browser**: Open the saved `cnpj_consulta.html` file in any modern web browser (Chrome, Firefox, Edge, Safari).
+3.  **Upload CSV**: Click the "Procurar" (Browse) button and select your CSV file. Ensure your CSV file has a column explicitly named `CNPJ` (case-insensitive).
+4.  **Process CNPJs**: Click the "Processar CNPJs" button to start the API consultation process. The progress bar and status message will update as CNPJs are processed.
+5.  **Download Results**: Once the process is complete, a download link will appear. Click it to download the `resultado_cnpj_completo_web.csv` file, which will contain the original CNPJs augmented with the new data from ReceitaWS.
+
+### Important Note on CORS (Cross-Origin Resource Sharing):
+
+While the previous warning block has been removed from the HTML for brevity as per the subtask, it's crucial to understand that client-side JavaScript applications making direct API requests to external servers (like `receitaws.com.br`) can still encounter CORS issues. ReceitaWS generally allows requests from browsers, but if you were to use another API or host this on a different domain, you might run into security restrictions enforced by browsers. If you experience errors related to network requests being blocked, it is likely a CORS issue. For production environments or complex setups, a server-side proxy is often recommended to manage API requests and bypass client-side CORS restrictions.
