@@ -1,0 +1,246 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNPJ Consulta</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1 { color: #333; text-align: center; }
+        .container { max-width: 700px; margin: auto; padding: 30px; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        p { line-height: 1.6; color: #555; }
+        input[type="file"] { margin-bottom: 20px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; display: block; width: 100%; box-sizing: border-box; }
+        button { padding: 12px 25px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; transition: background-color 0.3s ease; display: block; width: 100%; margin-top: 10px; }
+        button:hover { background-color: #218838; }
+        #statusMessage { margin-top: 25px; padding: 15px; border-radius: 5px; background-color: #e9ecef; border: 1px solid #dee2e6; font-weight: bold; color: #333; min-height: 30px; }
+        progress { width: 100%; height: 25px; margin-top: 20px; appearance: none; -webkit-appearance: none; border-radius: 5px; }
+        progress::-webkit-progress-bar { background-color: #e0e0e0; border-radius: 5px; }
+        progress::-webkit-progress-value { background-color: #007bff; border-radius: 5px; }
+        progress::-moz-progress-bar { background-color: #007bff; border-radius: 5px; }
+        #downloadLink { display: none; margin-top: 25px; color: #007bff; text-decoration: none; font-weight: bold; text-align: center; font-size: 1.1em; }
+        #downloadLink:hover { text-decoration: underline; }
+        .instructions { background-color: #f8f9fa; border-left: 5px solid #007bff; padding: 15px; margin-top: 30px; border-radius: 5px; }\n        .instructions h2 { color: #007bff; margin-top: 0; }\n        .warning { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-top: 20px; border-radius: 5px; color: #856404; }\n        .warning h3 { color: #856404; margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta CNPJ - ReceitaWS</h1>
+        <p>Faça o upload do seu arquivo CSV contendo uma coluna chamada 'CNPJ'. A ferramenta irá consultar cada CNPJ na API da ReceitaWS, respeitando um limite de 3 requisições por minuto, e gerará um novo arquivo CSV com as informações de DATA_ABERTURA e SÓCIOS.</p>
+        
+        <input type="file" id="csvFileInput" accept=".csv">
+        <button id="processButton">Processar CNPJs</button>
+        
+        <progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+        <div id="statusMessage">Aguardando arquivo...</div>
+        <a id="downloadLink" href="#" style="display: none;">Download Resultado CSV</a>
+
+        <div class="instructions">
+            <h2>Como Usar:</h2>
+            <ol>
+                <li>Prepare um arquivo CSV com uma coluna intitulada `CNPJ`.</li>
+                <li>Clique no botão "Procurar" para selecionar seu arquivo CSV.</li>
+                <li>Clique em "Processar CNPJs" para iniciar a consulta.</li>
+                <li>Aguarde o progresso. Devido ao limite de 3 requisições/minuto, o processamento de muitos CNPJs pode levar tempo.</li>
+                <li>Após a conclusão, um link de download aparecerá para o arquivo CSV resultante.</li>
+            </ol>
+        </div>
+
+        <div class="warning">
+            <h3>Atenção sobre CORS:</h3>
+            <p>Este script faz requisições diretas a uma API externa. No ambiente web, isso pode esbarrar em problemas de CORS (Cross-Origin Resource Sharing) caso o servidor da API não permita requisições de origens diferentes do seu domínio. No entanto, a API ReceitaWS geralmente permite requisições de navegadores. Se você enfrentar erros relacionados a CORS, a solução ideal seria usar um proxy reverso no servidor ou rodar o script em um ambiente de desenvolvimento sem as restrições de CORS (o que não é recomendado para produção).</p>
+        </div>
+    </div>
+    <script>
+        const API_URL = "https://receitaws.com.br/v1/cnpj/";
+
+        const csvFileInput = document.getElementById('csvFileInput');
+        const processButton = document.getElementById('processButton');
+        const statusMessage = document.getElementById('statusMessage');
+        const progressBar = document.getElementById('progressBar');
+        const downloadLink = document.getElementById('downloadLink');
+
+        let cleanedCnpjs = [];
+
+        async function consultarCnpjJS(cnpj) {
+            try {
+                const url = `${API_URL}${cnpj}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                const response = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
+                if (response.status !== 200) {
+                    if (response.status === 404) {
+                        return { abertura: "", socios: "", status: "ERRO_API: CNPJ não encontrado/inválido" };
+                    } else if (response.status === 429) {
+                        return { abertura: "", socios: "", status: "ERRO_API: Limite de requisições excedido" };
+                    } else {
+                        return { abertura: "", socios: "", status: `ERRO_HTTP_${response.status}` };
+                    }
+                }
+
+                const data = await response.json();
+
+                if (data.status === "ERROR") {
+                    const message = data.message || "Erro desconhecido da API";
+                    return { abertura: "", socios: "", status: `ERRO_API: ${message}` };
+                }
+
+                const abertura = data.abertura || "";
+                const sociosRaw = data.qsa || [];
+                const socios = sociosRaw.map(s => s.nome || "").join(", ");
+
+                return { abertura, socios, status: "OK" };
+
+            } catch (error) {
+                let errorMessage = `ERRO-${error.message || error.name}`;
+                if (errorMessage.length > 50) {
+                    errorMessage = errorMessage.substring(0, 50) + "...";
+                }
+                return { abertura: "", socios: "", status: errorMessage };
+            }
+        }
+
+        async function processAllCnpjs() {
+            const results = [];
+            const CALLS_PER_MINUTE = 3;
+            const CALL_INTERVAL_MS = (60 / CALLS_PER_MINUTE) * 1000;
+            let lastCallTime = 0;
+
+            progressBar.max = cleanedCnpjs.length;
+            progressBar.value = 0;
+            progressBar.style.display = 'block';
+            statusMessage.textContent = 'Iniciando consulta à API...';
+            statusMessage.style.color = 'black';
+            downloadLink.style.display = 'none';
+
+            for (let i = 0; i < cleanedCnpjs.length; i++) {
+                const cnpj = cleanedCnpjs[i];
+
+                const now = Date.now();
+                const timeSinceLastCall = now - lastCallTime;
+                if (timeSinceLastCall < CALL_INTERVAL_MS) {
+                    const timeToSleep = CALL_INTERVAL_MS - timeSinceLastCall;
+                    await new Promise(resolve => setTimeout(resolve, timeToSleep));
+                }
+
+                const { abertura, socios, status } = await consultarCnpjJS(cnpj);
+                lastCallTime = Date.now();
+
+                results.push({
+                    CNPJ: cnpj,
+                    DATA_ABERTURA: abertura,
+                    SOCIOS: socios,
+                    STATUS_API: status
+                });
+
+                progressBar.value = i + 1;
+                statusMessage.textContent = `Consultando CNPJs: ${i + 1} de ${cleanedCnpjs.length} (${status})`;
+            }
+
+            console.log('API Consulta Results:', results);
+            statusMessage.textContent = 'Consulta finalizada. Gerando CSV para download...';
+            statusMessage.style.color = 'green';
+
+            generateAndDownloadCSV(results);
+
+            progressBar.style.display = 'none';
+        }
+
+        function generateAndDownloadCSV(data) {
+            if (data.length === 0) {
+                statusMessage.textContent = 'Nenhum dado para gerar CSV.';
+                statusMessage.style.color = 'red';
+                return;
+            }
+
+            const header = Object.keys(data[0]);
+            const csvRows = [];
+            csvRows.push(header.join(','));
+
+            for (const row of data) {
+                const values = header.map(h => {
+                    const val = row[h];
+                    return (typeof val === 'string' && val.includes(',')) ? `"${val}"` : val;
+                });
+                csvRows.push(values.join(','));
+            }
+
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            downloadLink.href = url;
+            downloadLink.download = 'resultado_cnpj_completo_web.csv';
+            downloadLink.textContent = 'Download resultado_cnpj_completo_web.csv';
+            downloadLink.style.display = 'block';
+            statusMessage.textContent = 'Processo concluído! Arquivo pronto para download.';
+            statusMessage.style.color = 'green';
+        }
+
+        processButton.addEventListener('click', () => {
+            if (!csvFileInput.files || csvFileInput.files.length === 0) {
+                statusMessage.textContent = 'Por favor, selecione um arquivo CSV primeiro.';
+                statusMessage.style.color = 'red';
+                return;
+            }
+
+            statusMessage.textContent = 'Processando arquivo...';
+            statusMessage.style.color = 'black';
+            progressBar.style.display = 'block';
+
+            const file = csvFileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onerror = () => {
+                statusMessage.textContent = 'Erro ao ler o arquivo.';
+                statusMessage.style.color = 'red';
+                progressBar.style.display = 'none';
+            };
+
+            reader.onload = async (e) => {
+                const content = e.target.result;
+                const lines = content.split('\n').filter(line => line.trim() !== '');
+                if (lines.length === 0) {
+                    statusMessage.textContent = 'O arquivo CSV está vazio ou ilegível.';
+                    statusMessage.style.color = 'red';
+                    progressBar.style.display = 'none';
+                    return;
+                }
+
+                const header = lines[0].split(',');
+                const cnpjColumnIndex = header.findIndex(col => col.trim().toUpperCase() === 'CNPJ');
+
+                if (cnpjColumnIndex === -1) {
+                    statusMessage.textContent = 'Coluna \'CNPJ\' não encontrada no cabeçalho do CSV.';
+                    statusMessage.style.color = 'red';
+                    progressBar.style.display = 'none';
+                    return;
+                }
+
+                cleanedCnpjs = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const columns = lines[i].split(',');
+                    if (columns.length > cnpjColumnIndex) {
+                        let cnpj = columns[cnpjColumnIndex];
+                        cnpj = cnpj.replace(/\D/g, '');
+                        if (cnpj) {
+                            cleanedCnpjs.push(cnpj);
+                        }
+                    }
+                }
+
+                statusMessage.textContent = `Arquivo processado com sucesso. ${cleanedCnpjs.length} CNPJs limpos encontrados.`
+                statusMessage.style.color = 'green';
+                
+                await processAllCnpjs();
+            };
+
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
+```
