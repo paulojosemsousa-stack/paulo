@@ -32,10 +32,10 @@ Below is the complete HTML file combining the structure, JavaScript for file upl
     <div class="container">
         <h1>Consulta CNPJ - ReceitaWS</h1>
         <p>Faça o upload do seu arquivo CSV contendo uma coluna chamada 'CNPJ'. A ferramenta irá consultar cada CNPJ na API da ReceitaWS, respeitando um limite de 3 requisições por minuto, e gerará um novo arquivo CSV com as informações detalhadas.</p>
-        
+
         <input type="file" id="csvFileInput" accept=".csv">
         <button id="processButton">Processar CNPJs</button>
-        
+
         <progress id="progressBar" value="0" max="100" style="display: none;"></progress>
         <div id="statusMessage">Aguardando arquivo...</div>
         <a id="downloadLink" href="#" style="display: none;">Download Resultado CSV</a>
