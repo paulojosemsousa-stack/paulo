@@ -3,22 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Consulta CNPJ — Paulo Marques</title>
+  <title>Consulta CNPJ - República Federativa do Brasil</title>
 
   <style>
     :root {
-      --azul: #0b5cff;
-      --vermelho: #e02424;
-      --cinza-claro: #f6f7fb;
-      --texto-escuro: #1c1f26;
+      --verde: #009739;
+      --amarelo: #FFDF00;
+      --azul: #002776;
+      --cinza: #f3f4f5;
+      --texto: #1c1f26;
     }
 
     body {
+      margin:0;
+      padding:20px;
+      background: var(--cinza);
       font-family: "Segoe UI", Inter, Arial;
-      background: var(--cinza-claro);
-      color: var(--texto-escuro);
-      padding: 20px;
-      margin: 0;
+      color: var(--texto);
     }
 
     .card {
@@ -26,146 +27,126 @@
       margin: 20px auto;
       background: white;
       border-radius: 12px;
-      padding: 22px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-      border-top: 5px solid var(--azul);
-      border-bottom: 5px solid var(--vermelho);
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12);
+      border-top: 6px solid var(--verde);
+      border-bottom: 6px solid var(--amarelo);
     }
 
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:15px;
+      margin-bottom:20px;
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: 700;
+    .brasao {
+      width:60px;
+    }
+
+    .titulo {
+      font-size: 26px;
+      font-weight: 800;
       color: var(--azul);
+      line-height: 1.2;
     }
 
-    .logo span {
-      color: var(--vermelho);
-    }
-
-    .linkedin a {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--azul);
-      text-decoration: none;
-    }
-
-    .linkedin a:hover {
-      text-decoration: underline;
-    }
-
-    h1 {
-      margin: 0 0 10px 0;
-      color: var(--azul);
-    }
-
-    .row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    input[type=file], input.input {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccd2dd;
-      min-width: 180px;
+    .sub {
+      font-size: 14px;
+      opacity: .8;
     }
 
     button {
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
+      padding:10px 16px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      transition:0.2s;
     }
 
-    button.primary { background: var(--azul); color: white; }
-    button.secondary { background: var(--vermelho); color: white; }
+    .primary { background: var(--verde); color:white; }
+    .primary:hover { background:#00762c; }
 
-    button.primary:hover { background: #0047d1; }
-    button.secondary:hover { background: #be1d1d; }
+    .secondary { background: var(--azul); color:white; }
+    .secondary:hover { background:#001d55; }
+
+    input[type=file], input.input {
+      padding:8px;
+      border:1px solid #ccd2dd;
+      border-radius:6px;
+    }
+
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
 
     .progress {
       height: 14px;
-      background: #e1e6f0;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 10px;
+      background:#e1e6ef;
+      border-radius:8px;
+      overflow:hidden;
+      margin-top:10px;
     }
 
     .progress > span {
-      display: block;
-      height: 100%;
-      background: var(--azul);
-      width: 0%;
-      transition: width .20s ease;
+      display:block;
+      height:100%;
+      background: var(--verde);
+      width:0%;
+      transition: width .2s ease;
     }
 
     pre {
-      background: #0d1826;
-      color: #e6eefc;
-      padding: 12px;
-      height: 260px;
-      overflow: auto;
-      border-radius: 6px;
-      font-size: 13px;
-      margin-top: 10px;
+      background:#0d1826;
+      color:#e6eefc;
+      padding:12px;
+      border-radius:6px;
+      height:260px;
+      overflow:auto;
+      font-size:13px;
+      margin-top:10px;
     }
 
     a.link {
       color: var(--azul);
-      font-weight: 600;
-      display: inline-block;
-      margin-top: 10px;
-      text-decoration: none;
+      font-weight:600;
+      text-decoration:none;
+      margin-top:10px;
+      display:inline-block;
     }
 
-    a.link:hover {
-      text-decoration: underline;
-    }
+    a.link:hover { text-decoration:underline; }
   </style>
 
   <!-- PapaParse -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
 </head>
 
 <body>
 
 <div class="card">
 
-  <!-- HEADER COM LOGOTIPO E LINKEDIN -->
+  <!-- Cabeçalho oficial -->
   <div class="header">
-    <div class="logo">PAULO <span>MARQUES</span></div>
-
-    <div class="linkedin">
-      <a href="https://www.linkedin.com/in/paulo-marques-4a3300/" target="_blank">
-        Meu LinkedIn ↗
-      </a>
+    <img class="brasao" src="https://upload.wikimedia.org/wikipedia/commons/0/05/Coat_of_arms_of_Brazil.svg">
+    <div>
+      <div class="titulo">República Federativa do Brasil</div>
+      <div class="sub">Sistema de Consulta Pública — CNPJ / BrasilAPI</div>
     </div>
   </div>
 
-  <h1>Consulta CNPJ — BrasilAPI + Envio de E-mail</h1>
+  <h2>Processador de CNPJs com BrasilAPI</h2>
+  <p>Realiza upload do arquivo CSV, consulta cada CNPJ e gera novo arquivo com todas informações disponíveis.</p>
 
-  <p>Upload do CSV → Consulta BrasilAPI → Envio de e-mail para <b>paulojosemsousa@gmail.com</b> → Gera CSV final.</p>
-
-  <!-- UPLOAD -->
+  <!-- Upload -->
   <div class="row">
     <input id="fileInput" type="file" accept=".csv">
     <button id="btnParse" class="primary">Ler CSV</button>
     <button id="btnExportCNPJs" class="secondary">Exportar CNPJs limpos</button>
   </div>
 
-  <!-- CONFIG -->
+  <!-- Config API -->
   <div class="row">
     <span>API BrasilAPI:</span>
     <input id="apiBase" class="input" style="min-width:360px"
@@ -175,114 +156,88 @@
     <input id="callsPerMinute" class="input" style="width:80px" value="10">
   </div>
 
-  <!-- APPS SCRIPT -->
-  <div class="row">
-    <span>Apps Script URL:</span>
-    <input id="appsScriptUrl" class="input" style="min-width:450px"
-           placeholder="Cole aqui a URL do Google Apps Script">
-  </div>
-
-  <!-- START / ABORT -->
+  <!-- Execução -->
   <div class="row">
     <button id="btnStart" class="primary">Iniciar Processamento</button>
     <button id="btnAbort" class="secondary" disabled>Cancelar</button>
   </div>
 
-  <!-- PROGRESSO -->
+  <!-- Progresso -->
   <div class="progress"><span id="progressBar"></span></div>
   <div id="status" style="margin-top:10px">Aguardando…</div>
 
-  <!-- LOG -->
+  <!-- Log -->
   <h3>Log</h3>
   <pre id="log"></pre>
 
-  <!-- DOWNLOAD -->
-  <a id="downloadLink" class="link" style="display:none" href="#">Download CSV final</a>
+  <!-- Download -->
+  <a id="downloadLink" class="link" style="display:none;">Download CSV final</a>
 
 </div>
 
-<!-- =============================== -->
-<!--  AQUI COMEÇA O SCRIPT BASE      -->
-<!-- =============================== -->
-
 <script>
-
+// ----------------------------------------------
 // UTILIDADES
-const el   = id => document.getElementById(id);
-const log  = el("log");
-const stat = el("status");
-const pbar = el("progressBar");
+// ----------------------------------------------
+const el = id => document.getElementById(id);
+const log    = el("log");
+const stat   = el("status");
+const pbar   = el("progressBar");
+const fileInp= el("fileInput");
 
-const fileInput   = el("fileInput");
-const btnParse    = el("btnParse");
-const btnExport   = el("btnExportCNPJs");
-const btnStart    = el("btnStart");
-const btnAbort    = el("btnAbort");
-const apiBaseEl   = el("apiBase");
-const rateEl      = el("callsPerMinute");
-const appsScriptEl = el("appsScriptUrl");
-const downloadLink = el("downloadLink");
+let parsedRows=[];
+let cleanedCnpjs=[];
+let abortRequested=false;
 
-let parsedRows = [];
-let cleanedCnpjs = [];
-let abortRequested = false;
-
-// Funções auxiliares
-function addLog(m){ log.textContent = `${new Date().toLocaleTimeString()} - ${m}\n` + log.textContent; }
-function setStatus(m,c){ stat.textContent=m; stat.style.color=c||"#222"; }
-function setProgress(p){ pbar.style.width = p+"%"; }
+function addLog(t){ log.textContent = new Date().toLocaleTimeString()+" - "+t+"\n"+log.textContent; }
+function setStatus(t,c){ stat.textContent=t; stat.style.color=c||"#000"; }
+function setProgress(p){ pbar.style.width=p+"%"; }
 function cleanCnpj(v){ return (v||"").replace(/\D/g,""); }
 
-// =====================
+// ----------------------------------------------
 // PARSE CSV
-// =====================
-btnParse.onclick = () => {
-
-  const f = fileInput.files[0];
-  if(!f) return setStatus("Selecione um CSV.","red");
+// ----------------------------------------------
+el("btnParse").onclick = () => {
+  const f=fileInp.files[0];
+  if(!f) return setStatus("Selecione um arquivo CSV.","red");
 
   Papa.parse(f,{
     header:true,
     skipEmptyLines:true,
     complete: res=>{
-      parsedRows = res.data;
-      addLog("CSV lido. Linhas: "+parsedRows.length);
-
-      cleanedCnpjs = parsedRows.map((r,i)=>({
-        index:i,
-        raw:r["CNPJ"],
-        cnpj:cleanCnpj(r["CNPJ"])
+      parsedRows=res.data;
+      cleanedCnpjs=parsedRows.map((r,i)=>({
+        index:i, raw:r["CNPJ"], cnpj:cleanCnpj(r["CNPJ"])
       })).filter(x=>x.cnpj);
 
-      setStatus(`CNPJs limpos: ${cleanedCnpjs.length}`, "green");
+      setStatus(`Linhas lidas: ${parsedRows.length} | CNPJs válidos: ${cleanedCnpjs.length}`, "green");
+      addLog("CSV lido com sucesso.");
     }
   });
 };
 
-// =====================
+// ----------------------------------------------
 // EXPORTAR CNPJS
-// =====================
-btnExport.onclick = ()=>{
+// ----------------------------------------------
+el("btnExportCNPJs").onclick = () => {
   if(!cleanedCnpjs.length) return;
 
   const csv = Papa.unparse(cleanedCnpjs.map(x=>({CNPJ:x.cnpj})));
-  const blob = new Blob([csv],{type:"text/csv"});
-  const url  = URL.createObjectURL(blob);
+  const blob=new Blob([csv],{type:"text/csv"});
+  const url=URL.createObjectURL(blob);
 
-  downloadLink.href=url;
-  downloadLink.download="cnpjs_limpos.csv";
-  downloadLink.style.display="inline-block";
-  downloadLink.textContent="Download cnpjs_limpos.csv";
-  setStatus("Arquivo pronto.","green");
+  el("downloadLink").href=url;
+  el("downloadLink").download="cnpjs_limpos.csv";
+  el("downloadLink").textContent="Download cnpjs_limpos.csv";
+  el("downloadLink").style.display="inline-block";
 };
 
-// =====================
-// FETCH COM TIMEOUT
-// =====================
+// ----------------------------------------------
+// BUSCA COM TIMEOUT
+// ----------------------------------------------
 async function fetchTimeout(url,ms=15000){
   const ctrl=new AbortController();
   const t=setTimeout(()=>ctrl.abort(),ms);
-
   try{
     const r=await fetch(url,{signal:ctrl.signal});
     clearTimeout(t);
@@ -293,121 +248,94 @@ async function fetchTimeout(url,ms=15000){
   }
 }
 
-// =====================
+// ----------------------------------------------
 // MAPEAR CAMPOS BRASILAPI
-// =====================
-function mapBrasilApiFields(d){
-  const o={};
-  o.RAZAO_SOCIAL = d.razao_social || "";
-  o.NOME_FANTASIA = d.nome_fantasia || "";
-  o.DATA_INICIO_ATIVIDADE = d.data_inicio_atividade || "";
-  o.CNAE_PRINCIPAL = d.cnae_fiscal_descricao || "";
-  o.CAPITAL_SOCIAL = d.capital_social || "";
-  o.MUNICIPIO = d.municipio || "";
-  o.UF = d.uf || "";
-  o.EMAIL = d.email || "";
-  o.TELEFONE = d.telefone || "";
-
-  try{
-    o.SOCIOS = Array.isArray(d.qsa)
-      ? d.qsa.map(s=>s.nome_socio || s.nome || "").join(" | ")
-      : "";
-  }catch(e){ o.SOCIOS=""; }
-
-  return o;
+// ----------------------------------------------
+function mapBrasilApi(d){
+  return {
+    RAZAO_SOCIAL: d.razao_social || "",
+    FANTASIA: d.nome_fantasia || "",
+    CAP_SOCIAL: d.capital_social || "",
+    ABERTURA: d.data_inicio_atividade || "",
+    MUNICIPIO: d.municipio || "",
+    UF: d.uf || "",
+    CNAE: d.cnae_fiscal_descricao || "",
+    EMAIL: d.email || "",
+    TELEFONE: d.telefone || "",
+    SOCIOS: Array.isArray(d.qsa) ? d.qsa.map(s=>s.nome_socio||s.nome||"").join(" | ") : ""
+  };
 }
 
-// =====================
-// PROCESSAR
-// =====================
-btnStart.onclick = async ()=>{
+// ----------------------------------------------
+// PROCESSAMENTO
+// ----------------------------------------------
+el("btnStart").onclick = async ()=>{
 
-  if(!cleanedCnpjs.length)
-    return setStatus("Nenhum CNPJ limpo.","red");
+  if(!cleanedCnpjs.length) return setStatus("Nenhum CNPJ válido.","red");
 
-  const apiBase = apiBaseEl.value.trim();
-  const appsUrl = appsScriptEl.value.trim();
-
-  const rate = Math.max(1,parseInt(rateEl.value)||10);
-  const interval = Math.ceil(60000/rate);
+  const apiBase = el("apiBase").value.trim();
+  const rate = Math.max(1, parseInt(el("callsPerMinute").value)||10);
+  const interval = Math.ceil(60000 / rate);
 
   abortRequested=false;
-  btnAbort.disabled=false;
-  btnStart.disabled=true;
-
-  setStatus("Consultando...", "#0b5cff");
+  el("btnAbort").disabled=false;
+  el("btnStart").disabled=true;
 
   const results=[];
 
   for(let i=0;i<cleanedCnpjs.length;i++){
+
     if(abortRequested) break;
 
-    const item=cleanedCnpjs[i];
-    const cnpj=item.cnpj;
+    const cnpj = cleanedCnpjs[i].cnpj;
     const url = apiBase.endsWith("/") ? apiBase+cnpj : apiBase+"/"+cnpj;
 
-    let row = {CNPJ:cnpj, ORIGINAL_RAW:item.raw, ORIGINAL_INDEX:item.index};
+    addLog("Consultando "+cnpj);
 
-    addLog(`Consultando BrasilAPI: ${cnpj}`);
+    let row = {CNPJ:cnpj};
 
     try{
-      const r=await fetchTimeout(url);
+      const r = await fetchTimeout(url,15000);
+
       if(r.ok){
-        const j=await r.json();
-        const m=mapBrasilApiFields(j);
-        row={...row, ...m, STATUS_API:"OK"};
+        const j = await r.json();
+        row = {...row, ...mapBrasilApi(j), STATUS_API:"OK"};
       }else{
         row.STATUS_API="HTTP_"+r.status;
       }
+
     }catch(e){
-      row.STATUS_API="ERRO_FETCH";
+      row.STATUS_API="ERRO_TIMEOUT";
     }
 
     results.push(row);
-
-    // Enviar e-mail via Google Apps Script
-    if(appsUrl){
-      try{
-        await fetch(appsUrl,{
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({cnpj:cnpj, dados:row})
-        });
-        addLog(`Email enviado: ${cnpj}`);
-      }catch(e){
-        addLog("Falha ao enviar email: "+e);
-      }
-    }
-
-    // Progresso visual
-    setProgress(Math.round((i+1)/cleanedCnpjs.length*100));
+    setProgress(((i+1)/cleanedCnpjs.length)*100);
     setStatus(`Processados ${i+1}/${cleanedCnpjs.length}`);
 
-    if(i<cleanedCnpjs.length-1)
-      await new Promise(res=>setTimeout(res,interval));
+    await new Promise(res=>setTimeout(res,interval));
   }
 
-  // Finalização e CSV
-  const csv = Papa.unparse(results,{quotes:true});
+  // gerar CSV
+  const csv=Papa.unparse(results,{quotes:true});
   const blob=new Blob([csv],{type:"text/csv"});
-  const url = URL.createObjectURL(blob);
+  const url=URL.createObjectURL(blob);
 
-  downloadLink.href=url;
-  downloadLink.download="resultado_cnpj_brasilapi_email.csv";
-  downloadLink.textContent="Download resultado_cnpj_brasilapi_email.csv";
-  downloadLink.style.display="inline-block";
+  el("downloadLink").href=url;
+  el("downloadLink").download="resultado_cnpj_brasilapi.csv";
+  el("downloadLink").style.display="inline-block";
+  el("downloadLink").textContent="Download resultado_cnpj_brasilapi.csv";
 
-  setStatus("Finalizado!","green");
-  btnAbort.disabled=true;
-  btnStart.disabled=false;
+  setStatus("Finalizado!", "green");
+  el("btnAbort").disabled=true;
+  el("btnStart").disabled=false;
 };
 
-btnAbort.onclick=()=>{
+// cancelar
+el("btnAbort").onclick=()=>{
   abortRequested=true;
-  btnAbort.disabled=true;
-  btnStart.disabled=false;
-  setStatus("Cancelado.","vermelho");
-  addLog("Processo cancelado pelo usuário.");
+  el("btnAbort").disabled=true;
+  setStatus("Processo cancelado.","red");
+  addLog("Cancelado pelo usuário.");
 };
 
 </script>
