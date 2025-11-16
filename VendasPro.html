@@ -3,233 +3,413 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Enriquecimento de CNPJ em Massa — Automatize sua Prospecção</title>
+  <title>Consulta CNPJ — Paulo Marques</title>
 
   <style>
-    /* Estilos originais mantidos, com leves ajustes para a nova estrutura */
-    body { font-family: Inter, system-ui, Arial; background:#f5f7fa; color:#222; padding:18px; line-height: 1.6; }
-    .card { max-width:920px; margin:18px auto; background:white; border-radius:10px; padding:24px; box-shadow:0 6px 18px rgba(10,20,40,0.06); }
-    
-    /* Títulos e Textos de Marketing */
-    h1 { margin:0 0 10px 0; font-size:26px; font-weight: 700; color: #111; }
-    p.lead { margin:0 0 20px 0; color:#333; font-size: 17px; }
-    h3 { margin-top: 24px; margin-bottom: 8px; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 4px;}
-    hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+    :root {
+      --azul: #0b5cff;
+      --vermelho: #e02424;
+      --cinza-claro: #f6f7fb;
+      --texto-escuro: #1c1f26;
+    }
 
-    /* Estilo para a lista de "Como Usar" */
-    .how-to { padding-left: 20px; margin-bottom: 20px; }
-    .how-to li { margin-bottom: 8px; }
+    body {
+      font-family: "Segoe UI", Inter, Arial;
+      background: var(--cinza-claro);
+      color: var(--texto-escuro);
+      padding: 20px;
+      margin: 0;
+    }
 
-    /* Inputs e Botões */
-    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
-    input[type=file] { display:block; }
-    button { padding:10px 16px; border-radius:8px; border:none; background:#0b7cff; color:white; cursor:pointer; font-weight: 600; font-size: 15px; }
-    button:hover { background: #006ae6; }
-    button.secondary { background:#6c757d; }
-    .progress { width:100%; height:14px; background:#e8eef8; border-radius:8px; overflow:hidden; margin-top:8px; }
-    .progress > span { display:block; height:100%; background:#0b7cff; width:0%; transition:width .2s linear; }
-    pre.log { background:#0f1724; color:#e6eefc; padding:10px; border-radius:6px; max-height:260px; overflow:auto; font-size:13px; }
-    label { font-size:14px; color:#333; font-weight: 600; }
-    .small { font-size:13px; color:#666; }
-    .config { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .input { padding:8px 10px; border-radius:6px; border:1px solid #ddd; background:white; min-width:200px; font-size: 14px; }
-    .link-download { display:inline-block; margin-top:10px; text-decoration:none; color:#0b7cff; font-weight:600; font-size: 16px; }
+    .card {
+      max-width: 980px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+      border-top: 5px solid var(--azul);
+      border-bottom: 5px solid var(--vermelho);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--azul);
+    }
+
+    .logo span {
+      color: var(--vermelho);
+    }
+
+    .linkedin a {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--azul);
+      text-decoration: none;
+    }
+
+    .linkedin a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      color: var(--azul);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    input[type=file], input.input {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccd2dd;
+      min-width: 180px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    button.primary { background: var(--azul); color: white; }
+    button.secondary { background: var(--vermelho); color: white; }
+
+    button.primary:hover { background: #0047d1; }
+    button.secondary:hover { background: #be1d1d; }
+
+    .progress {
+      height: 14px;
+      background: #e1e6f0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      background: var(--azul);
+      width: 0%;
+      transition: width .20s ease;
+    }
+
+    pre {
+      background: #0d1826;
+      color: #e6eefc;
+      padding: 12px;
+      height: 260px;
+      overflow: auto;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    a.link {
+      color: var(--azul);
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+    }
+
+    a.link:hover {
+      text-decoration: underline;
+    }
   </style>
 
+  <!-- PapaParse -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
+
 <body>
+
 <div class="card">
-  
-  <h1>🚀 Automatize sua Prospecção e Análise de Mercado</h1>
-  <p class="lead">
-    Pare de consultar CNPJs manualmente. Envie sua lista e nós a enriquecemos para você 
-    com <strong>Razão Social, Nome Fantasia, Endereço, Sócios, Email e Telefone</strong>,
-    usando a BrasilAPI.
-  </p>
 
-  <h3>Como enriquecer sua lista de leads (ICP):</h3>
-  <ol class="how-to">
-    <li><strong>Prepare sua lista:</strong> Tenha um arquivo .CSV com uma coluna chamada "CNPJ".</li>
-    <li><strong>Faça o Upload:</strong> Use o botão "Carregar CSV" abaixo para validar seu arquivo.</li>
-    <li><strong>Inicie a Mágica:</strong> Clique em "Iniciar Consultas ⚡" e acompanhe o progresso.</li>
-    <li><strong>Receba os Dados:</strong> Baixe seu novo arquivo .CSV completo e pronto para usar!</li>
-  </ol>
+  <!-- HEADER COM LOGOTIPO E LINKEDIN -->
+  <div class="header">
+    <div class="logo">PAULO <span>MARQUES</span></div>
 
-  <hr />
-
-  <h3 style="margin-top:12px;">1. Upload do Arquivo</h3>
-  <p class="small">Selecione o arquivo .CSV da sua base de prospecção.</p>
-  <div class="row">
-    <input id="fileInput" type="file" accept=".csv,text/csv" />
-    <button id="btnParse">Carregar e Validar CSV</button>
-  </div>
-
-  <h3 style="margin-top:20px;">2. Configuração (Opcional)</h3>
-  <p class="small">Ajuste a velocidade das consultas para evitar bloqueios. O padrão (10/min) é seguro.</p>
-  <div class="row config">
-    <div>
-      <label for="apiBase">API Base</label><br/>
-      <input id="apiBase" class="input" value="https://brasilapi.com.br/api/cnpj/v1/" />
-    </div>
-    <div>
-      <label for="callsPerMinute">Consultas por Minuto</label><br/>
-      <input id="callsPerMinute" class="input" value="10" style="width:100px;" />
+    <div class="linkedin">
+      <a href="https://www.linkedin.com/in/paulo-marques-4a3300/" target="_blank">
+        Meu LinkedIn ↗
+      </a>
     </div>
   </div>
 
-  <h3 style="margin-top:20px;">3. Iniciar Processamento</h3>
+  <h1>Consulta CNPJ — BrasilAPI + Envio de E-mail</h1>
+
+  <p>Upload do CSV → Consulta BrasilAPI → Envio de e-mail para <b>paulojosemsousa@gmail.com</b> → Gera CSV final.</p>
+
+  <!-- UPLOAD -->
   <div class="row">
-    <button id="btnStart">Iniciar Consultas ⚡</button>
+    <input id="fileInput" type="file" accept=".csv">
+    <button id="btnParse" class="primary">Ler CSV</button>
+    <button id="btnExportCNPJs" class="secondary">Exportar CNPJs limpos</button>
   </div>
 
-  <div class="small" style="margin-top: 12px;">Progresso:</div>
+  <!-- CONFIG -->
+  <div class="row">
+    <span>API BrasilAPI:</span>
+    <input id="apiBase" class="input" style="min-width:360px"
+           value="https://brasilapi.com.br/api/cnpj/v1/">
+
+    <span>Consultas/min:</span>
+    <input id="callsPerMinute" class="input" style="width:80px" value="10">
+  </div>
+
+  <!-- APPS SCRIPT -->
+  <div class="row">
+    <span>Apps Script URL:</span>
+    <input id="appsScriptUrl" class="input" style="min-width:450px"
+           placeholder="Cole aqui a URL do Google Apps Script">
+  </div>
+
+  <!-- START / ABORT -->
+  <div class="row">
+    <button id="btnStart" class="primary">Iniciar Processamento</button>
+    <button id="btnAbort" class="secondary" disabled>Cancelar</button>
+  </div>
+
+  <!-- PROGRESSO -->
   <div class="progress"><span id="progressBar"></span></div>
+  <div id="status" style="margin-top:10px">Aguardando…</div>
 
-  <div style="margin-top:8px; font-weight: 600;" id="status">Aguardando arquivo...</div>
+  <!-- LOG -->
+  <h3>Log</h3>
+  <pre id="log"></pre>
 
-  <a id="downloadLink" class="link-download" style="display:none">Baixar arquivo final</a>
-
-  <h3 style="margin-top:20px;">Log de Atividade</h3>
-  <pre class="log" id="log"></pre>
+  <!-- DOWNLOAD -->
+  <a id="downloadLink" class="link" style="display:none" href="#">Download CSV final</a>
 
 </div>
 
+<!-- =============================== -->
+<!--  AQUI COMEÇA O SCRIPT BASE      -->
+<!-- =============================== -->
+
 <script>
-// SEU JAVASCRIPT ORIGINAL VEM EXATAMENTE AQUI
-// (Não foi alterado, pois é 100% funcional)
-(() => {
 
-  const el = id => document.getElementById(id);
-  const fileInput = el('fileInput');
-  const btnParse = el('btnParse');
-  const btnStart = el('btnStart');
-  const pbar = el('progressBar');
-  const statusEl = el('status');
-  const logEl = el('log');
-  const downloadLink = el('downloadLink');
+// UTILIDADES
+const el   = id => document.getElementById(id);
+const log  = el("log");
+const stat = el("status");
+const pbar = el("progressBar");
 
-  let parsedRows = [];
-  let cnpjs = [];
+const fileInput   = el("fileInput");
+const btnParse    = el("btnParse");
+const btnExport   = el("btnExportCNPJs");
+const btnStart    = el("btnStart");
+const btnAbort    = el("btnAbort");
+const apiBaseEl   = el("apiBase");
+const rateEl      = el("callsPerMinute");
+const appsScriptEl = el("appsScriptUrl");
+const downloadLink = el("downloadLink");
 
-  function log(msg) {
-    const t = new Date().toLocaleTimeString();
-    logEl.textContent = `${t} - ${msg}\n` + logEl.textContent;
-  }
+let parsedRows = [];
+let cleanedCnpjs = [];
+let abortRequested = false;
 
-  function status(msg, color="#111") {
-    statusEl.textContent = msg;
-    statusEl.style.color = color;
-  }
+// Funções auxiliares
+function addLog(m){ log.textContent = `${new Date().toLocaleTimeString()} - ${m}\n` + log.textContent; }
+function setStatus(m,c){ stat.textContent=m; stat.style.color=c||"#222"; }
+function setProgress(p){ pbar.style.width = p+"%"; }
+function cleanCnpj(v){ return (v||"").replace(/\D/g,""); }
 
-  function cleanCNPJ(s) {
-    return String(s).replace(/\D/g, "");
-  }
+// =====================
+// PARSE CSV
+// =====================
+btnParse.onclick = () => {
 
-  btnParse.addEventListener("click", () => {
-    const f = fileInput.files?.[0];
-    if (!f) return status("Selecione um CSV primeiro", "red");
+  const f = fileInput.files[0];
+  if(!f) return setStatus("Selecione um CSV.","red");
 
-    Papa.parse(f, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (res) => {
-        parsedRows = res.data;
-        const headers = res.meta.fields.map(h => h.toUpperCase());
-        const cnpjIndex = headers.indexOf("CNPJ");
-        if (cnpjIndex === -1) {
-          status("Coluna 'CNPJ' não encontrada no arquivo!", "red");
-          return;
-        }
+  Papa.parse(f,{
+    header:true,
+    skipEmptyLines:true,
+    complete: res=>{
+      parsedRows = res.data;
+      addLog("CSV lido. Linhas: "+parsedRows.length);
 
-        cnpjs = parsedRows.map((row, idx) => {
-          let raw = row["CNPJ"];
-          if (!raw) {
-            for (const k in row) {
-              if (k.toUpperCase() === "CNPJ") raw = row[k];
-            }
-          }
-          const c = cleanCNPJ(raw);
-          return { index: idx, original: raw, cnpj: c };
-        }).filter(x => x.cnpj);
+      cleanedCnpjs = parsedRows.map((r,i)=>({
+        index:i,
+        raw:r["CNPJ"],
+        cnpj:cleanCnpj(r["CNPJ"])
+      })).filter(x=>x.cnpj);
 
-        status(`${cnpjs.length} CNPJs prontos para consulta!`, "green");
-        log(`${cnpjs.length} CNPJs extraídos do arquivo.`);
-      }
-    });
+      setStatus(`CNPJs limpos: ${cleanedCnpjs.length}`, "green");
+    }
   });
+};
 
-  btnStart.addEventListener("click", async () => {
-    if (cnpjs.length === 0) return status("Nenhum CNPJ carregado. Carregue um CSV primeiro.", "red");
+// =====================
+// EXPORTAR CNPJS
+// =====================
+btnExport.onclick = ()=>{
+  if(!cleanedCnpjs.length) return;
 
-    const apiBase = el("apiBase").value.trim();
-    const callsPerMinute = parseInt(el("callsPerMinute").value) || 10;
-    const interval = Math.ceil(60000 / callsPerMinute);
+  const csv = Papa.unparse(cleanedCnpjs.map(x=>({CNPJ:x.cnpj})));
+  const blob = new Blob([csv],{type:"text/csv"});
+  const url  = URL.createObjectURL(blob);
 
-    log(`Iniciando consultas... Limite: ${callsPerMinute}/min. Intervalo: ${interval}ms`);
+  downloadLink.href=url;
+  downloadLink.download="cnpjs_limpos.csv";
+  downloadLink.style.display="inline-block";
+  downloadLink.textContent="Download cnpjs_limpos.csv";
+  setStatus("Arquivo pronto.","green");
+};
 
-    const results = [];
-    let processed = 0;
+// =====================
+// FETCH COM TIMEOUT
+// =====================
+async function fetchTimeout(url,ms=15000){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(),ms);
 
-    for (let i = 0; i < cnpjs.length; i++) {
-      const c = cnpjs[i].cnpj;
-      const url = apiBase.endsWith("/") ? apiBase + c : apiBase + "/" + c;
+  try{
+    const r=await fetch(url,{signal:ctrl.signal});
+    clearTimeout(t);
+    return r;
+  }catch(e){
+    clearTimeout(t);
+    throw e;
+  }
+}
 
-      log(`Consultando ${c}...`);
+// =====================
+// MAPEAR CAMPOS BRASILAPI
+// =====================
+function mapBrasilApiFields(d){
+  const o={};
+  o.RAZAO_SOCIAL = d.razao_social || "";
+  o.NOME_FANTASIA = d.nome_fantasia || "";
+  o.DATA_INICIO_ATIVIDADE = d.data_inicio_atividade || "";
+  o.CNAE_PRINCIPAL = d.cnae_fiscal_descricao || "";
+  o.CAPITAL_SOCIAL = d.capital_social || "";
+  o.MUNICIPIO = d.municipio || "";
+  o.UF = d.uf || "";
+  o.EMAIL = d.email || "";
+  o.TELEFONE = d.telefone || "";
 
-      try {
-        const r = await fetch(url);
-        const data = await r.json();
+  try{
+    o.SOCIOS = Array.isArray(d.qsa)
+      ? d.qsa.map(s=>s.nome_socio || s.nome || "").join(" | ")
+      : "";
+  }catch(e){ o.SOCIOS=""; }
 
-        const out = {
-          CNPJ_CONSULTADO: c,
-          STATUS_API: r.ok ? "OK" : "ERRO_API",
-          DATA_ABERTURA: data.data_inicio_atividade || "",
-          RAZAO_SOCIAL: data.razao_social || "",
-          NOME_FANTASIA: data.nome_fantasia || "",
-          UF: data.uf || "",
-          MUNICIPIO: data.municipio || "",
-          TELEFONE: data.ddd_telefone_1 || "",
-          EMAIL: data.email || "",
-          CNPJ_ORIGINAL_LISTA: cnpjs[i].original // Adiciona o CNPJ original para referência
-        };
+  return o;
+}
 
-        if (Array.isArray(data.qsa)) {
-          out.SOCIOS = data.qsa.map(s => s.nome_socio).join(" | ");
-        } else out.SOCIOS = "";
+// =====================
+// PROCESSAR
+// =====================
+btnStart.onclick = async ()=>{
 
-        results.push(out);
+  if(!cleanedCnpjs.length)
+    return setStatus("Nenhum CNPJ limpo.","red");
 
-      } catch (err) {
-        log(`Erro de rede ao consultar ${c}: ${err.message}`);
-        results.push({
-          CNPJ_CONSULTADO: c,
-          STATUS_API: "ERRO_FETCH",
-          CNPJ_ORIGINAL_LISTA: cnpjs[i].original
-        });
+  const apiBase = apiBaseEl.value.trim();
+  const appsUrl = appsScriptEl.value.trim();
+
+  const rate = Math.max(1,parseInt(rateEl.value)||10);
+  const interval = Math.ceil(60000/rate);
+
+  abortRequested=false;
+  btnAbort.disabled=false;
+  btnStart.disabled=true;
+
+  setStatus("Consultando...", "#0b5cff");
+
+  const results=[];
+
+  for(let i=0;i<cleanedCnpjs.length;i++){
+    if(abortRequested) break;
+
+    const item=cleanedCnpjs[i];
+    const cnpj=item.cnpj;
+    const url = apiBase.endsWith("/") ? apiBase+cnpj : apiBase+"/"+cnpj;
+
+    let row = {CNPJ:cnpj, ORIGINAL_RAW:item.raw, ORIGINAL_INDEX:item.index};
+
+    addLog(`Consultando BrasilAPI: ${cnpj}`);
+
+    try{
+      const r=await fetchTimeout(url);
+      if(r.ok){
+        const j=await r.json();
+        const m=mapBrasilApiFields(j);
+        row={...row, ...m, STATUS_API:"OK"};
+      }else{
+        row.STATUS_API="HTTP_"+r.status;
       }
-
-      processed++;
-      pbar.style.width = Math.round(processed / cnpjs.length * 100) + "%";
-      status(`Processados ${processed} de ${cnpjs.length}...`);
-      await new Promise(r => setTimeout(r, interval));
+    }catch(e){
+      row.STATUS_API="ERRO_FETCH";
     }
 
-    log("Processamento finalizado. Gerando arquivo CSV para download.");
+    results.push(row);
 
-    const csv = Papa.unparse(results);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const urlDownload = URL.createObjectURL(blob);
+    // Enviar e-mail via Google Apps Script
+    if(appsUrl){
+      try{
+        await fetch(appsUrl,{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({cnpj:cnpj, dados:row})
+        });
+        addLog(`Email enviado: ${cnpj}`);
+      }catch(e){
+        addLog("Falha ao enviar email: "+e);
+      }
+    }
 
-    downloadLink.href = urlDownload;
-    downloadLink.download = "resultado_cnpj_enriquecido_brasilapi.csv";
-    downloadLink.style.display = "inline-block";
-    downloadLink.textContent = "✅ Download Concluído! Clique para baixar.";
+    // Progresso visual
+    setProgress(Math.round((i+1)/cleanedCnpjs.length*100));
+    setStatus(`Processados ${i+1}/${cleanedCnpjs.length}`);
 
-    status("Finalizado! Seu arquivo está pronto para download.", "green");
-  });
+    if(i<cleanedCnpjs.length-1)
+      await new Promise(res=>setTimeout(res,interval));
+  }
 
-})();
+  // Finalização e CSV
+  const csv = Papa.unparse(results,{quotes:true});
+  const blob=new Blob([csv],{type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+
+  downloadLink.href=url;
+  downloadLink.download="resultado_cnpj_brasilapi_email.csv";
+  downloadLink.textContent="Download resultado_cnpj_brasilapi_email.csv";
+  downloadLink.style.display="inline-block";
+
+  setStatus("Finalizado!","green");
+  btnAbort.disabled=true;
+  btnStart.disabled=false;
+};
+
+btnAbort.onclick=()=>{
+  abortRequested=true;
+  btnAbort.disabled=true;
+  btnStart.disabled=false;
+  setStatus("Cancelado.","vermelho");
+  addLog("Processo cancelado pelo usuário.");
+};
+
 </script>
 
 </body>
