@@ -1,310 +1,311 @@
-## Complete HTML File
-
-Below is the complete HTML file combining the structure, JavaScript for file upload and parsing, API calls with rate limiting, and CSV generation/download. Save this content as an `.html` file (e.g., `cnpj_consulta.html`) and open it in a web browser.
-
-```html
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNPJ Consulta</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
-        h1 { color: #333; text-align: center; }
-        .container { max-width: 700px; margin: auto; padding: 30px; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        p { line-height: 1.6; color: #555; }
-        input[type="file"] { margin-bottom: 20px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; display: block; width: 100%; box-sizing: border-box; }
-        button { padding: 12px 25px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; transition: background-color 0.3s ease; display: block; width: 100%; margin-top: 10px; }
-        button:hover { background-color: #218838; }
-        #statusMessage { margin-top: 25px; padding: 15px; border-radius: 5px; background-color: #e9ecef; border: 1px solid #dee2e6; font-weight: bold; color: #333; min-height: 30px; }
-        progress { width: 100%; height: 25px; margin-top: 20px; appearance: none; -webkit-appearance: none; border-radius: 5px; }
-        progress::-webkit-progress-bar { background-color: #e0e0e0; border-radius: 5px; }
-        progress::-webkit-progress-value { background-color: #007bff; border-radius: 5px; }
-        progress::-moz-progress-bar { background-color: #007bff; border-radius: 5px; }
-        #downloadLink { display: none; margin-top: 25px; color: #007bff; text-decoration: none; font-weight: bold; text-align: center; font-size: 1.1em; }
-        #downloadLink:hover { text-decoration: underline; }
-        .instructions { background-color: #f8f9fa; border-left: 5px solid #007bff; padding: 15px; margin-top: 30px; border-radius: 5px; }
-        .instructions h2 { color: #007bff; margin-top: 0; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Consulta CNPJ (corrigido) — Parser robusto + RateLimit</title>
+  <style>
+    body { font-family: Inter, system-ui, Arial; background:#f5f7fa; color:#222; padding:18px; }
+    .card { max-width:920px; margin:18px auto; background:white; border-radius:10px; padding:18px; box-shadow:0 6px 18px rgba(10,20,40,0.06); }
+    h1 { margin:0 0 8px 0; font-size:20px; }
+    p.lead { margin:0 0 14px 0; color:#444; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+    input[type=file] { display:block; }
+    button { padding:10px 14px; border-radius:8px; border:none; background:#0b7cff; color:white; cursor:pointer; }
+    button.secondary { background:#6c757d; }
+    .progress { width:100%; height:14px; background:#e8eef8; border-radius:8px; overflow:hidden; margin-top:8px; }
+    .progress > span { display:block; height:100%; background:#0b7cff; width:0%; transition:width .2s linear; }
+    pre.log { background:#0f1724; color:#e6eefc; padding:10px; border-radius:6px; max-height:260px; overflow:auto; font-size:13px; }
+    label { font-size:13px; color:#333; }
+    .small { font-size:13px; color:#666; }
+    .config { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .input { padding:8px 10px; border-radius:6px; border:1px solid #ddd; background:white; min-width:200px; }
+    .link-download { display:inline-block; margin-top:10px; text-decoration:none; color:#0b7cff; font-weight:600; }
+  </style>
+  <!-- PapaParse CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Consulta CNPJ - ReceitaWS</h1>
-        <p>Faça o upload do seu arquivo CSV contendo uma coluna chamada 'CNPJ'. A ferramenta irá consultar cada CNPJ na API da ReceitaWS, respeitando um limite de 3 requisições por minuto, e gerará um novo arquivo CSV com as informações detalhadas.</p>
+  <div class="card">
+    <h1>Consulta CNPJ — Parser robusto & rate-limit</h1>
+    <p class="lead">Upload de CSV com coluna <strong>CNPJ</strong>. Corrige parser (papaparse), limpa CNPJs, tenta consultar API e gera CSV final. Se a API bloquear por CORS, o arquivo final ainda será gerado com mensagens de erro em <code>STATUS_API</code>.</p>
 
-        <input type="file" id="csvFileInput" accept=".csv">
-        <button id="processButton">Processar CNPJs</button>
-
-        <progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-        <div id="statusMessage">Aguardando arquivo...</div>
-        <a id="downloadLink" href="#" style="display: none;">Download Resultado CSV</a>
-
-        <div class="instructions">
-            <h2>Como Usar:</h2>
-            <ol>
-                <li>Prepare um arquivo CSV com uma coluna intitulada `CNPJ`.</li>
-                <li>Clique no botão "Procurar" para selecionar seu arquivo CSV.</li>
-                <li>Clique em "Processar CNPJs" para iniciar a consulta.</li>
-                <li>Aguarde o progresso. Devido ao limite de 3 requisições/minuto, o processamento de muitos CNPJs pode levar tempo.</li>
-                <li>Após a conclusão, um link de download aparecerá para o arquivo CSV resultante.</li>
-            </ol>
-        </div>
+    <div class="row">
+      <input id="fileInput" type="file" accept=".csv,text/csv" />
+      <button id="btnParse">Ler & Limpar CNPJs</button>
+      <button id="btnCleanExport" class="secondary">Exportar só CNPJs limpos</button>
     </div>
-    <script>
-        const API_URL = "https://receitaws.com.br/v1/cnpj/";
 
-        const csvFileInput = document.getElementById('csvFileInput');
-        const processButton = document.getElementById('processButton');
-        const statusMessage = document.getElementById('statusMessage');
-        const progressBar = document.getElementById('progressBar');
-        const downloadLink = document.getElementById('downloadLink');
+    <div class="row config">
+      <label>API base (ex.: https://receitaws.com.br/v1/cnpj/)</label>
+      <input id="apiBase" class="input" value="https://receitaws.com.br/v1/cnpj/" />
+      <label>Chamadas/minuto</label>
+      <input id="callsPerMinute" class="input" value="3" style="width:80px;" />
+      <label>Timeout req (ms)</label>
+      <input id="timeoutMs" class="input" value="10000" style="width:100px;" />
+    </div>
 
-        let cleanedCnpjs = [];
+    <div class="row">
+      <button id="btnStart" style="min-width:180px">Iniciar consulta à API</button>
+      <button id="btnAbort" class="secondary" disabled>Cancelar</button>
+    </div>
 
-        async function consultarCnpjJS(cnpj) {
-            try {
-                const url = `${API_URL}${cnpj}`;
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
+    <div class="small">Progresso:</div>
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+    <div style="margin-top:8px;" id="status">Nenhuma ação iniciada.</div>
 
-                const response = await fetch(url, { signal: controller.signal });
-                clearTimeout(timeoutId);
+    <h3 style="margin-top:12px">Log</h3>
+    <pre class="log" id="log"></pre>
 
-                if (response.status !== 200) {
-                    if (response.status === 404) {
-                        return { status: "ERRO_API: CNPJ não encontrado/inválido" };
-                    } else if (response.status === 429) {
-                        return { status: "ERRO_API: Limite de requisições excedido" };
-                    } else {
-                        return { status: `ERRO_HTTP_${response.status}` };
-                    }
-                }
+    <a id="downloadLink" class="link-download" style="display:none" href="#">Download CSV final</a>
+  </div>
 
-                const data = await response.json();
+<script>
+(() => {
+  // Utilitários
+  const el = id => document.getElementById(id);
+  const logEl = el('log'), statusEl = el('status'), pbar = el('progressBar'), downloadLink = el('downloadLink');
+  const fileInput = el('fileInput'), btnParse = el('btnParse'), btnCleanExport = el('btnCleanExport');
+  const btnStart = el('btnStart'), btnAbort = el('btnAbort');
+  const apiBaseInput = el('apiBase'), callsPerMinuteInput = el('callsPerMinute'), timeoutMsInput = el('timeoutMs');
 
-                if (data.status === "ERROR") {
-                    const message = data.message || "Erro desconhecido da API";
-                    return { status: `ERRO_API: ${message}` };
-                }
+  let parsedRows = []; // array of objects from CSV
+  let cleanedCnpjs = []; // array of {original, cnpj}
+  let controllerAbort = null;
+  let abortRequested = false;
 
-                const abertura = data.abertura || "";
-                const sociosRaw = data.qsa || [];
-                const socios = sociosRaw.map(s => s.nome || "").join(", ");
+  function addLog(txt) {
+    const time = new Date().toLocaleTimeString();
+    logEl.textContent = `${time} - ${txt}\n` + logEl.textContent;
+  }
 
-                // Extract new comprehensive fields
-                const razaoSocial = data.nome || "";
-                const nomeFantasia = data.fantasia || "";
-                const atividadePrincipal = (data.atividade_principal && data.atividade_principal[0] ? data.atividade_principal[0].text : "") || "";
-                const naturezaJuridica = data.natureza_juridica || "";
-                const logradouro = data.logradouro || "";
-                const numero = data.numero || "";
-                const complemento = data.complemento || "";
-                const cep = data.cep || "";
-                const bairro = data.bairro || "";
-                const municipio = data.municipio || "";
-                const uf = data.uf || "";
-                const telefone = data.telefone || "";
-                const email = data.email || "";
-                const capitalSocial = data.capital_social || "";
+  function setStatus(txt, color) {
+    statusEl.textContent = txt;
+    statusEl.style.color = color || '#111';
+  }
 
-                return {
-                    status: "OK",
-                    abertura,
-                    socios,
-                    razaoSocial,
-                    nomeFantasia,
-                    atividadePrincipal,
-                    naturezaJuridica,
-                    logradouro,
-                    numero,
-                    complemento,
-                    cep,
-                    bairro,
-                    municipio,
-                    uf,
-                    telefone,
-                    email,
-                    capitalSocial
-                };
+  function setProgress(percent) {
+    pbar.style.width = percent + '%';
+  }
 
-            } catch (error) {
-                let errorMessage = `ERRO-${error.message || error.name}`;
-                if (errorMessage.length > 50) {
-                    errorMessage = errorMessage.substring(0, 50) + "...";
-                }
-                return { status: errorMessage };
-            }
+  function cleanCnpj(raw) {
+    if (raw === null || raw === undefined) return '';
+    const only = String(raw).replace(/\D/g,'');
+    return only === '' ? '' : only;
+  }
+
+  // Parse with PapaParse (robusto)
+  btnParse.addEventListener('click', () => {
+    const f = fileInput.files && fileInput.files[0];
+    if (!f) { setStatus('Selecione um arquivo CSV primeiro.', 'crimson'); return; }
+    addLog('Iniciando parse com PapaParse...');
+    setStatus('Lendo CSV...', '#666');
+    Papa.parse(f, {
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: false,
+      complete: (results) => {
+        parsedRows = results.data || [];
+        addLog(`CSV carregado: ${parsedRows.length} linhas (cabecalho: ${JSON.stringify(results.meta.fields)})`);
+        // localizar coluna CNPJ (case-insensitive)
+        const headers = results.meta.fields.map(h => h.toUpperCase());
+        const cnpjIndex = headers.indexOf('CNPJ');
+        if (cnpjIndex === -1) {
+          setStatus("Coluna 'CNPJ' não encontrada no CSV (procure coluna com nome 'CNPJ').", 'crimson');
+          addLog("Erro: coluna CNPJ não encontrada.");
+          return;
         }
-
-        async function processAllCnpjs() {
-            const results = [];
-            const CALLS_PER_MINUTE = 3;
-            const CALL_INTERVAL_MS = (60 / CALLS_PER_MINUTE) * 1000;
-            let lastCallTime = 0;
-
-            progressBar.max = cleanedCnpjs.length;
-            progressBar.value = 0;
-            progressBar.style.display = 'block';
-            statusMessage.textContent = 'Iniciando consulta à API...';
-            statusMessage.style.color = 'black';
-            downloadLink.style.display = 'none';
-
-            for (let i = 0; i < cleanedCnpjs.length; i++) {
-                const cnpj = cleanedCnpjs[i];
-
-                const now = Date.now();
-                const timeSinceLastCall = now - lastCallTime;
-                if (timeSinceLastCall < CALL_INTERVAL_MS) {
-                    const timeToSleep = CALL_INTERVAL_MS - timeSinceLastCall;
-                    await new Promise(resolve => setTimeout(resolve, timeToSleep));
-                }
-
-                const apiResult = await consultarCnpjJS(cnpj);
-                lastCallTime = Date.now();
-
-                results.push({
-                    CNPJ: cnpj,
-                    DATA_ABERTURA: apiResult.abertura || "",
-                    SOCIOS: apiResult.socios || "",
-                    RAZAO_SOCIAL: apiResult.razaoSocial || "",
-                    NOME_FANTASIA: apiResult.nomeFantasia || "",
-                    ATIVIDADE_PRINCIPAL: apiResult.atividadePrincipal || "",
-                    NATUREZA_JURIDICA: apiResult.naturezaJuridica || "",
-                    LOGRADOURO: apiResult.logradouro || "",
-                    NUMERO: apiResult.numero || "",
-                    COMPLEMENTO: apiResult.complemento || "",
-                    CEP: apiResult.cep || "",
-                    BAIRRO: apiResult.bairro || "",
-                    MUNICIPIO: apiResult.municipio || "",
-                    UF: apiResult.uf || "",
-                    TELEFONE: apiResult.telefone || "",
-                    EMAIL: apiResult.email || "",
-                    CAPITAL_SOCIAL: apiResult.capitalSocial || "",
-                    STATUS_API: apiResult.status
-                });
-
-                // Update UI
-                progressBar.value = i + 1;
-                statusMessage.textContent = `Consultando CNPJs: ${i + 1} de ${cleanedCnpjs.length} (${apiResult.status})`;
+        // build cleanedCnpjs list (respect original row)
+        cleanedCnpjs = parsedRows.map((row, idx) => {
+          // try to access by header named 'CNPJ' (case-insensitive)
+          let raw = row['CNPJ'];
+          if (raw === undefined) {
+            // fallback: find first header named case-insensitively
+            for (const k of Object.keys(row)) {
+              if (k.toUpperCase() === 'CNPJ') { raw = row[k]; break; }
             }
+          }
+          const c = cleanCnpj(raw);
+          return { index: idx, original: raw, cnpj: c };
+        }).filter(x => x.cnpj); // remove empty
+        addLog(`CNPJs limpos: ${cleanedCnpjs.length}`);
+        setStatus(`CSV pronto. ${cleanedCnpjs.length} CNPJs encontrados e limpos.`, 'green');
+      },
+      error: (err) => {
+        addLog('Erro parse: ' + err.message);
+        setStatus('Erro lendo CSV: ' + err.message, 'crimson');
+      }
+    });
+  });
 
-            console.log('API Consulta Results:', results);
-            statusMessage.textContent = 'Consulta finalizada. Gerando CSV para download...';
-            statusMessage.style.color = 'green';
+  // Exporta só os cnpjs limpos (útil quando API não acessível)
+  btnCleanExport.addEventListener('click', () => {
+    if (cleanedCnpjs.length === 0) { setStatus('Nenhum CNPJ limpo disponível. Faça o parse primeiro.', 'crimson'); return; }
+    const rows = cleanedCnpjs.map(x => ({ CNPJ: x.cnpj }));
+    const csv = Papa.unparse(rows);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = 'cnpjs_limpos.csv';
+    downloadLink.style.display = 'inline-block';
+    downloadLink.textContent = 'Download: cnpjs_limpos.csv';
+    setStatus('Arquivo de CNPJs limpos gerado para download.', 'green');
+    addLog('Export: cnpjs_limpos.csv pronto.');
+  });
 
-            // Convert results to CSV and enable download
-            generateAndDownloadCSV(results);
+  // Função de fetch com timeout e tratamento simples
+  async function fetchWithTimeout(url, options = {}, timeout = 10000) {
+    const ctrl = new AbortController();
+    const id = setTimeout(() => ctrl.abort(), timeout);
+    try {
+      const res = await fetch(url, { ...options, signal: ctrl.signal });
+      clearTimeout(id);
+      return res;
+    } catch (err) {
+      clearTimeout(id);
+      throw err;
+    }
+  }
 
-            progressBar.style.display = 'none';
+  // Iniciar consultas (rate-limited)
+  btnStart.addEventListener('click', async () => {
+    if (cleanedCnpjs.length === 0) { setStatus('Nenhum CNPJ limpo disponível. Faça o parse primeiro.', 'crimson'); return; }
+    const apiBase = (apiBaseInput.value || '').trim();
+    if (!apiBase) { setStatus('Informe a base da API.', 'crimson'); return; }
+    const callsPerMinute = Math.max(1, parseInt(callsPerMinuteInput.value) || 3);
+    const timeoutMs = Math.max(1000, parseInt(timeoutMsInput.value) || 10000);
+    const intervalMs = Math.ceil(60000 / callsPerMinute);
+
+    abortRequested = false;
+    controllerAbort = new AbortController();
+    btnAbort.disabled = false;
+    btnStart.disabled = true;
+    setStatus('Iniciando consultas... (veja log)', '#0b7cff');
+    addLog(`Iniciando ${cleanedCnpjs.length} requisições — limite ${callsPerMinute} req/min => ${intervalMs}ms entre chamadas.`);
+
+    const results = []; // resultados para CSV final
+    let processed = 0;
+
+    for (let i = 0; i < cleanedCnpjs.length; i++) {
+      if (abortRequested) { addLog('Abort solicitado pelo usuário.'); break; }
+
+      const item = cleanedCnpjs[i];
+      const cnpj = item.cnpj;
+      const url = apiBase.endsWith('/') ? apiBase + cnpj : apiBase + '/' + cnpj;
+
+      // tentativa com backoff básico para 429: 3 tentativas com backoff exponencial
+      let attempt = 0, maxAttempts = 3, got = null, errorMsg = null;
+      while (attempt < maxAttempts && !got && !abortRequested) {
+        try {
+          attempt++;
+          addLog(`(${i+1}/${cleanedCnpjs.length}) Requisitando ${cnpj} (tentativa ${attempt}) -> ${url}`);
+          // fetch com timeout
+          const response = await fetchWithTimeout(url, {}, timeoutMs);
+          // se 200 -> parse
+          if (response.ok) {
+            const js = await response.json();
+            // alguns endpoints usam { status: "ERROR", message: "..."} -> normalizar
+            if (js && js.status && js.status.toUpperCase && js.status.toUpperCase() === 'ERROR') {
+              errorMsg = js.message || 'API returned ERROR';
+              addLog(`API respondeu ERROR para ${cnpj}: ${errorMsg}`);
+              got = { raw: js, status: `ERRO_API: ${errorMsg}` };
+            } else {
+              got = { raw: js, status: 'OK' };
+            }
+          } else if (response.status === 429) {
+            errorMsg = `HTTP 429`;
+            addLog(`429 recebido para ${cnpj}. Backoff antes de nova tentativa.`);
+            // backoff
+            await new Promise(res => setTimeout(res, 1000 * attempt * 2));
+          } else {
+            errorMsg = `HTTP_${response.status}`;
+            addLog(`Resposta HTTP ${response.status} para ${cnpj}`);
+            got = { raw: null, status: `ERRO_HTTP_${response.status}` };
+          }
+        } catch (err) {
+          // Erro: pode ser CORS, timeout, network
+          const m = (err && err.name) ? err.name : (err && err.message) ? err.message : String(err);
+          errorMsg = `ERRO_FETCH: ${m}`;
+          addLog(`Erro fetch para ${cnpj}: ${m}`);
+          // Se for AbortError, sair
+          if (err.name === 'AbortError') {
+            addLog('Fetch abortado via AbortController.');
+            break;
+          }
+          // backoff curto antes de nova tentativa
+          await new Promise(res => setTimeout(res, 800 * attempt));
         }
+      } // while attempts
 
-        function generateAndDownloadCSV(data) {
-            if (data.length === 0) {
-                statusMessage.textContent = 'Nenhum dado para gerar CSV.';
-                statusMessage.style.color = 'red';
-                return;
-            }
+      // montar linha de resultado — manter campos consistentes
+      const out = {
+        CNPJ: cnpj,
+        ORIGINAL_INDEX: item.index,
+        ORIGINAL_RAW: item.original
+      };
 
-            const header = Object.keys(data[0]);
-            const csvRows = [];
-            csvRows.push(header.join(',')); // Add header row
+      if (got && got.raw) {
+        // extrair campos comuns se existirem (adaptável)
+        const data = got.raw;
+        out.STATUS_API = got.status || 'OK';
+        out.DATA_ABERTURA = data.abertura || data.data_abertura || '';
+        out.RAZAO_SOCIAL = data.nome || data.razao_social || '';
+        out.NOME_FANTASIA = data.fantasia || data.nome_fantasia || '';
+        // QSA / socios pode estar em data.qsa (array) ou data.socios
+        try {
+          if (Array.isArray(data.qsa)) out.SOCIOS = data.qsa.map(s => s.nome || s).join(' | ');
+          else if (Array.isArray(data.socios)) out.SOCIOS = data.socios.join(' | ');
+          else out.SOCIOS = data.socios || '';
+        } catch (e) { out.SOCIOS = ''; }
+        out.UF = data.uf || data.estado || '';
+        out.MUNICIPIO = data.municipio || data.municipio_nome || '';
+        out.TELEFONE = data.telefone || '';
+        out.EMAIL = data.email || '';
+      } else {
+        out.STATUS_API = errorMsg || 'ERRO_DESCONHECIDO';
+      }
 
-            for (const row of data) {
-                const values = header.map(h => {
-                    const val = row[h];
-                    // Handle potential commas in string values by quoting them
-                    return (typeof val === 'string' && (val.includes(',') || val.includes('\n') || val.includes('\r'))) ? `"${val.replace(/"/g, '""')}"` : val; // Escape double quotes within field
-                });
-                csvRows.push(values.join(','));
-            }
+      results.push(out);
+      processed++;
+      const percent = Math.round((processed / cleanedCnpjs.length) * 100);
+      setProgress(percent);
+      setStatus(`Processados ${processed}/${cleanedCnpjs.length} — último: ${cnpj} — ${out.STATUS_API}`, '#0b7cff');
 
-            const csvString = csvRows.join('\n');
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
+      // esperar intervalo entre chamadas
+      if (i < cleanedCnpjs.length - 1) {
+        await new Promise(res => setTimeout(res, intervalMs));
+      }
+    } // for each cnpj
 
-            downloadLink.href = url;
-            downloadLink.download = 'resultado_cnpj_completo_web.csv';
-            downloadLink.textContent = 'Download resultado_cnpj_completo_web.csv';
-            downloadLink.style.display = 'block';
-            statusMessage.textContent = 'Processo concluído! Arquivo pronto para download.';
-            statusMessage.style.color = 'green';
-        }
+    // fim
+    btnAbort.disabled = true;
+    btnStart.disabled = false;
+    setProgress(100);
+    setStatus('Processamento finalizado. Gerando CSV...', 'green');
+    addLog('Gerando CSV final com Papa.unparse ...');
 
-        processButton.addEventListener('click', () => {
-            if (!csvFileInput.files || csvFileInput.files.length === 0) {
-                statusMessage.textContent = 'Por favor, selecione um arquivo CSV primeiro.';
-                statusMessage.style.color = 'red';
-                return;
-            }
+    // gerar CSV final com Papa.unparse (assegura quoting)
+    const csv = Papa.unparse(results, { quotes: true });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = 'resultado_cnpj_completo_web_corrigido.csv';
+    downloadLink.style.display = 'inline-block';
+    downloadLink.textContent = 'Download: resultado_cnpj_completo_web_corrigido.csv';
+    addLog('CSV final pronto para download.');
+    setStatus('Arquivo pronto. Clique em "Download".', 'green');
+  });
 
-            statusMessage.textContent = 'Processando arquivo...';
-            statusMessage.style.color = 'black';
-            progressBar.style.display = 'block'; // Make progress bar visible
+  // Abort button
+  btnAbort.addEventListener('click', () => {
+    abortRequested = true;
+    btnAbort.disabled = true;
+    btnStart.disabled = false;
+    setStatus('Abort solicitado. Aguardando término das operações em andamento...', 'orange');
+    addLog('Usuário solicitou abort.');
+  });
 
-            const file = csvFileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onerror = () => {
-                statusMessage.textContent = 'Erro ao ler o arquivo.';
-                statusMessage.style.color = 'red';
-                progressBar.style.display = 'none';
-            };
-
-            reader.onload = async (e) => { // Make this an async function to await processAllCnpjs
-                const content = e.target.result;
-                const lines = content.split('\n').filter(line => line.trim() !== '');
-                if (lines.length === 0) {
-                    statusMessage.textContent = 'O arquivo CSV está vazio ou ilegível.';
-                    statusMessage.style.color = 'red';
-                    progressBar.style.display = 'none';
-                    return;
-                }
-
-                const header = lines[0].split(',');
-                const cnpjColumnIndex = header.findIndex(col => col.trim().toUpperCase() === 'CNPJ');
-
-                if (cnpjColumnIndex === -1) {
-                    statusMessage.textContent = 'Coluna \'CNPJ\' não encontrada no cabeçalho do CSV.';
-                    statusMessage.style.color = 'red';
-                    progressBar.style.display = 'none';
-                    return;
-                }
-
-                cleanedCnpjs = []; // Reset for new upload
-                for (let i = 1; i < lines.length; i++) {
-                    const columns = lines[i].split(',');
-                    if (columns.length > cnpjColumnIndex) {
-                        let cnpj = columns[cnpjColumnIndex];
-                        cnpj = cnpj.replace(/\D/g, ''); // Remove all non-digit characters
-                        if (cnpj) {
-                            cleanedCnpjs.push(cnpj);
-                        }
-                    }
-                }
-
-                statusMessage.textContent = `Arquivo processado com sucesso. ${cleanedCnpjs.length} CNPJs limpos encontrados.`
-                statusMessage.style.color = 'green';
-                
-                // Start the API processing
-                await processAllCnpjs();
-            };
-
-            reader.readAsText(file);
-        });
-    </script>
+})();
+</script>
 </body>
 </html>
-```
-
-### Instructions to Use:
-
-1.  **Save the Code**: Copy the entire HTML code provided above and save it as an `.html` file (e.g., `cnpj_consulta.html`) on your computer.
-2.  **Open in Browser**: Open the saved `cnpj_consulta.html` file in any modern web browser (Chrome, Firefox, Edge, Safari).
-3.  **Upload CSV**: Click the "Procurar" (Browse) button and select your CSV file. Ensure your CSV file has a column explicitly named `CNPJ` (case-insensitive).
-4.  **Process CNPJs**: Click the "Processar CNPJs" button to start the API consultation process. The progress bar and status message will update as CNPJs are processed.
-5.  **Download Results**: Once the process is complete, a download link will appear. Click it to download the `resultado_cnpj_completo_web.csv` file, which will contain the original CNPJs augmented with the new data from ReceitaWS.
-
-### Important Note on CORS (Cross-Origin Resource Sharing):
-
-While the previous warning block has been removed from the HTML for brevity as per the subtask, it's crucial to understand that client-side JavaScript applications making direct API requests to external servers (like `receitaws.com.br`) can still encounter CORS issues. ReceitaWS generally allows requests from browsers, but if you were to use another API or host this on a different domain, you might run into security restrictions enforced by browsers. If you experience errors related to network requests being blocked, it is likely a CORS issue. For production environments or complex setups, a server-side proxy is often recommended to manage API requests and bypass client-side CORS restrictions.
