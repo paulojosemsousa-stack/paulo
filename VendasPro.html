@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Enriquecimento de CNPJ em Massa — Automatize sua Prospecção</title>
+
+  <style>
+    /* Estilos originais mantidos, com leves ajustes para a nova estrutura */
+    body { font-family: Inter, system-ui, Arial; background:#f5f7fa; color:#222; padding:18px; line-height: 1.6; }
+    .card { max-width:920px; margin:18px auto; background:white; border-radius:10px; padding:24px; box-shadow:0 6px 18px rgba(10,20,40,0.06); }
+    
+    /* Títulos e Textos de Marketing */
+    h1 { margin:0 0 10px 0; font-size:26px; font-weight: 700; color: #111; }
+    p.lead { margin:0 0 20px 0; color:#333; font-size: 17px; }
+    h3 { margin-top: 24px; margin-bottom: 8px; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 4px;}
+    hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+
+    /* Estilo para a lista de "Como Usar" */
+    .how-to { padding-left: 20px; margin-bottom: 20px; }
+    .how-to li { margin-bottom: 8px; }
+
+    /* Inputs e Botões */
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+    input[type=file] { display:block; }
+    button { padding:10px 16px; border-radius:8px; border:none; background:#0b7cff; color:white; cursor:pointer; font-weight: 600; font-size: 15px; }
+    button:hover { background: #006ae6; }
+    button.secondary { background:#6c757d; }
+    .progress { width:100%; height:14px; background:#e8eef8; border-radius:8px; overflow:hidden; margin-top:8px; }
+    .progress > span { display:block; height:100%; background:#0b7cff; width:0%; transition:width .2s linear; }
+    pre.log { background:#0f1724; color:#e6eefc; padding:10px; border-radius:6px; max-height:260px; overflow:auto; font-size:13px; }
+    label { font-size:14px; color:#333; font-weight: 600; }
+    .small { font-size:13px; color:#666; }
+    .config { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .input { padding:8px 10px; border-radius:6px; border:1px solid #ddd; background:white; min-width:200px; font-size: 14px; }
+    .link-download { display:inline-block; margin-top:10px; text-decoration:none; color:#0b7cff; font-weight:600; font-size: 16px; }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+<div class="card">
+  
+  <h1>🚀 Automatize sua Prospecção e Análise de Mercado</h1>
+  <p class="lead">
+    Pare de consultar CNPJs manualmente. Envie sua lista e nós a enriquecemos para você 
+    com <strong>Razão Social, Nome Fantasia, Endereço, Sócios, Email e Telefone</strong>,
+    usando a BrasilAPI.
+  </p>
+
+  <h3>Como enriquecer sua lista de leads (ICP):</h3>
+  <ol class="how-to">
+    <li><strong>Prepare sua lista:</strong> Tenha um arquivo .CSV com uma coluna chamada "CNPJ".</li>
+    <li><strong>Faça o Upload:</strong> Use o botão "Carregar CSV" abaixo para validar seu arquivo.</li>
+    <li><strong>Inicie a Mágica:</strong> Clique em "Iniciar Consultas ⚡" e acompanhe o progresso.</li>
+    <li><strong>Receba os Dados:</strong> Baixe seu novo arquivo .CSV completo e pronto para usar!</li>
+  </ol>
+
+  <hr />
+
+  <h3 style="margin-top:12px;">1. Upload do Arquivo</h3>
+  <p class="small">Selecione o arquivo .CSV da sua base de prospecção.</p>
+  <div class="row">
+    <input id="fileInput" type="file" accept=".csv,text/csv" />
+    <button id="btnParse">Carregar e Validar CSV</button>
+  </div>
+
+  <h3 style="margin-top:20px;">2. Configuração (Opcional)</h3>
+  <p class="small">Ajuste a velocidade das consultas para evitar bloqueios. O padrão (10/min) é seguro.</p>
+  <div class="row config">
+    <div>
+      <label for="apiBase">API Base</label><br/>
+      <input id="apiBase" class="input" value="https://brasilapi.com.br/api/cnpj/v1/" />
+    </div>
+    <div>
+      <label for="callsPerMinute">Consultas por Minuto</label><br/>
+      <input id="callsPerMinute" class="input" value="10" style="width:100px;" />
+    </div>
+  </div>
+
+  <h3 style="margin-top:20px;">3. Iniciar Processamento</h3>
+  <div class="row">
+    <button id="btnStart">Iniciar Consultas ⚡</button>
+  </div>
+
+  <div class="small" style="margin-top: 12px;">Progresso:</div>
+  <div class="progress"><span id="progressBar"></span></div>
+
+  <div style="margin-top:8px; font-weight: 600;" id="status">Aguardando arquivo...</div>
+
+  <a id="downloadLink" class="link-download" style="display:none">Baixar arquivo final</a>
+
+  <h3 style="margin-top:20px;">Log de Atividade</h3>
+  <pre class="log" id="log"></pre>
+
+</div>
+
+<script>
+// SEU JAVASCRIPT ORIGINAL VEM EXATAMENTE AQUI
+// (Não foi alterado, pois é 100% funcional)
+(() => {
+
+  const el = id => document.getElementById(id);
+  const fileInput = el('fileInput');
+  const btnParse = el('btnParse');
+  const btnStart = el('btnStart');
+  const pbar = el('progressBar');
+  const statusEl = el('status');
+  const logEl = el('log');
+  const downloadLink = el('downloadLink');
+
+  let parsedRows = [];
+  let cnpjs = [];
+
+  function log(msg) {
+    const t = new Date().toLocaleTimeString();
+    logEl.textContent = `${t} - ${msg}\n` + logEl.textContent;
+  }
+
+  function status(msg, color="#111") {
+    statusEl.textContent = msg;
+    statusEl.style.color = color;
+  }
+
+  function cleanCNPJ(s) {
+    return String(s).replace(/\D/g, "");
+  }
+
+  btnParse.addEventListener("click", () => {
+    const f = fileInput.files?.[0];
+    if (!f) return status("Selecione um CSV primeiro", "red");
+
+    Papa.parse(f, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (res) => {
+        parsedRows = res.data;
+        const headers = res.meta.fields.map(h => h.toUpperCase());
+        const cnpjIndex = headers.indexOf("CNPJ");
+        if (cnpjIndex === -1) {
+          status("Coluna 'CNPJ' não encontrada no arquivo!", "red");
+          return;
+        }
+
+        cnpjs = parsedRows.map((row, idx) => {
+          let raw = row["CNPJ"];
+          if (!raw) {
+            for (const k in row) {
+              if (k.toUpperCase() === "CNPJ") raw = row[k];
+            }
+          }
+          const c = cleanCNPJ(raw);
+          return { index: idx, original: raw, cnpj: c };
+        }).filter(x => x.cnpj);
+
+        status(`${cnpjs.length} CNPJs prontos para consulta!`, "green");
+        log(`${cnpjs.length} CNPJs extraídos do arquivo.`);
+      }
+    });
+  });
+
+  btnStart.addEventListener("click", async () => {
+    if (cnpjs.length === 0) return status("Nenhum CNPJ carregado. Carregue um CSV primeiro.", "red");
+
+    const apiBase = el("apiBase").value.trim();
+    const callsPerMinute = parseInt(el("callsPerMinute").value) || 10;
+    const interval = Math.ceil(60000 / callsPerMinute);
+
+    log(`Iniciando consultas... Limite: ${callsPerMinute}/min. Intervalo: ${interval}ms`);
+
+    const results = [];
+    let processed = 0;
+
+    for (let i = 0; i < cnpjs.length; i++) {
+      const c = cnpjs[i].cnpj;
+      const url = apiBase.endsWith("/") ? apiBase + c : apiBase + "/" + c;
+
+      log(`Consultando ${c}...`);
+
+      try {
+        const r = await fetch(url);
+        const data = await r.json();
+
+        const out = {
+          CNPJ_CONSULTADO: c,
+          STATUS_API: r.ok ? "OK" : "ERRO_API",
+          DATA_ABERTURA: data.data_inicio_atividade || "",
+          RAZAO_SOCIAL: data.razao_social || "",
+          NOME_FANTASIA: data.nome_fantasia || "",
+          UF: data.uf || "",
+          MUNICIPIO: data.municipio || "",
+          TELEFONE: data.ddd_telefone_1 || "",
+          EMAIL: data.email || "",
+          CNPJ_ORIGINAL_LISTA: cnpjs[i].original // Adiciona o CNPJ original para referência
+        };
+
+        if (Array.isArray(data.qsa)) {
+          out.SOCIOS = data.qsa.map(s => s.nome_socio).join(" | ");
+        } else out.SOCIOS = "";
+
+        results.push(out);
+
+      } catch (err) {
+        log(`Erro de rede ao consultar ${c}: ${err.message}`);
+        results.push({
+          CNPJ_CONSULTADO: c,
+          STATUS_API: "ERRO_FETCH",
+          CNPJ_ORIGINAL_LISTA: cnpjs[i].original
+        });
+      }
+
+      processed++;
+      pbar.style.width = Math.round(processed / cnpjs.length * 100) + "%";
+      status(`Processados ${processed} de ${cnpjs.length}...`);
+      await new Promise(r => setTimeout(r, interval));
+    }
+
+    log("Processamento finalizado. Gerando arquivo CSV para download.");
+
+    const csv = Papa.unparse(results);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const urlDownload = URL.createObjectURL(blob);
+
+    downloadLink.href = urlDownload;
+    downloadLink.download = "resultado_cnpj_enriquecido_brasilapi.csv";
+    downloadLink.style.display = "inline-block";
+    downloadLink.textContent = "✅ Download Concluído! Clique para baixar.";
+
+    status("Finalizado! Seu arquivo está pronto para download.", "green");
+  });
+
+})();
+</script>
+
+</body>
+</html>
