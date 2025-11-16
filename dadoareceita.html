@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Consulta CNPJ — BrasilAPI</title>
+
+  <style>
+    body { font-family: Inter, system-ui, Arial; background:#f5f7fa; color:#222; padding:18px; }
+    .card { max-width:920px; margin:18px auto; background:white; border-radius:10px; padding:18px; box-shadow:0 6px 18px rgba(10,20,40,0.06); }
+    h1 { margin:0 0 8px 0; font-size:20px; }
+    p.lead { margin:0 0 14px 0; color:#444; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+    input[type=file] { display:block; }
+    button { padding:10px 14px; border-radius:8px; border:none; background:#0b7cff; color:white; cursor:pointer; }
+    button.secondary { background:#6c757d; }
+    .progress { width:100%; height:14px; background:#e8eef8; border-radius:8px; overflow:hidden; margin-top:8px; }
+    .progress > span { display:block; height:100%; background:#0b7cff; width:0%; transition:width .2s linear; }
+    pre.log { background:#0f1724; color:#e6eefc; padding:10px; border-radius:6px; max-height:260px; overflow:auto; font-size:13px; }
+    label { font-size:13px; color:#333; }
+    .small { font-size:13px; color:#666; }
+    .config { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .input { padding:8px 10px; border-radius:6px; border:1px solid #ddd; background:white; min-width:200px; }
+    .link-download { display:inline-block; margin-top:10px; text-decoration:none; color:#0b7cff; font-weight:600; }
+  </style>
+
+  <!-- PapaParse -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+<div class="card">
+  <h1>Consulta CNPJ — BrasilAPI (sem CORS)</h1>
+  <p class="lead">Upload do CSV → extrai CNPJs → consulta na BrasilAPI → gera CSV completo.</p>
+
+  <div class="row">
+    <input id="fileInput" type="file" accept=".csv,text/csv" />
+    <button id="btnParse">Ler CSV</button>
+  </div>
+
+  <div class="row config">
+    <label>API Base</label>
+    <input id="apiBase" class="input" value="https://brasilapi.com.br/api/cnpj/v1/" />
+    <label>Limite req/minuto</label>
+    <input id="callsPerMinute" class="input" value="10" style="width:80px;" />
+  </div>
+
+  <div class="row">
+    <button id="btnStart">Iniciar consultas</button>
+  </div>
+
+  <div class="small">Progresso:</div>
+  <div class="progress"><span id="progressBar"></span></div>
+
+  <div style="margin-top:8px;" id="status">Aguardando…</div>
+
+  <h3 style="margin-top:12px">Log</h3>
+  <pre class="log" id="log"></pre>
+
+  <a id="downloadLink" class="link-download" style="display:none">Download</a>
+</div>
+
+<script>
+(() => {
+
+  const el = id => document.getElementById(id);
+  const fileInput = el('fileInput');
+  const btnParse = el('btnParse');
+  const btnStart = el('btnStart');
+  const pbar = el('progressBar');
+  const statusEl = el('status');
+  const logEl = el('log');
+  const downloadLink = el('downloadLink');
+
+  let parsedRows = [];
+  let cnpjs = [];
+
+  function log(msg) {
+    const t = new Date().toLocaleTimeString();
+    logEl.textContent = `${t} - ${msg}\n` + logEl.textContent;
+  }
+
+  function status(msg, color="#111") {
+    statusEl.textContent = msg;
+    statusEl.style.color = color;
+  }
+
+  function cleanCNPJ(s) {
+    return String(s).replace(/\D/g, "");
+  }
+
+  btnParse.addEventListener("click", () => {
+    const f = fileInput.files?.[0];
+    if (!f) return status("Selecione um CSV primeiro", "red");
+
+    Papa.parse(f, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (res) => {
+        parsedRows = res.data;
+        const headers = res.meta.fields.map(h => h.toUpperCase());
+        const cnpjIndex = headers.indexOf("CNPJ");
+        if (cnpjIndex === -1) {
+          status("Coluna CNPJ não encontrada", "red");
+          return;
+        }
+
+        cnpjs = parsedRows.map((row, idx) => {
+          let raw = row["CNPJ"];
+          if (!raw) {
+            for (const k in row) {
+              if (k.toUpperCase() === "CNPJ") raw = row[k];
+            }
+          }
+          const c = cleanCNPJ(raw);
+          return { index: idx, original: raw, cnpj: c };
+        }).filter(x => x.cnpj);
+
+        status(`${cnpjs.length} CNPJs extraídos`, "green");
+      }
+    });
+  });
+
+  btnStart.addEventListener("click", async () => {
+    if (cnpjs.length === 0) return status("Nenhum CNPJ carregado", "red");
+
+    const apiBase = el("apiBase").value.trim();
+    const callsPerMinute = parseInt(el("callsPerMinute").value) || 10;
+    const interval = Math.ceil(60000 / callsPerMinute);
+
+    const results = [];
+    let processed = 0;
+
+    for (let i = 0; i < cnpjs.length; i++) {
+      const c = cnpjs[i].cnpj;
+      const url = apiBase.endsWith("/") ? apiBase + c : apiBase + "/" + c;
+
+      log(`Consultando ${c} → ${url}`);
+
+      try {
+        const r = await fetch(url);
+        const data = await r.json();
+
+        const out = {
+          CNPJ: c,
+          STATUS_API: r.ok ? "OK" : "ERRO",
+          DATA_ABERTURA: data.data_inicio_atividade || "",
+          RAZAO_SOCIAL: data.razao_social || "",
+          NOME_FANTASIA: data.nome_fantasia || "",
+          UF: data.uf || "",
+          MUNICIPIO: data.municipio || "",
+          TELEFONE: data.ddd_telefone_1 || "",
+          EMAIL: data.email || ""
+        };
+
+        if (Array.isArray(data.qsa)) {
+          out.SOCIOS = data.qsa.map(s => s.nome_socio).join(" | ");
+        } else out.SOCIOS = "";
+
+        results.push(out);
+
+      } catch (err) {
+        log(`Erro no fetch: ${err.message}`);
+        results.push({
+          CNPJ: c,
+          STATUS_API: "ERRO_FETCH"
+        });
+      }
+
+      processed++;
+      pbar.style.width = Math.round(processed / cnpjs.length * 100) + "%";
+      status(`Processados ${processed} de ${cnpjs.length}`);
+      await new Promise(r => setTimeout(r, interval));
+    }
+
+    const csv = Papa.unparse(results);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const urlDownload = URL.createObjectURL(blob);
+
+    downloadLink.href = urlDownload;
+    downloadLink.download = "resultado_cnpj_brasilapi.csv";
+    downloadLink.style.display = "inline-block";
+    downloadLink.textContent = "Baixar arquivo final";
+
+    status("Finalizado!", "green");
+  });
+
+})();
+</script>
+
+</body>
+</html>
