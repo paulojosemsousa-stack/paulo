@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Consulta CNPJ + Envio E-mail</title>
+  <style>
+    body { font-family: Arial; background:#f5f7fa; color:#222; padding:20px; }
+    .card { max-width:960px; margin:auto; background:white; border-radius:10px; padding:22px; box-shadow:0 6px 18px rgba(0,0,0,0.1); }
+    h1 { margin:0 0 10px; }
+    button { padding:10px 18px; border:none; border-radius:8px; background:#0b7cff; color:white; cursor:pointer; }
+    button.secondary { background:#6c757d; }
+    input[type=file], input.input { padding:8px; border-radius:6px; border:1px solid #ccc; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+    .progress { height:14px; background:#e2e6ef; border-radius:8px; overflow:hidden; }
+    .progress > span { display:block; height:100%; background:#0b7cff; width:0%; }
+    pre { background:#0f1724; color:#e6eefc; padding:12px; height:250px; overflow:auto; border-radius:6px; font-size:13px; }
+    a { color:#0b7cff; font-weight:bold; }
+  </style>
+
+  <!-- PapaParse CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+
+<body>
+<div class="card">
+  <h1>Consulta CNPJ + Envio E-mail Automático</h1>
+  <p>Faz upload do CSV, consulta cada CNPJ e envia e-mail para <b>paulojosemsousa@gmail.com</b> a cada consulta realizada.</p>
+
+  <div class="row">
+    <input id="fileInput" type="file" accept=".csv">
+    <button id="btnParse">Ler CSV</button>
+    <button id="btnCleanExport" class="secondary">Exportar CNPJs limpos</button>
+  </div>
+
+  <div class="row">
+    <label>API Base:</label>
+    <input id="apiBase" class="input" value="https://receitaws.com.br/v1/cnpj/" style="min-width:250px">
+    <label>Consultas/minuto:</label>
+    <input id="callsPerMinute" class="input" value="3" style="width:80px">
+  </div>
+
+  <div class="row">
+    <button id="btnStart">Iniciar Processamento</button>
+    <button id="btnAbort" class="secondary" disabled>Cancelar</button>
+  </div>
+
+  <div class="progress"><span id="progressBar"></span></div>
+  <div id="status" style="margin:8px 0;">Aguardando…</div>
+
+  <h3>Log</h3>
+  <pre id="log"></pre>
+
+  <a id="downloadLink" style="display:none;" href="#">Download CSV Final</a>
+</div>
+
+<script>
+// UTILIDADES
+const el = id => document.getElementById(id);
+const logEl = el("log"), statusEl = el("status"), pbar = el("progressBar"), downloadLink = el("downloadLink");
+const fileInput = el("fileInput");
+const btnParse = el("btnParse"), btnStart = el("btnStart"), btnAbort = el("btnAbort"), btnCleanExport = el("btnCleanExport");
+const apiBaseInput = el("apiBase"), callsPerMinuteInput = el("callsPerMinute");
+
+let parsedRows = [];
+let cleanedCnpjs = [];
+let abortRequested = false;
+
+// LOG
+function log(txt) {
+  const time = new Date().toLocaleTimeString();
+  logEl.textContent = `${time} - ${txt}\n` + logEl.textContent;
+}
+function setStatus(msg, color) {
+  statusEl.textContent = msg;
+  statusEl.style.color = color || "#222";
+}
+function setProgress(p) { pbar.style.width = p+"%"; }
+function cleanCnpj(v) { return (v || "").replace(/\D/g, ""); }
+
+// ============ PARSE CSV ============
+btnParse.onclick = () => {
+  const f = fileInput.files[0];
+  if (!f) return setStatus("Selecione um CSV.", "red");
+
+  Papa.parse(f, {
+    header: true,
+    skipEmptyLines: true,
+    complete: res => {
+      parsedRows = res.data;
+      log("CSV carregado. Linhas: " + parsedRows.length);
+
+      cleanedCnpjs = parsedRows
+        .map((r,i) => ({ index:i, raw:r["CNPJ"], cnpj: cleanCnpj(r["CNPJ"]) }))
+        .filter(x => x.cnpj);
+
+      setStatus(`Encontrados ${cleanedCnpjs.length} CNPJs limpos.`, "green");
+    }
+  });
+};
+
+// Exportar só os CNPJs limpos
+btnCleanExport.onclick = () => {
+  if (!cleanedCnpjs.length) return;
+
+  const csv = Papa.unparse(cleanedCnpjs.map(r => ({ CNPJ:r.cnpj })));
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+
+  downloadLink.href = url;
+  downloadLink.download = "cnpjs_limpos.csv";
+  downloadLink.textContent = "Download: cnpjs_limpos.csv";
+  downloadLink.style.display = "block";
+};
+
+// ============ FETCH COM TIMEOUT ============
+async function fetchTimeout(url, ms = 10000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), ms);
+  try {
+    const r = await fetch(url, {signal:ctrl.signal});
+    clearTimeout(t);
+    return r;
+  } catch(e) {
+    clearTimeout(t);
+    throw e;
+  }
+}
+
+// ============ PROCESSAR ============
+btnStart.onclick = async () => {
+  if (!cleanedCnpjs.length) return setStatus("Nenhum CNPJ limpo. Leia o CSV primeiro.", "red");
+
+  abortRequested = false;
+  btnAbort.disabled = false;
+  btnStart.disabled = true;
+
+  const apiBase = apiBaseInput.value;
+  const interval = Math.ceil(60000 / (parseInt(callsPerMinuteInput.value)||3));
+
+  const results = [];
+
+  setStatus("Iniciando processamento…");
+  log("Processamento iniciado.");
+
+  for (let i=0; i<cleanedCnpjs.length; i++) {
+    if (abortRequested) break;
+
+    const {cnpj, raw, index} = cleanedCnpjs[i];
+    const url = apiBase + cnpj;
+
+    log(`Consultando CNPJ ${cnpj}`);
+
+    let out = {CNPJ:cnpj, ORIGINAL_RAW:raw, ORIGINAL_INDEX:index};
+
+    try {
+      const r = await fetchTimeout(url);
+      if (r.ok) {
+        const js = await r.json();
+        out.STATUS_API = js.status || "OK";
+        out.RAZAO_SOCIAL = js.nome || "";
+        out.NOME_FANTASIA = js.fantasia || "";
+        out.DATA_ABERTURA = js.abertura || "";
+        out.SOCIOS = (js.qsa||[]).map(s=>s.nome).join(" | ");
+        out.MUNICIPIO = js.municipio || "";
+        out.UF = js.uf || "";
+      } else {
+        out.STATUS_API = "HTTP_"+r.status;
+      }
+    } catch(e) {
+      out.STATUS_API = "ERRO_FETCH";
+    }
+
+    // Adiciona ao resultado
+    results.push(out);
+
+    // ========== ENVIA E-MAIL PELO GOOGLE APPS SCRIPT ==========
+    try {
+      await fetch("URL_DA_SUA_API_AQUI", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ cnpj: cnpj, dados: out })
+      });
+      log(`📧 Email enviado para CNPJ ${cnpj}`);
+    } catch(e) {
+      log(`❌ Erro ao enviar email: ${e}`);
+    }
+
+    // progresso
+    const pct = Math.round((i+1)/cleanedCnpjs.length*100);
+    setProgress(pct);
+    setStatus(`Processados ${i+1}/${cleanedCnpjs.length}`);
+
+    await new Promise(res => setTimeout(res, interval));
+  }
+
+  // Final: exportar CSV
+  const csv = Papa.unparse(results);
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+
+  downloadLink.href = url;
+  downloadLink.download = "resultado_cnpj_completo_web_email.csv";
+  downloadLink.textContent = "Download: resultado_cnpj_completo_web_email.csv";
+  downloadLink.style.display = "block";
+
+  btnAbort.disabled = true;
+  btnStart.disabled = false;
+
+  log("Finalizado.");
+  setStatus("Processamento concluído.", "green");
+};
+
+// ============ CANCELAR ============
+btnAbort.onclick = () => {
+  abortRequested = true;
+  btnAbort.disabled = true;
+  btnStart.disabled = false;
+  setStatus("Cancelado pelo usuário.", "red");
+};
+</script>
+
+</body>
+</html>
