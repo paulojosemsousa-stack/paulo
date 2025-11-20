@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Painel BrasilAPI - Filtros & Endpoints</title>
+
+<!-- Estilos -->
+<style>
+  :root{
+    --sidebar-bg:#003366;
+    --accent:#005bb5;
+    --white:#ffffff;
+    --muted:#cce0ff;
+    --card-bg:#ffffff;
+    --page-bg:#f4f6fa;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    height:100vh;
+    display:flex;
+    background:var(--page-bg);
+    color:#111;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    width:290px;
+    background:var(--sidebar-bg);
+    color:var(--white);
+    padding:18px;
+    overflow:auto;
+    border-right:1px solid rgba(255,255,255,0.04);
+  }
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .brand h1{font-size:18px;margin:0;color:var(--white)}
+  .menu-section{margin-top:8px}
+  .accordion-item{
+    padding:12px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+    border-radius:6px;
+    margin-bottom:6px;
+    background:transparent;
+  }
+  .accordion-item:hover{background:rgba(255,255,255,0.02)}
+  .accordion-item .title{font-weight:600; color:#00000020; color: #111; /* fallback */ color:var(--white);}
+  .accordion-item .chev{opacity:0.9;}
+  .accordion-item.open{background:rgba(255,255,255,0.04)}
+  .subnote{font-size:12px;color:var(--muted);margin:6px 0 12px 0}
+
+  /* Main content */
+  .main{
+    flex:1;
+    padding:20px;
+    overflow:auto;
+  }
+  .card{
+    background:var(--card-bg);
+    border-radius:10px;
+    padding:18px;
+    box-shadow: 0 6px 18px rgba(10,20,40,0.06);
+    margin-bottom:16px;
+  }
+
+  /* layout: two columns inside main */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .controls{display:flex;gap:8px;align-items:center}
+
+  .btn{
+    background:var(--accent);
+    color:var(--white);
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .btn.ghost{background:transparent;color:#333;border:1px solid #ddd}
+  .input, select {padding:8px;border-radius:8px;border:1px solid #ddd;min-width:160px}
+  .small{font-size:13px;color:#666}
+
+  /* Content panes */
+  .pane{display:none}
+  .pane.active{display:block}
+  .pane h2{margin-top:0}
+
+  table{width:100%;border-collapse:collapse}
+  th, td{padding:8px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
+  th{background:#003366;color:white}
+
+  pre {background:#0f1724;color:#e6eefc;padding:10px;border-radius:6px;overflow:auto}
+
+  /* responsive */
+  @media (max-width:900px){
+    .sidebar{display:none}
+    body{flex-direction:column}
+  }
+
+  /* Novos estilos para CNPJ */
+  .config-section {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+    border: 1px solid #e9ecef;
+  }
+  .config-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .config-label {
+    font-size: 13px;
+    color: #666;
+    min-width: 120px;
+  }
+  .error-row {
+    background-color: #fff5f5;
+    color: #c53030;
+  }
+  .success-row {
+    background-color: #f0fff4;
+  }
+  .cnae-cell {
+    max-width: 200px;
+    white-space: normal;
+    font-size: 12px;
+  }
+  .socios-cell {
+    max-width: 250px;
+    white-space: normal;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" role="navigation">
+  <div class="brand">
+    <img src="https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" alt="BR" style="width:28px;height:18px;border-radius:3px;">
+    <h1>BrasilAPI — Painel</h1>
+  </div>
+
+  <div class="subnote">Termos de uso — use sua chave se necessário</div>
+
+  <div class="menu-section" id="menu">
+    <!-- We'll create items via JS for convenience -->
+  </div>
+  <div style="height:22px"></div>
+  <div class="small">Exemplos: CEP, CNPJ, FIPE, IBGE, PIX</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h2>Painel de Endpoints — BrasilAPI</h2>
+      <div class="small">Clique em um endpoint no menu para abrir a interface correspondente.</div>
+    </div>
+    <div class="controls">
+      <label class="small">API Base</label>
+      <input id="apiBase" class="input" value="https://brasilapi.com.br/api" title="Base URL da BrasilAPI">
+      <button class="btn" onclick="setApiBase()">Atualizar</button>
+    </div>
+  </div>
+
+  <!-- PANES -->
+  <div id="panes">
+
+    <!-- CNPJ -->
+    <div id="cnpj" class="pane card">
+      <h2>CNPJ — Upload CSV + Filtros + Consulta API</h2>
+
+      <!-- Configurações de Rate Limiting -->
+      <div class="config-section">
+        <h3 style="margin-top:0;margin-bottom:12px;">Configurações de Consulta</h3>
+        <div class="config-row">
+          <div class="config-label">Consultas por minuto:</div>
+          <input id="rateLimit" class="input" type="number" value="10" min="1" max="60" style="width:100px">
+          <div class="small">(Máx: 60/min para evitar bloqueios)</div>
+        </div>
+        <div class="config-row">
+          <div class="config-label">Delay entre consultas:</div>
+          <input id="delayMs" class="input" type="number" value="6000" min="100" max="60000" style="width:120px">
+          <span class="small">ms</span>
+        </div>
+        <div class="config-row">
+          <button class="btn" onclick="calcularDelay()">Calcular Delay Automaticamente</button>
+          <button class="btn ghost" onclick="resetRateLimit()">Redefinir para 10/min</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <div class="small">Importe CSV (mantém colunas originais e adiciona dados da API)</div>
+          <input id="fileCnpj" type="file" accept=".csv" style="margin-top:8px">
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn" onclick="loadCSV()">Carregar CSV e Consultar API</button>
+            <button class="btn ghost" onclick="clearCSV()">Limpar</button>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:260px">
+          <label class="small">Filtros locais</label>
+          <input id="fRazao" class="input" placeholder="Razão Social">
+          <input id="fCNAE" class="input" placeholder="CNAE">
+          <input id="fMunicipio" class="input" placeholder="Município">
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <input id="fUF" class="input" placeholder="UF" style="width:80px">
+            <select id="fSituacao" class="input" style="width:160px">
+              <option value="">Situação (todos)</option>
+              <option value="ATIVA">Ativa</option>
+              <option value="BAIXADA">Baixada</option>
+              <option value="SUSPENSA">Suspensa</option>
+            </select>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn" onclick="filtrarCSV()">Filtrar</button>
+            <button class="btn" onclick="exportTableCSV('cnpjTable','resultado_cnpj_completo.csv')">Exportar CSV Completo</button>
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin:12px 0">
+
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="cnpjLookup" class="input" placeholder="Consultar BrasilAPI por CNPJ (ex: 12345678000195)">
+        <button class="btn" onclick="consultarCNPJ()">Consultar API</button>
+        <button class="btn ghost" onclick="downloadSampleCSV()">Baixar CSV amostra</button>
+      </div>
+
+      <div style="margin-top:12px;overflow:auto">
+        <table id="cnpjTable" style="min-width:1800px">
+          <thead><tr>
+            <!-- Colunas originais do CSV -->
+            <th>CNPJ</th>
+            <th>nome_transportador</th>
+            <th>municipio</th>
+            <th>uf</th>
+            <th>cep</th>
+            <th>Bomba Interna</th>
+            <th>ANOS RNTC</th>
+            <!-- Novas colunas da API -->
+            <th>Razão Social API</th>
+            <th>Nome Fantasia</th>
+            <th>Situação</th>
+            <th>CNAE Fiscal</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Sócios</th>
+            <th>Natureza Jurídica</th>
+            <th>Porte</th>
+            <th>Data Abertura</th>
+            <th>Capital Social</th>
+            <th>Logradouro</th>
+            <th>Número</th>
+            <th>Bairro</th>
+            <th>Complemento</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <pre id="cnpjLog" style="margin-top:12px"></pre>
+    </div>
+
+    <!-- Outros panes... -->
+
+  </div>
+</div>
+
+<!-- Scripts -->
+<script>
+const endpoints = [
+  { id:'banks', label:'BANKS' },
+  { id:'cambio', label:'CAMBIO' },
+  { id:'cep', label:'CEP' },
+  { id:'cepv2', label:'CEP V2' },
+  { id:'cnpj', label:'CNPJ' },
+  { id:'corretoras', label:'Corretoras' },
+  { id:'cptec', label:'CPTEC' },
+  { id:'ddd', label:'DDD' },
+  { id:'feriados', label:'Feriados Nacionais' },
+  { id:'fipe', label:'FIPE' },
+  { id:'ibge', label:'IBGE' },
+  { id:'isbn', label:'ISBN' },
+  { id:'ncm', label:'NCM' },
+  { id:'pix', label:'PIX' },
+];
+
+const menu = document.getElementById('menu');
+const panes = document.getElementById('panes');
+const apiBaseInput = document.getElementById('apiBase');
+
+// Variáveis para controle de rate limiting
+let currentDelay = 6000;
+let baseCSV = [];
+let csvHeaders = [];
+
+function createMenu(){
+  endpoints.forEach(ep=>{
+    const it = document.createElement('div');
+    it.className = 'accordion-item';
+    it.dataset.target = ep.id;
+    it.innerHTML = `<div class="title">${ep.label}</div><div class="chev">›</div>`;
+    it.addEventListener('click', ()=> openPane(ep.id, it));
+    menu.appendChild(it);
+  });
+}
+createMenu();
+
+function openPane(id, elem){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  const pane = document.getElementById(id);
+  if (pane) pane.classList.add('active');
+
+  document.querySelectorAll('.accordion-item').forEach(i=>{
+    i.classList.toggle('open', i.dataset.target === id);
+  });
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+openPane('cnpj');
+
+function setApiBase(){
+  alert('API Base atualizada para: ' + apiBaseInput.value);
+}
+
+// Funções para rate limiting
+function calcularDelay() {
+  const rateLimit = parseInt(document.getElementById('rateLimit').value) || 10;
+  const delayMs = Math.floor(60000 / rateLimit);
+  document.getElementById('delayMs').value = delayMs;
+  currentDelay = delayMs;
+}
+
+function resetRateLimit() {
+  document.getElementById('rateLimit').value = 10;
+  calcularDelay();
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  calcularDelay();
+});
+
+function csvToArray(text){
+  try{
+    if (window.Papa) {
+      const res = Papa.parse(text, { header:true, skipEmptyLines:true });
+      csvHeaders = res.meta.fields || [];
+      return res.data;
+    }
+  }catch(e){}
+  const lines = text.split(/\r?\n/).filter(Boolean);
+  const headers = lines.shift().split(',');
+  csvHeaders = headers.map(h => h.trim());
+  return lines.map(l=>{
+    const cols = l.split(',');
+    const obj = {};
+    headers.forEach((h,i)=> obj[h.trim()] = (cols[i]||'').trim());
+    return obj;
+  });
+}
+
+function loadCSV(){
+  const f = document.getElementById('fileCnpj').files[0];
+  const log = document.getElementById('cnpjLog');
+  if(!f){ alert('Selecione um CSV'); return; }
+  const reader = new FileReader();
+  reader.onload = async e=>{
+    try{
+      const arr = csvToArray(e.target.result);
+      baseCSV = arr;
+      log.textContent = `CSV carregado: ${arr.length} registros. Colunas detectadas: ${csvHeaders.join(', ')}. Iniciando consultas automáticas...`;
+      
+      // Criar cabeçalho da tabela com colunas originais + novas
+      criarCabecalhoTabela();
+      
+      await consultarCNPJsDoCSV(arr);
+      
+    }catch(er){
+      log.textContent = 'Erro ao ler CSV: ' + er.message;
+    }
+  }
+  reader.readAsText(f,'utf-8');
+}
+
+function criarCabecalhoTabela() {
+  const thead = document.querySelector('#cnpjTable thead');
+  thead.innerHTML = '';
+  
+  const tr = document.createElement('tr');
+  
+  // Adicionar colunas originais do CSV
+  csvHeaders.forEach(header => {
+    const th = document.createElement('th');
+    th.textContent = header;
+    tr.appendChild(th);
+  });
+  
+  // Adicionar novas colunas da API
+  const colunasAPI = [
+    'Razão Social API', 'Nome Fantasia', 'Situação', 'CNAE Fiscal', 
+    'Telefone', 'Email', 'Sócios', 'Natureza Jurídica', 'Porte', 
+    'Data Abertura', 'Capital Social', 'Logradouro', 'Número', 
+    'Bairro', 'Complemento'
+  ];
+  
+  colunasAPI.forEach(coluna => {
+    const th = document.createElement('th');
+    th.textContent = coluna;
+    tr.appendChild(th);
+  });
+  
+  thead.appendChild(tr);
+}
+
+// Função para formatar CNAE com número e descrição
+function formatarCNAE(json) {
+  const cnaeNumero = json.cnae_fiscal || '';
+  const cnaeDescricao = json.cnae_fiscal_descricao || '';
+  
+  if (cnaeNumero && cnaeDescricao) {
+    return `${cnaeNumero} - ${cnaeDescricao}`;
+  } else if (cnaeNumero) {
+    return cnaeNumero;
+  } else if (cnaeDescricao) {
+    return cnaeDescricao;
+  }
+  return '';
+}
+
+// Função para formatar lista de sócios
+function formatarSocios(json) {
+  if (!json.qsa || !Array.isArray(json.qsa) || json.qsa.length === 0) {
+    return 'Nenhum sócio encontrado';
+  }
+  
+  const sociosFormatados = json.qsa.map(socio => {
+    const nome = socio.nome || socio.nome_socio || '';
+    const qual = socio.qual || socio.qualificacao_socio || '';
+    const pais = socio.pais_origem || '';
+    
+    if (nome && qual) {
+      return `${nome} (${qual})${pais ? ` - ${pais}` : ''}`;
+    } else if (nome) {
+      return nome;
+    } else if (qual) {
+      return `Sócio (${qual})`;
+    }
+    return '';
+  }).filter(socio => socio !== '');
+
+  return sociosFormatados.length > 0 ? sociosFormatados.join('; ') : 'Sócios não disponíveis';
+}
+
+// Função para formatar natureza jurídica
+function formatarNaturezaJuridica(json) {
+  const codigo = json.natureza_juridica || '';
+  const descricao = json.natureza_juridica_descricao || '';
+  
+  if (codigo && descricao) {
+    return `${codigo} - ${descricao}`;
+  } else if (codigo) {
+    return codigo;
+  } else if (descricao) {
+    return descricao;
+  }
+  return 'Não informado';
+}
+
+// Nova função para consultar todos os CNPJs do CSV na API
+async function consultarCNPJsDoCSV(csvData) {
+  const log = document.getElementById('cnpjLog');
+  const tbody = document.querySelector('#cnpjTable tbody');
+  
+  tbody.innerHTML = '';
+  
+  let successCount = 0;
+  let errorCount = 0;
+  let rateLimitCount = 0;
+  
+  for (let i = 0; i < csvData.length; i++) {
+    const row = csvData[i];
+    const cnpj = (row.cnpj || row.CNPJ || '').replace(/\D/g,'');
+    
+    if (!cnpj || cnpj.length !== 14) {
+      errorCount++;
+      continue;
+    }
+    
+    const progress = Math.round(((i + 1) / csvData.length) * 100);
+    log.textContent = `Consultando API... ${i + 1}/${csvData.length} (${progress}%) - CNPJ: ${cnpj}\nSucessos: ${successCount} | Erros: ${errorCount} | Rate Limits: ${rateLimitCount}`;
+    
+    try {
+      const base = apiBaseInput.value.replace(/\/$/,'');
+      const response = await fetch(base + `/cnpj/v1/${cnpj}`);
+      
+      if (response.ok) {
+        const json = await response.json();
+        
+        const tr = document.createElement('tr');
+        tr.className = 'success-row';
+        
+        let html = '';
+        
+        // Colunas originais do CSV
+        csvHeaders.forEach(header => {
+          const value = row[header] || '';
+          html += `<td>${value}</td>`;
+        });
+        
+        // Novas colunas da API
+        html += `
+          <td><strong>${json.razao_social || ''}</strong></td>
+          <td>${json.nome_fantasia || ''}</td>
+          <td>${json.descricao_situacao_cadastral || json.situacao_cadastral || ''}</td>
+          <td class="cnae-cell">${formatarCNAE(json)}</td>
+          <td>${formatTelefone(json.ddd_telefone_1 || json.telefone || '')}</td>
+          <td>${json.email || ''}</td>
+          <td class="socios-cell">${formatarSocios(json)}</td>
+          <td>${formatarNaturezaJuridica(json)}</td>
+          <td>${json.porte || ''}</td>
+          <td>${formatData(json.data_inicio_atividade || json.data_abertura || '')}</td>
+          <td>${formatCapital(json.capital_social || '')}</td>
+          <td>${json.logradouro || ''}</td>
+          <td>${json.numero || ''}</td>
+          <td>${json.bairro || ''}</td>
+          <td>${json.complemento || ''}</td>
+        `;
+        
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+        
+        successCount++;
+      } else {
+        if (response.status === 429) {
+          rateLimitCount++;
+          log.textContent += `\n⚠️ RATE LIMIT EXCEDIDO! Aguardando ${currentDelay/1000} segundos...`;
+          await new Promise(resolve => setTimeout(resolve, currentDelay));
+          i--;
+          continue;
+        } else {
+          errorCount++;
+          const tr = document.createElement('tr');
+          tr.className = 'error-row';
+          
+          let html = '';
+          csvHeaders.forEach(header => {
+            const value = header === 'cnpj' ? formatCNPJ(cnpj) : (row[header] || '');
+            html += `<td>${value}</td>`;
+          });
+          
+          // Colunas vazias para as colunas da API
+          const colunasAPI = 15; // Número de colunas da API
+          html += `<td colspan="${colunasAPI}"><strong>ERRO ${response.status}:</strong> ${response.statusText || 'Falha na consulta'}</td>`;
+          
+          tr.innerHTML = html;
+          tbody.appendChild(tr);
+        }
+      }
+    } catch (error) {
+      errorCount++;
+      const tr = document.createElement('tr');
+      tr.className = 'error-row';
+      
+      let html = '';
+      csvHeaders.forEach(header => {
+        const value = header === 'cnpj' ? formatCNPJ(cnpj) : (row[header] || '');
+        html += `<td>${value}</td>`;
+      });
+      
+      const colunasAPI = 15;
+      html += `<td colspan="${colunasAPI}"><strong>ERRO:</strong> ${error.message}</td>`;
+      
+      tr.innerHTML = html;
+      tbody.appendChild(tr);
+    }
+    
+    if (i < csvData.length - 1) {
+      await new Promise(resolve => setTimeout(resolve, currentDelay));
+    }
+  }
+  
+  log.textContent = `✅ Consulta finalizada!\n- Sucessos: ${successCount}\n- Erros: ${errorCount}\n- Rate Limits: ${rateLimitCount}\n- Total processado: ${csvData.length} registros\n\nDelay utilizado: ${currentDelay}ms entre consultas`;
+}
+
+// Funções auxiliares para formatação
+function formatCNPJ(cnpj) {
+  if (!cnpj) return '';
+  const cleaned = cnpj.replace(/\D/g, '');
+  if (cleaned.length !== 14) return cnpj;
+  return cleaned.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+}
+
+function formatTelefone(telefone) {
+  if (!telefone) return '';
+  const cleaned = telefone.replace(/\D/g, '');
+  if (cleaned.length === 10) {
+    return cleaned.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+  } else if (cleaned.length === 11) {
+    return cleaned.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  }
+  return telefone;
+}
+
+function formatData(data) {
+  if (!data) return '';
+  return data.split('-').reverse().join('/');
+}
+
+function formatCapital(capital) {
+  if (!capital) return '';
+  const num = parseFloat(capital);
+  if (isNaN(num)) return capital;
+  return 'R$ ' + num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function clearCSV(){
+  baseCSV = [];
+  csvHeaders = [];
+  document.querySelector('#cnpjTable thead').innerHTML = '';
+  document.querySelector('#cnpjTable tbody').innerHTML = '';
+  document.getElementById('cnpjLog').textContent = 'Base limpa.';
+}
+
+function filtrarCSV(){
+  if(baseCSV.length===0){ alert('Carregue um CSV antes de filtrar'); return; }
+  const razao = (document.getElementById('fRazao').value||'').toLowerCase();
+  const cnae = (document.getElementById('fCNAE').value||'').toLowerCase();
+  const mun = (document.getElementById('fMunicipio').value||'').toLowerCase();
+  const uf = (document.getElementById('fUF').value||'').toLowerCase();
+  const sit = (document.getElementById('fSituacao').value||'').toLowerCase();
+
+  const res = baseCSV.filter(r=>{
+    return (!razao || ( (r.razao_social||r.nome_transportador||'').toLowerCase().includes(razao) )) &&
+           (!cnae || ( (r.cnae_principal||r.cnae||'').toLowerCase().includes(cnae) )) &&
+           (!mun || ( (r.municipio||'').toLowerCase().includes(mun) )) &&
+           (!uf || ( (r.uf||'').toLowerCase() === uf )) &&
+           (!sit || ( (r.situacao_cadastral||'').toLowerCase() === sit ));
+  });
+
+  renderCNPJTable(res);
+  document.getElementById('cnpjLog').textContent = `Filtrado: ${res.length} registros.`;
+}
+
+function renderCNPJTable(list){
+  const tbody = document.querySelector('#cnpjTable tbody');
+  tbody.innerHTML = '';
+  list.forEach(r=>{
+    const tr = document.createElement('tr');
+    let html = '';
+    
+    csvHeaders.forEach(header => {
+      html += `<td>${r[header] || ''}</td>`;
+    });
+    
+    // Colunas vazias para dados da API (quando apenas filtrando)
+    const colunasAPI = 15;
+    html += `<td colspan="${colunasAPI}">Dados disponíveis apenas após consulta à API</td>`;
+    
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  });
+}
+
+function downloadSampleCSV(){
+  const sample = `cnpj,nome_transportador,municipio,uf,cep,Bomba Interna,ANOS RNTC
+906706000117,TRANSPORTES CIDADE LTDA,NOVA MUTUM,MT,78450-000,null,21.09
+5512974000178,TRANSPORTADORA SCHLATTER LTDA,LUCAS DO RIO VERDE,MT,78455-000,null,21.05`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([sample], {type:'text/csv'}));
+  a.download = 'sample_transportadoras.csv';
+  a.click();
+}
+
+async function consultarCNPJ(){
+  const cnpj = (document.getElementById('cnpjLookup').value||'').replace(/\D/g,'');
+  const log = document.getElementById('cnpjLog');
+  if(!cnpj){ alert('Informe um CNPJ'); return; }
+  log.textContent = 'Consultando API...';
+  try{
+    const base = apiBaseInput.value.replace(/\/$/,'');
+    const res = await fetch(base + `/cnpj/v1/${cnpj}`);
+    const json = await res.json();
+    
+    const tbody = document.querySelector('#cnpjTable tbody');
+    const tr = document.createElement('tr');
+    tr.className = 'success-row';
+    
+    let html = '';
+    
+    // Se não temos colunas do CSV, criar colunas básicas
+    if (csvHeaders.length === 0) {
+      csvHeaders = ['CNPJ'];
+      criarCabecalhoTabela();
+      html += `<td>${formatCNPJ(json.cnpj || cnpj)}</td>`;
+    } else {
+      // Coluna CNPJ do CSV
+      html += `<td>${formatCNPJ(json.cnpj || cnpj)}</td>`;
+      // Colunas vazias para as outras colunas originais
+      for (let i = 1; i < csvHeaders.length; i++) {
+        html += `<td></td>`;
+      }
+    }
+    
+    // Novas colunas da API
+    html += `
+      <td><strong>${json.razao_social || ''}</strong></td>
+      <td>${json.nome_fantasia || ''}</td>
+      <td>${json.descricao_situacao_cadastral || json.situacao_cadastral || ''}</td>
+      <td class="cnae-cell">${formatarCNAE(json)}</td>
+      <td>${formatTelefone(json.ddd_telefone_1 || json.telefone || '')}</td>
+      <td>${json.email || ''}</td>
+      <td class="socios-cell">${formatarSocios(json)}</td>
+      <td>${formatarNaturezaJuridica(json)}</td>
+      <td>${json.porte || ''}</td>
+      <td>${formatData(json.data_inicio_atividade || json.data_abertura || '')}</td>
+      <td>${formatCapital(json.capital_social || '')}</td>
+      <td>${json.logradouro || ''}</td>
+      <td>${json.numero || ''}</td>
+      <td>${json.bairro || ''}</td>
+      <td>${json.complemento || ''}</td>
+    `;
+    
+    tr.innerHTML = html;
+    tbody.prepend(tr);
+    
+    log.textContent = JSON.stringify(json, null, 2);
+  }catch(e){
+    log.textContent = 'Erro: ' + e.message;
+  }
+}
+
+/* Export generic table to CSV */
+function exportTableCSV(tableId, filename){
+  const rows = Array.from(document.querySelectorAll(`#${tableId} tr`));
+  const csv = rows.map(r=>{
+    return Array.from(r.querySelectorAll('th,td')).map(c => `"${(c.innerText||'').replace(/"/g,'""')}"`).join(',');
+  }).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = filename || 'export.csv';
+  a.click();
+}
+
+/* Try to load PapaParse for CSV convenience (optional) */
+(function(){
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js';
+  document.head.appendChild(s);
+})();
+</script>
+
+</body>
+</html>
