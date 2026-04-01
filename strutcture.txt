@@ -1,0 +1,8 @@
+logistics-omnichannel-hub/
+│
+├── requirements.txt
+├── README.md
+├── connectors.py         # Integrações: ERPs, Ticket Log e VExpense
+├── routing_engine.py     # Inteligência Artificial (Google OR-Tools)
+├── main.py               # API Gateway (FastAPI)
+└── index.html            # Dashboard Torre de Controle + CRM
